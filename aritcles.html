@@ -2,148 +2,63 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>อ่านบทความ - BBC</title>
-    <link rel="icon" type="image/png" href="logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อ่านบทความ - BBC Church</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; padding-bottom: 50px; }
+        :root { --primary: #4dabff; --dark-bg: #121212; --card-bg: #1e1e1e; }
+        body { background: var(--dark-bg); color: #e0e0e0; font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
         
-        /* Navbar */
-        .navbar { background: #0a2c6d; padding: 15px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; }
-        .navbar img { width: 35px; border-radius: 50%; }
-        .btn-back { color: white; text-decoration: none; font-size: 14px; margin-right: auto; border: 1px solid rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 5px; }
+        .article-card { background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid #333; margin-bottom: 30px; }
+        h1 { font-family: 'Prompt'; color: white; margin-top: 0; }
+        .avg-rating { color: #f1c40f; font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .content-text { line-height: 1.8; font-size: 16px; white-space: pre-line; }
 
-        .container { padding: 15px; max-width: 800px; margin: auto; }
-        
-        /* Article Box */
-        .article-box { background: #1e1e1e; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 30px; }
-        .article-header { padding: 25px 25px 10px 25px; }
-        .category-tag { background: #0a2c6d; color: #fff; padding: 3px 10px; border-radius: 5px; font-size: 12px; display: inline-block; margin-bottom: 10px; }
-        .article-box h1 { color: #fff; font-family: 'Prompt'; font-size: 28px; line-height: 1.3; margin-bottom: 10px; }
-        
-        /* Meta Data */
-        .meta-info { color: #888; font-size: 14px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 15px; }
-        .bible-ref { background: rgba(77, 171, 255, 0.1); color: #4dabff; padding: 10px 15px; border-radius: 10px; border-left: 4px solid #4dabff; margin-bottom: 20px; font-style: italic; }
+        .comments-section { margin-top: 50px; }
+        .comment-item { background: #252525; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
+        .comment-user { font-weight: bold; color: var(--primary); }
+        .comment-stars { color: #f1c40f; font-size: 14px; margin: 5px 0; }
+        .comment-msg { color: #eee; font-size: 15px; }
 
-        .main-img { width: 100%; height: auto; display: block; max-height: 450px; object-fit: cover; }
-        .article-body { padding: 25px; font-size: 17px; line-height: 1.8; color: #ddd; }
-
-        /* Comment Section */
-        .card { background: #1e1e1e; padding: 25px; border-radius: 20px; border: 1px solid #333; }
-        .comment-title { font-family: 'Prompt'; font-size: 20px; color: #4dabff; margin-bottom: 20px; text-align: center; }
-        
-        input, textarea, select { 
-            width: 100%; padding: 14px; margin-top: 12px; background: #2a2a2a; 
-            border: 1px solid #444; color: white; border-radius: 10px; font-family: inherit;
-        }
-        input:focus, textarea:focus { border-color: #4dabff; outline: none; }
-        
-        .btn-send { 
-            width: 100%; padding: 15px; background: #0a2c6d; color: white; border: none; 
-            border-radius: 10px; margin-top: 20px; font-weight: bold; font-size: 16px; cursor: pointer;
-            transition: 0.3s;
-        }
-        .btn-send:disabled { background: #444; }
-
-        .comment-list-area { margin-top: 40px; }
-        .comment-item { background: #252525; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-        .comment-name { color: #4dabff; font-weight: 600; font-size: 15px; margin-bottom: 5px; }
-        .comment-msg { font-size: 15px; color: #bbb; line-height: 1.5; }
+        .rating-form { background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px dashed #444; margin-top: 50px; }
+        .stars { display: flex; gap: 10px; margin: 15px 0; }
+        .star { font-size: 30px; color: #444; cursor: pointer; }
+        .star.active { color: #f1c40f; }
+        input, textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
+        .btn-submit { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<nav class="navbar">
-    <a href="index.html" class="btn-back">⬅ กลับ</a>
-    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
-    <span style="font-family:'Prompt'; font-weight:600;">Bangkhen Baptist Church</span>
-</nav>
-
 <div class="container">
-    <article class="article-box">
-        <div class="article-header">
-            <span id="a-category" class="category-tag">General</span>
-            <h1 id="a-title">กำลังโหลดเนื้อหา...</h1>
-            <div class="meta-info">
-                <span id="a-author">👤 โดย: ...</span>
-                <span id="a-date">📅 ...</span>
-            </div>
-            <div id="bible-container" style="display:none;" class="bible-ref">
-                📖 พระธรรม: <span id="a-bible"></span>
-            </div>
+    <div class="article-card">
+        <h1 id="artTitle">กำลังโหลด...</h1>
+        <div id="artRating" class="avg-rating">☆☆☆☆☆ (0)</div>
+        <div id="artBody" class="content-text"></div>
+    </div>
+
+    <div class="comments-section">
+        <h3 style="font-family: 'Prompt'; color: var(--primary);">ความคิดเห็นและคำพยาน</h3>
+        <div id="commentsList">กำลังตรวจสอบข้อมูล...</div>
+    </div>
+
+    <div class="rating-form">
+        <h4 style="font-family: 'Prompt'; margin: 0;">ให้คะแนนและแสดงความคิดเห็น</h4>
+        <input type="text" id="uName" placeholder="ชื่อของคุณ">
+        <div class="stars" id="starGroup">
+            <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span>
+            <span class="star" data-v="3">★</span><span class="star" data-v="4">★</span>
+            <span class="star" data-v="5">★</span>
         </div>
-        
-        <img id="a-img" class="main-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
-
-        <div class="article-body" id="a-content">
-            เนื้อหากำลังโหลด กรุณารอสักครู่...
-        </div>
-    </article>
-
-    <div class="card">
-        <h3 class="comment-title">💬 เขียนคำหนุนใจ / ข้อคิดที่ได้รับ</h3>
-        <form id="commentForm">
-            <input type="text" id="c_name" placeholder="ชื่อของคุณ" required>
-            <select id="c_star">
-                <option value="5">⭐⭐⭐⭐⭐ (ประทับใจมาก)</option>
-                <option value="4">⭐⭐⭐⭐ (ดีมาก)</option>
-                <option value="3">⭐⭐⭐ (ดี)</option>
-            </select>
-            <textarea id="c_msg" rows="4" placeholder="แบ่งปันพระพร หรือเขียนคำหนุนใจ..." required></textarea>
-            <button type="submit" class="btn-send" id="btn">ส่งข้อความ</button>
-        </form>
-    </div>
-
-    <div id="comment-list" class="comment-list-area">
-        <!-- คอมเมนต์จะโหลดตรงนี้ -->
+        <textarea id="uMsg" rows="3" placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
+        <button id="submitBtn" class="btn-submit">ส่งความคิดเห็น</button>
     </div>
 </div>
-
-<!-- Section: Contact & QR Code -->
-<div style="margin-top: 50px; text-align: center; padding: 30px 15px; background: #1e1e1e; border-radius: 20px; border: 1px solid #333;">
-    <h3 style="font-family: 'Prompt'; color: #4dabff; margin-bottom: 10px;">ติดต่อสอบถาม / ขอคำปรึกษา</h3>
-    <p style="font-size: 14px; color: #bbb; margin-bottom: 20px;">สแกน QR Code เพื่อเพิ่มเพื่อนใน LINE</p>
-    
-    <div style="background: white; display: inline-block; padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
-        <!-- QR Code จากลิงก์ LINE ที่ให้มา -->
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://lin.ee/NhFf2Rf" alt="LINE QR Code" style="display: block;">
-    </div>
-    
-    <div style="margin-top: 20px;">
-        <a href="https://lin.ee/NhFf2Rf" target="_blank" style="text-decoration: none; background: #06C755; color: white; padding: 10px 25px; border-radius: 25px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
-            <img src="https://cdn-icons-png.flaticon.com/512/2504/2504922.png" style="width: 20px; filter: brightness(0) invert(1);">
-            เพิ่มเพื่อนผ่าน LINE
-        </a>
-    </div>
-</div>
-
-<!-- Flag Counter Section -->
-<div class="counter-section" style="text-align: center; padding: 40px 15px; background: #121212;">
-    <h3 style="margin-bottom: 20px; font-family: 'Prompt'; font-size: 18px; color: #888;">ผู้เยี่ยมชมคริสตจักร</h3>
-    <a href="https://info.flagcounter.com/8zW3">
-        <img src="https://s11.flagcounter.com/count2/8zW3/bg_121212/txt_EEEEEE/border_333333/columns_4/maxflags_12/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
-    </a>
-</div>
-
-<!-- Footer -->
-<footer style="background: #0a2c6d; color: white; text-align: center; padding: 50px 20px; border-top: 4px solid #4dabff;">
-    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'" style="width: 70px; border-radius: 50%; margin-bottom: 15px;">
-    <br>
-    <strong style="font-family: 'Prompt'; font-size: 18px;">©2026 Bangkhen Baptist Church</strong>
-    <p style="font-size: 14px; opacity: 0.8; margin-top: 15px; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
-        2172/145-147 ซอยพหลโยธิน ถนนพหลโยธิน แขวงลาดยาว <br> 
-        เขตจตุจักร กรุงเทพฯ 10900 โทร. 02-579-8764
-    </p>
-    <div style="margin-top: 20px; font-size: 13px; color: #4dabff; font-weight: bold;">
-        ร่วมนมัสการ ทุกวันอาทิตย์ 9.00 am - 12.00 pm
-    </div>
-</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
@@ -155,98 +70,92 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const artId = new URLSearchParams(window.location.search).get('id');
 
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
+    // โหลดเนื้อหา
+    async function loadContent() {
+        if(!artId) return;
+        const snap = await getDoc(doc(db, "articles", artId));
+        if(snap.exists()) {
+            document.getElementById('artTitle').innerText = snap.data().title;
+            document.getElementById('artBody').innerText = snap.data().content;
+        }
+    }
 
-    if (id) {
-        // 1. ดึงข้อมูลบทความ
-        getDoc(doc(db, "articles", id)).then(snap => {
-            if(snap.exists()){
-                const d = snap.data();
-                document.title = d.title + " - BBC";
-                document.getElementById('a-title').innerText = d.title || 'ไม่มีหัวข้อ';
-                document.getElementById('a-content').innerText = d.content || '';
-                document.getElementById('a-category').innerText = d.category || 'บทความ';
-                document.getElementById('a-author').innerText = "👤 โดย: " + (d.author || 'เจ้าหน้าที่');
-                
-                // จัดการเรื่องวันที่
-                if(d.createdAt) {
-                    const date = d.createdAt.toDate ? d.createdAt.toDate() : new Date(d.createdAt);
-                    document.getElementById('a-date').innerText = "📅 " + date.toLocaleDateString('th-TH', { day:'numeric', month:'long', year:'numeric' });
-                }
-
-                // แสดงพระธรรม (ถ้ามี)
-                if(d.bible) {
-                    document.getElementById('bible-container').style.display = 'block';
-                    document.getElementById('a-bible').innerText = d.bible;
-                }
-
-                // ดึงรูป (เช็คหลายฟิลด์ที่อาจเป็นไปได้)
-                const finalImg = d.introUrl || d.image || d.imageUrl || '495258.jpg';
-                document.getElementById('a-img').src = finalImg;
-            } else {
-                document.getElementById('a-title').innerText = "ไม่พบบทความนี้";
-            }
-        }).catch(err => console.error("Error fetching article:", err));
-
-        // 2. ดึงคอมเมนต์ (เฉพาะที่อนุมัติ)
+    // โหลดคอมเมนต์ (เอา orderBy ออกเพื่อให้โชว์ทันที)
+    function loadComments() {
         const q = query(
-            collection(db, "comments"), 
-            where("articleId", "==", id), 
-            where("approved", "==", true), 
-            orderBy("createdAt", "desc")
+            collection(db, "ratings"), 
+            where("articleId", "==", artId),
+            where("approved", "==", true)
         );
 
         onSnapshot(q, (snap) => {
-            const listDiv = document.getElementById('comment-list');
-            if (snap.empty) {
-                listDiv.innerHTML = "<p style='text-align:center; color:#666;'>ยังไม่มีคำหนุนใจ มาเป็นคนแรกที่เขียนกัน!</p>";
+            const list = document.getElementById('commentsList');
+            const avgHeader = document.getElementById('artRating');
+            
+            if(snap.empty) {
+                list.innerHTML = "ยังไม่มีความคิดเห็นที่ได้รับอนุมัติในขณะนี้";
+                avgHeader.innerHTML = "☆☆☆☆☆ (0)";
                 return;
             }
 
-            listDiv.innerHTML = "<h4 style='margin-bottom:15px; font-family:Prompt;'>ความคิดเห็นจากพี่น้อง</h4>";
-            snap.forEach(doc => {
-                const c = doc.data();
-                listDiv.innerHTML += `
+            let html = "";
+            let sumRating = 0;
+            let count = 0;
+
+            snap.forEach(d => {
+                const data = d.data();
+                sumRating += data.rating;
+                count++;
+                let s = ""; for(let i=1;i<=5;i++) s += i <= data.rating ? "★" : "☆";
+                html += `
                     <div class="comment-item">
-                        <div class="comment-name">${c.name} ${"⭐".repeat(c.rating || 5)}</div>
-                        <div class="comment-msg">${c.message}</div>
-                    </div>`;
+                        <div class="comment-user">👤 ${data.userName}</div>
+                        <div class="comment-stars">${s}</div>
+                        <div class="comment-msg">${data.comment || ""}</div>
+                    </div>
+                `;
             });
+            list.innerHTML = html;
+
+            const avg = (sumRating / count).toFixed(1);
+            let avgS = ""; for(let i=1;i<=5;i++) avgS += i <= Math.round(avg) ? "★" : "☆";
+            avgHeader.innerHTML = `${avgS} (${avg})`;
         });
     }
 
-    // 3. ส่งคอมเมนต์
-    document.getElementById('commentForm').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('btn');
-        const name = document.getElementById('c_name').value;
-        const msg = document.getElementById('c_msg').value;
-        const star = document.getElementById('c_star').value;
+    // ดาวหน้ารูปแบบฟอร์ม
+    let userStar = 0;
+    const starList = document.querySelectorAll('.star');
+    starList.forEach(s => {
+        s.onclick = () => {
+            userStar = s.getAttribute('data-v');
+            starList.forEach((st, i) => st.classList.toggle('active', i < userStar));
+        };
+    });
 
+    // ส่งข้อมูล
+    document.getElementById('submitBtn').onclick = async () => {
+        if(userStar == 0) return alert("กรุณาให้คะแนนดาว");
+        const btn = document.getElementById('submitBtn');
         btn.disabled = true;
-        btn.innerText = "กำลังส่ง...";
-
         try {
-            await addDoc(collection(db, "comments"), {
-                articleId: id,
-                name: name,
-                rating: parseInt(star),
-                message: msg,
-                approved: false, // รอ Admin อนุมัติก่อนถึงจะแสดง
-                createdAt: serverTimestamp() // ใช้เวลาของ Server
+            await addDoc(collection(db, "ratings"), {
+                articleId: artId,
+                userName: document.getElementById('uName').value || "ผู้เยี่ยมชม",
+                rating: parseInt(userStar),
+                comment: document.getElementById('uMsg').value,
+                approved: false,
+                createdAt: serverTimestamp()
             });
-            alert("ขอบคุณสำหรับคำหนุนใจ! ข้อความของคุณจะปรากฏหลังจาก Admin ตรวจสอบครับ");
-            document.getElementById('commentForm').reset();
-        } catch (error) {
-            console.error("Error adding comment: ", error);
-            alert("เกิดข้อผิดพลาด กรุณาลองใหม่ครับ");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "ส่งข้อความ";
-        }
+            alert("ขอบคุณครับ! ความเห็นจะโชว์หลังจากแอดมินตรวจสอบ");
+            location.reload();
+        } catch (e) { alert("เกิดข้อผิดพลาด"); btn.disabled = false; }
     };
+
+    loadContent();
+    loadComments();
 </script>
 </body>
 </html>
