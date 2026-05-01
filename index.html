@@ -1,346 +1,217 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bangkhen Baptist Church คริสตจักรแบ๊บติสต์บางเขน</title>
-<link rel="icon" type="image/png" href="logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bangkhen Baptist Church</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* พื้นฐาน */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
 
-<style>
-html { scroll-behavior: smooth; }
+        /* Navbar */
+        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .navbar img { width: 35px; border-radius: 50%; }
 
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #000;
-  color: #fff;
-  padding-top: 70px;
-}
+        /* Hero Slideshow */
+        .hero-container { width: 100%; background: #000; position: relative; overflow: hidden; }
+        .slide { width: 100%; display: none; animation: fade 1.5s; }
+        .slide.active { display: block; }
+        .slide img { width: 100%; height: 400px; object-fit: cover; opacity: 0.8; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-/* NAV */
-nav {
-  background: #0b3d91;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 999;
+        /* Layout & Grid */
+        .container { padding: 20px 5%; width: 100%; max-width: 1200px; margin: auto; }
+        .section-title { font-family: 'Prompt'; font-size: 24px; margin: 40px 0 20px 0; color: #4dabff; border-left: 5px solid #4dabff; padding-left: 15px; }
+        
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+            margin-bottom: 20px;
+        }
 
-  height: auto;
-  min-height: 60px;
-}
+        /* Card Design ปรับปรุงใหม่ให้มีส่วนของดาว */
+        .card { 
+            background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; 
+            transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%;
+            position: relative;
+        }
+        .card:hover { transform: translateY(-5px); border-color: #4dabff; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #2a2a2a; }
+        .card-content { padding: 15px; flex-grow: 1; }
+        .card-title { font-family: 'Prompt'; font-size: 18px; margin-bottom: 8px; color: #fff; line-height: 1.4; }
+        .card-meta { font-size: 12px; color: #888; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* สไตล์คะแนนดาวหน้าแรก */
+        .star-rating { color: #f1c40f; font-size: 14px; margin-bottom: 5px; }
+        .comment-count { font-size: 11px; color: #4dabff; background: rgba(77, 171, 255, 0.1); padding: 2px 8px; border-radius: 10px; }
 
-nav a {
-  color: white;
-  margin: 0 8px;
-  text-decoration: none;
-}
+        .card-sub-info { font-size: 11px; color: #4dabff; margin-bottom: 5px; font-weight: 600; }
 
-/* HERO */
-.hero {
-  min-height: 60vh;   /* ลดความสูง */
-  max-height: 500px;  /* กันไม่ให้ใหญ่เกิน */
-  background: url('https://images.unsplash.com/photo-1507692049790-de58290a4334') center/cover no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+        /* Dashboard Statistics */
+        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 50px 0; }
+        .stat-box { background: #1e1e1e; padding: 20px; border-radius: 12px; text-align: center; border-bottom: 4px solid #0a2c6d; }
+        .stat-box strong { font-size: 24px; color: #4dabff; font-family: 'Prompt'; }
 
-/* SECTION */
-.section {
-  padding: 50px 20px;
-  text-align: center;
-}
+        /* Footer & Others */
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 40px; align-items: center; background: #1a1a1a; padding: 30px; border-radius: 15px; }
+        .qr-box { text-align: center; }
+        .qr-box img { width: 150px; border-radius: 10px; border: 5px solid white; }
+        .counter-section { text-align: center; padding: 40px 20px; background: #121212; border-top: 1px solid #333; }
+        footer { background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; }
+        footer img { width: 60px; border-radius: 50%; margin-bottom: 15px; }
 
-.card {
-  background: #111;
-  padding: 20px;
-  margin: 10px;
-  border-radius: 12px;
-}
-
-/* FORM */
-form {
-  max-width: 500px;
-  margin: auto;
-  background: #111;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: left;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
-  background: #000;
-  color: #fff;
-  border: 1px solid #333;
-  border-radius: 5px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background: #0b3d91;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-/* CHECKBOX */
-.checkbox-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 10px 0;
-}
-
-.checkbox-group input {
-  width: auto;
-  transform: scale(1.2);
-}
-
-/* FOOTER */
-footer {
-  background: #0b3d91;
-  padding: 20px;
-  margin-top: 50px;
-}
-
-/* FLOAT LINE */
-#lineFloat {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #06C755;
-  color: white;
-  font-size: 24px;
-  padding: 15px 18px;
-  border-radius: 50%;
-  text-decoration: none;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  z-index: 9999;
-}
-
-/* POPUP */
-#qrPopup {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.popup-box {
-  background: #111;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  position: relative;
-}
-
-#closePopup {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 28px;
-  cursor: pointer;
-}
-  html, body {
-  width: 100%;
-  overflow-x: hidden;
-}
-
-* {
-  box-sizing: border-box;
-}
-</style>
+        @media (max-width: 768px) {
+            .slide img { height: 250px; }
+            .dashboard { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; text-align: center; }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- NAV -->
-<nav>
-  <div>Bangkhen Baptist Chruch คริสตจักรแบ๊บติสต์บางเขน</div>
-  <div>
-    <a href="#home">หน้าแรก</a>
-    <a href="#about">เกี่ยวกับ</a>
-    <a href="#service">นมัสการ</a>
-    <a href="#news">ข่าว</a>
-    <a href="#contact">ติดต่อ</a>
-  </div>
+<nav class="navbar">
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
+    <span style="font-family:'Prompt'; font-weight: 600;">Bangkhen Baptist Church</span>
 </nav>
 
-<!-- HERO -->
-<div id="home" class="hero">
-  <div>
-    <h1>ยินดีต้อนรับ</h1>
-    <p>พระเจ้าทรงรักคุณเสมอ ❤️</p>
-  </div>
+<div class="hero-container">
+    <div class="slide active"><img src="hero_01.png" onerror="this.src='https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=1200'"></div>
+    <div class="slide"><img src="hero_02.png" onerror="this.src='https://images.unsplash.com/photo-1544427928-c49cdca8a93d?q=80&w=1200'"></div>
 </div>
 
-  <!-- FLAG TOP -->
-<div style="display:flex; justify-content:center; margin:20px 0;">
-  <img src="https://s01.flagcounter.com/count2/M2Js/bg_EEF277/txt_000000/border_CCCCCC/columns_8/maxflags_250/viewers_0/labels_1/pageviews_1/flags_0/percent_0/">
-</div>
-  
-<div id="about" class="section">
-  <h2>เกี่ยวกับคริสตจักร</h2>
-</div>
+<div class="container">
+    <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
+    <div id="list-news" class="grid-container">กำลังโหลด...</div>
 
-<div id="service" class="section">
-  <h2>เวลานมัสการ</h2>
-  <div class="card">อาทิตย์ 09:00 - 11:30</div>
-</div>
+    <h2 class="section-title">🙏 คำพยานชีวิต</h2>
+    <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
 
-<div id="news" class="section">
-  <h2>ข่าวสาร</h2>
-</div>
+    <h2 class="section-title">📖 บทความหนุนใจ</h2>
+    <div id="list-article" class="grid-container">กำลังโหลด...</div>
 
-<!-- CONTACT -->
-<div id="contact" class="section">
-<h2>ติดต่อเรา</h2>
+    <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
+    <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
 
-<form id="contactForm">
-<input type="text" name="fullname" placeholder="ชื่อ-นามสกุล" required>
-<input type="tel" name="phone" placeholder="เบอร์โทร" required>
-<textarea name="address" placeholder="ที่อยู่"></textarea>
-<input type="text" name="lineid" placeholder="LINE ID">
-
-<div class="checkbox-group">
-  <input type="checkbox" id="worship" name="worship">
-  <label for="worship">ต้องการไปร่วมนมัสการพระเจ้า</label>
+    <!-- สถิติ -->
+    <div class="dashboard">
+        <div class="stat-box"><span>ผู้ลงทะเบียน</span><br><strong>1,250</strong></div>
+        <div class="stat-box"><span>นมัสการ</span><br><strong>450</strong></div>
+        <div class="stat-box"><span>กลุ่มเซลล์</span><br><strong>85</strong></div>
+    </div>
 </div>
 
-<div class="checkbox-group">
-  <input type="checkbox" id="study" name="study">
-  <label for="study">ต้องการศึกษาพระคัมภีร์ที่บ้าน</label>
+<div class="counter-section">
+    <h3 style="margin-bottom: 20px; font-family: 'Prompt'; font-weight: 400;">สถิติผู้เยี่ยมชมคริสตจักร</h3>
+    <a href="https://info.flagcounter.com/8zW3">
+        <img src="https://s11.flagcounter.com/count2/8zW3/bg_121212/txt_EEEEEE/border_333333/columns_4/maxflags_12/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
+    </a>
 </div>
 
-<button type="submit">ส่งข้อมูล</button>
-</form>
-
-<!-- LINE QR SECTION -->
-<div style="text-align:center; margin-top:30px;">
-
-  <h3>เพิ่มเพื่อน LINE</h3>
-
-  <!-- QR (คลิกได้) -->
-  <a href="https://lin.ee/60jBty7m" target="_blank">
-    <img src="line-qr.png"
-      style="width:200px; border-radius:10px; cursor:pointer;">
-  </a>
-
-  <p>สแกนหรือกดที่รูปเพื่อไป LINE</p>
-
-  <!-- ปุ่ม -->
-  <a href="https://lin.ee/60jBty7m" target="_blank">
-    <button>แอด LINE</button>
-  </a>
-
-</div>
-</div>
-
-<!-- FLAG BOTTOM -->
-<div style="display:flex; justify-content:center; margin:20px 0;">
-  <img src="https://s01.flagcounter.com/count2/M2Js/bg_EEF277/txt_000000/border_CCCCCC/columns_8/maxflags_250/viewers_0/labels_1/pageviews_1/flags_0/percent_0/">
-</div>
-
-<!-- FOOTER -->
 <footer>
-  <div style="text-align:center; padding:20px;">
-
-    <!-- 🔥 LOGO -->
-    <img src="logo.png" alt="Church Logo"
-      style="width:80px; border-radius:10px; margin-bottom:10px;">
-
-    <!-- TEXT -->
-    <h3 style="margin:0;">
-      <p>@2026 Bangkhen Baptist Church คริสตจักรแบ๊บติสต์บางเขน</p>
-      <p>2172/145-147 ซอยพหลโยธิน 36 ถนนพหลโยธิน แขวงลาดยาว เขตจตุจักร กรุงเทพฯ รหัสไปรษณี 12000</p>
-      <p>โทรศัพท์ 02-5798764 (+662-5798764)</p>
-
-    </h3>
-
-  </div>
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'"><br>
+    <strong style="font-family:'Prompt'; font-size:18px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
+    <p style="margin-top:20px; font-size:12px; opacity:0.5;">©2026 Bangkhen Baptist Church. All Rights Reserved.</p>
 </footer>
 
-<!-- FLOAT BUTTON -->
-<a href="#" id="lineFloat">💬</a>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, query, orderBy, onSnapshot, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-<!-- POPUP -->
-<div id="qrPopup">
-  <div class="popup-box">
-    <div id="closePopup">&times;</div>
-    <h3>เพิ่มเพื่อน LINE</h3>
-    <img src="line-qr.png" style="width:200px;">
-  </div>
-</div>
+const firebaseConfig = {
+    apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
+    authDomain: "bbcchurch-6ffc3.firebaseapp.com",
+    projectId: "bbcchurch-6ffc3",
+    storageBucket: "bbcchurch-6ffc3.appspot.com",
+    appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
+};
 
-<script>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-/* FORM */
-document.getElementById("contactForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
+// 1. ฟังก์ชันดึงคะแนนดาวและจำนวนคอมเมนต์ (รองรับทุก ID)
+async function getRatingData(articleId) {
+    try {
+        const q = query(
+            collection(db, "ratings"), 
+            where("articleId", "==", articleId), 
+            where("approved", "==", true)
+        );
+        const snap = await getDocs(q);
+        let total = 0;
+        let count = snap.size;
+        
+        if (count === 0) return { stars: "☆☆☆☆☆", count: 0 };
 
-  const formData = new FormData(e.target);
-
-  const data = {
-    fullname: formData.get("fullname"),
-    phone: formData.get("phone"),
-    address: formData.get("address"),
-    lineid: formData.get("lineid"),
-    worship: formData.get("worship") ? true : false,
-    study: formData.get("study") ? true : false
-  };
-
-  try {
-    const res = await fetch("https://bbcchurch.onrender.com/send", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify(data)
-    });
-
-    if (res.ok) {
-      alert("✅ ส่งข้อมูลเรียบร้อยแล้ว");
-      e.target.reset();
-    } else {
-      alert("❌ ส่งไม่สำเร็จ");
+        snap.forEach(doc => { total += doc.data().rating; });
+        const avg = Math.round(total / count);
+        let starStr = "";
+        for(let i=1; i<=5; i++) starStr += i <= avg ? "★" : "☆";
+        
+        return { stars: starStr, count: count };
+    } catch (error) {
+        console.error("Error fetching ratings:", error);
+        return { stars: "☆☆☆☆☆", count: 0 };
     }
-
-  } catch {
-    alert("❌ server error");
-  }
-});
-
-/* POPUP CONTROL */
-const popup = document.getElementById("qrPopup");
-
-document.getElementById("lineFloat").onclick = (e) => {
-  e.preventDefault();
-  popup.style.display = "flex";
-};
-
-document.getElementById("closePopup").onclick = () => {
-  popup.style.display = "none";
-};
-
-popup.onclick = (e) => {
-  if (e.target === popup) popup.style.display = "none";
-};
-
-function openQR(){
-  popup.style.display = "flex";
 }
 
+// 2. ส่วนการดึงข้อมูลบทความ/ข่าวสาร/คำเทศนา มาโชว์ที่หน้าแรก
+const qArticles = query(collection(db, "articles"), orderBy("createdAt", "desc"));
+
+onSnapshot(qArticles, (snap) => {
+    const containers = {
+        "📢 ข่าวสารคริสตจักร": document.getElementById('list-news'),
+        "🙏 คำพยานจากผู้เชื่อ": document.getElementById('list-testimony'),
+        "📖 บทความทั่วไป": document.getElementById('list-article'),
+        "🎙️ คำเทศนา (วิดีโอ)": document.getElementById('list-sermon')
+    };
+
+    // ล้างข้อมูลเก่าก่อนแสดงผลใหม่
+    Object.values(containers).forEach(el => { if(el) el.innerHTML = ""; });
+
+    // ใช้ for...of เพื่อรองรับการทำงานของ await ให้ออกมาตรงตามลำดับ
+    snap.forEach(async (doc) => {
+        const d = doc.data();
+        const targetDiv = containers[d.category]; 
+        
+        if (targetDiv) {
+            // ดึงข้อมูลดาวและคอมเมนต์สำหรับแต่ละเรื่อง
+            const ratingData = await getRatingData(doc.id);
+            
+            const img = d.thumbUrl || d.image || 'https://via.placeholder.com/400x250/0a2c6d/ffffff?text=BBC+CHURCH';
+            const youtubeIcon = d.youtubeUrl ? '📺 ' : '';
+            
+            // สร้าง Card HTML ที่มีทั้ง ดาว และ จำนวนคอมเมนต์
+            const cardHtml = `
+                <div class="card" onclick="location.href='article.html?id=${doc.id}'" style="cursor:pointer;">
+                    <img src="${img}">
+                    <div class="card-content">
+                        <div class="star-rating" style="color: #f1c40f; margin-bottom: 5px;">${ratingData.stars}</div>
+                        <h4 class="card-title" style="font-family:'Prompt'; font-size:18px; margin-bottom:8px;">${youtubeIcon}${d.title}</h4>
+                        <div class="card-meta" style="display:flex; justify-content:space-between; font-size:12px; color:#888;">
+                            <span>📅 ${d.displayDate || 'ไม่ระบุวันที่'}</span>
+                            <span class="comment-count" style="color:#4dabff;">💬 ${ratingData.count}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            targetDiv.insertAdjacentHTML('beforeend', cardHtml);
+        }
+    });
+});
+
+// 3. Slideshow Logic
+let cur = 0;
+setInterval(() => {
+    const slides = document.querySelectorAll('.slide');
+    if(slides.length < 2) return;
+    slides[cur].classList.remove('active');
+    cur = (cur + 1) % slides.length;
+    slides[cur].classList.add('active');
+}, 5000);
 </script>
 
 </body>
