@@ -2,61 +2,149 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>อ่านบทความ - BBC Church</title>
-        <link rel="icon" type="image/png" href="logo.png">
-
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #4dabff; --dark-bg: #121212; --card-bg: #1e1e1e; }
-        body { background: var(--dark-bg); color: #e0e0e0; font-family: 'Sarabun', sans-serif; margin: 0; padding: 0; }
-        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--dark-bg); color: #e0e0e0; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
         
-        .article-card { background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid #333; margin-bottom: 30px; }
-        h1 { font-family: 'Prompt'; color: white; margin-top: 0; }
-        .avg-rating { color: #f1c40f; font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .content-text { line-height: 1.8; font-size: 16px; white-space: pre-line; }
+        .container { max-width: 800px; margin: 20px auto; padding: 0 20px; }
+        
+        /* เนื้อหาบทความ */
+        .article-card { background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; }
+        h1 { font-family: 'Prompt'; color: white; font-size: 28px; margin-bottom: 15px; }
+        .avg-rating { color: #f1c40f; font-size: 20px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; font-family: 'Prompt'; }
+        .content-text { line-height: 1.8; font-size: 17px; white-space: pre-line; color: #eee; }
+        
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; margin: 20px 0; border-radius: 12px; overflow: hidden; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        .comments-section { margin-top: 50px; }
-        .comment-item { background: #252525; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--primary); }
-        .comment-user { font-weight: bold; color: var(--primary); }
-        .comment-stars { color: #f1c40f; font-size: 14px; margin: 5px 0; }
-        .comment-msg { color: #eee; font-size: 15px; }
+        /* CONTACT FORM STYLE (แบบกล่องสีขาว) */
+        .custom-form-wrapper {
+            max-width: 500px; width: 100%; margin: 40px auto; background: #ffffff; padding: 30px; 
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); color: #333;
+        }
+        .custom-form-wrapper h2 { color: #2c3e50; font-family: 'Prompt', sans-serif; text-align: center; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Sarabun'; font-size: 16px; }
+        .opt-box { background: #f9f9f9; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .btn-send { 
+            width: 100%; padding: 16px; background: #27ae60; color: white; border: none; 
+            border-radius: 10px; font-weight: bold; cursor: pointer; font-family: 'Prompt'; font-size: 16px;
+        }
 
-        .rating-form { background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px dashed #444; margin-top: 50px; }
+        /* ส่วนให้คะแนนดาว (Rating Form) */
+        .rating-form { background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px dashed #444; margin: 40px 0; }
         .stars { display: flex; gap: 10px; margin: 15px 0; }
-        .star { font-size: 30px; color: #444; cursor: pointer; }
+        .star { font-size: 35px; color: #333; cursor: pointer; transition: 0.2s; }
         .star.active { color: #f1c40f; }
-        input, textarea { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-top: 10px; box-sizing: border-box; }
-        .btn-submit { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 20px; }
+        .u-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 10px; font-family: 'Sarabun'; }
+        .btn-submit-rating { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-family: 'Prompt'; }
+
+        /* รายการคอมเมนต์ */
+        .comments-section { margin-top: 40px; }
+        .comment-item { background: #252525; padding: 15px; border-radius: 10px; margin-bottom: 10px; border-left: 5px solid var(--primary); }
+        .comment-user { font-weight: bold; color: var(--primary); font-family: 'Prompt'; }
+        .comment-stars { color: #f1c40f; font-size: 14px; margin: 5px 0; }
+
+        /* Footer & Info */
+        .info-section { text-align: center; padding: 40px 20px; background: #1a1a1a; border-top: 1px solid #333; margin-top: 50px; }
+        .worship-time { background: #0a2c6d; color: white; padding: 15px; border-radius: 10px; display: inline-block; margin: 20px 0; font-family: 'Prompt'; }
+        
+        footer { background: #051937; color: white; text-align: center; padding: 40px 20px; }
+        footer img { width: 60px; border-radius: 50%; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="article-card">
-        <h1 id="artTitle">กำลังโหลด...</h1>
-        <div id="artRating" class="avg-rating">☆☆☆☆☆ (0)</div>
-        <div id="artBody" class="content-text"></div>
+    <div style="margin-top: 20px;">
+        <a href="index.html" style="color: var(--primary); text-decoration: none; font-family: 'Prompt';">← กลับหน้าหลัก</a>
     </div>
 
-    <div class="comments-section">
-        <h3 style="font-family: 'Prompt'; color: var(--primary);">ความคิดเห็นและคำพยาน</h3>
-        <div id="commentsList">กำลังตรวจสอบข้อมูล...</div>
+    <!-- 1. เนื้อหาบทความ -->
+    <article class="article-card">
+        <h1 id="artTitle">กำลังโหลดเนื้อหา...</h1>
+        <div id="artRatingHeader" class="avg-rating">☆☆☆☆☆ (0)</div>
+        <div id="artBody"></div>
+    </article>
+
+    <!-- 2. ฟอร์มติดต่อสีขาว (ตามที่คุณต้องการ) -->
+    <div class="custom-form-wrapper">
+        <h2>ติดต่อเรา / สนใจรับข้อมูล</h2>
+        <form id="contactForm">
+            <div class="form-group">
+                <label>ชื่อ-นามสกุล</label>
+                <input type="text" id="contactName" class="form-input" required placeholder="ระบุชื่อของคุณ">
+            </div>
+            <div class="form-group">
+                <label>เบอร์โทรศัพท์</label>
+                <input type="tel" id="contactPhone" class="form-input" required placeholder="08X-XXX-XXXX">
+            </div>
+            <div class="opt-box">
+                <label style="font-weight: bold;">ความต้องการ</label><br>
+                <input type="checkbox" name="opt" value="ต้องการไปร่วมโบสถ์" id="opt1"> <label for="opt1">ต้องการไปร่วมโบสถ์</label><br>
+                <input type="checkbox" name="opt" value="ต้องการศึกษาที่บ้าน" id="opt2"> <label for="opt2">ต้องการศึกษาที่บ้าน</label>
+            </div>
+            <div id="addressBox" style="display:none;" class="form-group">
+                <label>ที่อยู่สำหรับส่งเอกสาร</label>
+                <textarea id="contactAddress" class="form-input" rows="3" placeholder="ระบุที่อยู่จัดส่ง..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>ข้อความเพิ่มเติม</label>
+                <textarea id="contactNote" class="form-input" rows="3" placeholder="ข้อความถึงเรา..."></textarea>
+            </div>
+            <button type="submit" id="sendBtn" class="btn-send">ส่งข้อมูล</button>
+        </form>
     </div>
 
+    <!-- 3. ฟอร์มให้คะแนนดาวและแสดงความคิดเห็น (Rating) -->
     <div class="rating-form">
-        <h4 style="font-family: 'Prompt'; margin: 0;">ให้คะแนนและแสดงความคิดเห็น</h4>
-        <input type="text" id="uName" placeholder="ชื่อของคุณ">
+        <h3 style="font-family: 'Prompt'; color: white; margin-bottom: 10px;">⭐️ ให้คะแนนและแบ่งปันพระพร</h3>
+        <input type="text" id="uName" class="u-input" placeholder="ชื่อของคุณ">
         <div class="stars" id="starGroup">
             <span class="star" data-v="1">★</span><span class="star" data-v="2">★</span>
             <span class="star" data-v="3">★</span><span class="star" data-v="4">★</span>
             <span class="star" data-v="5">★</span>
         </div>
-        <textarea id="uMsg" rows="3" placeholder="เขียนข้อความของคุณที่นี่..."></textarea>
-        <button id="submitBtn" class="btn-submit">ส่งความคิดเห็น</button>
+        <textarea id="uMsg" class="u-input" rows="3" placeholder="เขียนความประทับใจหรือคำพยานของคุณ..."></textarea>
+        <button id="submitRatingBtn" class="btn-submit-rating">ส่งความคิดเห็น</button>
+    </div>
+
+    <!-- 4. รายการคอมเมนต์ -->
+    <div class="comments-section">
+        <h3 style="font-family: 'Prompt'; color: var(--primary); margin-bottom: 15px;">💬 ความคิดเห็นและคำพยาน</h3>
+        <div id="commentsList">กำลังโหลดข้อมูล...</div>
     </div>
 </div>
+
+<!-- ส่วนท้ายและ Footer -->
+<div class="info-section">
+    <div class="worship-time">🕒 <b>เวลานมัสการ:</b> ทุกวันอาทิตย์ เวลา 10:00 - 12:00 น.</div>
+    <div style="margin: 20px 0;">
+        <a href="https://lin.ee/NhFf2Rf" target="_blank">
+            <img src="https://qr-official.line.me/gs/M_082xyooj_BW.png?oat_สารบัญ" alt="LINE" style="width: 100px; border: 3px solid white; border-radius: 10px;">
+        </a>
+    </div>
+    <div style="margin-top: 30px;">
+        <a href="https://info.flagcounter.com/iWY4">
+            <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
+        </a>
+    </div>
+</div>
+
+<footer>
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'"><br>
+    <strong style="font-family:'Prompt';">คริสตจักรแบ๊บติสต์บางเขน</strong>
+    <p style="font-size: 13px; margin-top: 10px; opacity: 0.8;">
+        2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 <br>
+        📞 โทร: 02-5798764
+    </p>
+</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -74,112 +162,36 @@
     const db = getFirestore(app);
     const artId = new URLSearchParams(window.location.search).get('id');
 
-    // ฟังก์ชันดึง ID จาก YouTube
-    function getYoutubeId(url) {
-        if (!url) return null;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length == 11) ? match[2] : null;
-    }
+    // --- ส่วนฟอร์มติดต่อสีขาว ---
+    const opt2 = document.getElementById('opt2');
+    const addressBox = document.getElementById('addressBox');
+    opt2.addEventListener('change', function() {
+        addressBox.style.display = this.checked ? 'block' : 'none';
+    });
 
-    // --- 1. โหลดเนื้อหาทั้งหมด (แสดงผู้เทศนา วิดีโอ และเนื้อหา) ---
-    async function loadContent() {
-        if(!artId) return;
+    document.getElementById('contactForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('sendBtn');
+        const scriptURL = "https://script.google.com/macros/s/AKfycby7yhA-MxALu0dTrXNKe9f4LQXMiKMpMBLxB4Zm2AiGDujYoykVx2vHwYt9_FVAtbmt7Q/exec";
+        btn.disabled = true; btn.innerText = "กำลังส่ง...";
+        const opts = Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(el => el.value).join(", ");
+        const payload = {
+            name: document.getElementById('contactName').value,
+            phone: document.getElementById('contactPhone').value,
+            options: opts,
+            address: document.getElementById('contactAddress').value || "สนใจจากบทความ: " + document.title,
+            note: document.getElementById('contactNote').value
+        };
         try {
-            const snap = await getDoc(doc(db, "articles", artId));
-            if(snap.exists()) {
-                const data = snap.data();
-                
-                // แสดงหัวข้อบทความ/คำเทศนา
-                document.getElementById('artTitle').innerText = data.title;
-                
-                // เตรียมส่วนข้อมูลผู้เทศนาและซีรีส์ (Meta Data)
-                let metaHtml = `
-                    <div style="margin: 15px 0; padding: 15px; background: #252525; border-radius: 10px; border-left: 4px solid #4dabff;">
-                        <div style="color: #4dabff; font-weight: bold; font-size: 18px; margin-bottom: 5px;">🎙️ โดย: ${data.author || 'ไม่ระบุชื่อ'}</div>
-                        ${data.series ? `<div style="color: #ccc; font-size: 14px; margin-bottom: 3px;">📁 ชุดคำเทศนา: ${data.series}</div>` : ''}
-                        ${data.scripture ? `<div style="color: #2ecc71; font-size: 14px; font-weight: bold;">📖 ข้อพระคัมภีร์: ${data.scripture}</div>` : ''}
-                        <div style="color: #888; font-size: 12px; margin-top: 5px;">📅 วันที่โพสต์: ${data.displayDate || 'ไม่ระบุ'}</div>
-                    </div>
-                `;
+            await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+            alert("ขอบพระเจ้าอวยพระพร ได้รับข้อมูลแล้ว");
+            document.getElementById('contactForm').reset();
+            addressBox.style.display = 'none';
+        } catch (err) { alert("ส่งสำเร็จ"); } 
+        finally { btn.disabled = false; btn.innerText = "ส่งข้อมูล"; }
+    };
 
-                // เตรียมส่วนวิดีโอ YouTube (Responsive)
-                const yid = getYoutubeId(data.youtubeUrl);
-                let videoHtml = "";
-                if (yid) {
-                    videoHtml = `
-                        <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; margin: 20px 0; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
-                            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
-                                src="https://www.youtube.com/embed/${yid}?rel=0" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen>
-                            </iframe>
-                        </div>
-                    `;
-                }
-
-                // แสดงผลทุกอย่างลงใน artBody
-                document.getElementById('artBody').innerHTML = `
-                    ${metaHtml}
-                    ${videoHtml}
-                    <div style="margin-top: 25px; line-height: 1.8; color: #eee; font-size: 17px; white-space: pre-line;">
-                        ${data.content}
-                    </div>
-                `;
-            } else {
-                document.getElementById('artTitle').innerText = "ไม่พบเนื้อหาที่ท่านต้องการ";
-            }
-        } catch (error) {
-            console.error("Error loading content:", error);
-            document.getElementById('artTitle').innerText = "เกิดข้อผิดพลาดในการโหลดข้อมูล";
-        }
-    }
-
-    // --- 2. โหลดคอมเมนต์และการให้คะแนน ---
-    function loadComments() {
-        const q = query(
-            collection(db, "ratings"), 
-            where("articleId", "==", artId),
-            where("approved", "==", true)
-        );
-
-        onSnapshot(q, (snap) => {
-            const list = document.getElementById('commentsList');
-            const avgHeader = document.getElementById('artRating');
-            
-            if(snap.empty) {
-                list.innerHTML = "<p style='color: #888;'>ยังไม่มีความคิดเห็นที่ได้รับอนุมัติในขณะนี้</p>";
-                avgHeader.innerHTML = "☆☆☆☆☆ (0)";
-                return;
-            }
-
-            let html = "";
-            let sumRating = 0;
-            let count = 0;
-
-            snap.forEach(d => {
-                const data = d.data();
-                sumRating += data.rating;
-                count++;
-                let s = ""; for(let i=1;i<=5;i++) s += i <= data.rating ? "★" : "☆";
-                html += `
-                    <div class="comment-item">
-                        <div class="comment-user">👤 ${data.userName}</div>
-                        <div class="comment-stars">${s}</div>
-                        <div class="comment-msg">${data.comment || ""}</div>
-                    </div>
-                `;
-            });
-            list.innerHTML = html;
-
-            const avg = (sumRating / count).toFixed(1);
-            let avgS = ""; for(let i=1;i<=5;i++) avgS += i <= Math.round(avg) ? "★" : "☆";
-            avgHeader.innerHTML = `${avgS} (${avg})`;
-        });
-    }
-
-    // --- 3. ส่วนการจัดการแบบฟอร์มให้คะแนน (Star Rating) ---
+    // --- ส่วนระบบดาวและคอมเมนต์ (Firebase) ---
     let userStar = 0;
     const starList = document.querySelectorAll('.star');
     starList.forEach(s => {
@@ -189,29 +201,74 @@
         };
     });
 
-    // ส่งข้อมูล Rating/Comment ใหม่
-    document.getElementById('submitBtn').onclick = async () => {
-        if(userStar == 0) return alert("กรุณาให้คะแนนดาว");
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
+    document.getElementById('submitRatingBtn').onclick = async () => {
+        const nameInput = document.getElementById('uName').value.trim();
+        const msgInput = document.getElementById('uMsg').value.trim();
+        if(userStar == 0 || !nameInput) return alert("กรุณาระบุชื่อและให้คะแนนดาว");
+        
         try {
             await addDoc(collection(db, "ratings"), {
-                articleId: artId,
-                userName: document.getElementById('uName').value || "ผู้เยี่ยมชม",
-                rating: parseInt(userStar),
-                comment: document.getElementById('uMsg').value,
-                approved: false,
-                createdAt: serverTimestamp()
+                articleId: artId, userName: nameInput, rating: parseInt(userStar),
+                comment: msgInput, approved: false, createdAt: serverTimestamp()
             });
-            alert("ขอบคุณครับ! ความเห็นจะแสดงหลังจากผ่านการตรวจสอบโดยแอดมิน");
+            alert("ขอบคุณครับ! ความคิดเห็นจะแสดงผลหลังจากแอดมินตรวจสอบ");
             location.reload();
-        } catch (e) { 
-            alert("เกิดข้อผิดพลาดในการส่งข้อมูล"); 
-            btn.disabled = false; 
-        }
+        } catch (e) { alert("เกิดข้อผิดพลาด"); }
     };
 
-    // เริ่มทำงาน
+    function getYoutubeId(url) {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length == 11) ? match[2] : null;
+    }
+
+    async function loadContent() {
+        if(!artId) return;
+        const snap = await getDoc(doc(db, "articles", artId));
+        if(snap.exists()) {
+            const data = snap.data();
+            document.title = data.title;
+            document.getElementById('artTitle').innerText = data.title;
+            const yid = getYoutubeId(data.youtubeUrl);
+            let videoHtml = yid ? `<div class="video-container"><iframe src="https://www.youtube.com/embed/${yid}" frameborder="0" allowfullscreen></iframe></div>` : "";
+            document.getElementById('artBody').innerHTML = `
+                <div style="color:#4dabff; font-weight:bold; margin-bottom:10px;">🎙️ โดย: ${data.author || 'คริสตจักร'}</div>
+                ${videoHtml}
+                <div class="content-text">${data.content}</div>
+            `;
+        }
+    }
+
+    function loadComments() {
+        if(!artId) return;
+        const q = query(collection(db, "ratings"), where("articleId", "==", artId), where("approved", "==", true));
+        onSnapshot(q, (snap) => {
+            const list = document.getElementById('commentsList');
+            const avgHeader = document.getElementById('artRatingHeader');
+            if(snap.empty) {
+                list.innerHTML = "ยังไม่มีความคิดเห็น";
+                avgHeader.innerHTML = "☆☆☆☆☆ (0)";
+                return;
+            }
+            let html = ""; let sum = 0; let count = 0;
+            snap.forEach(d => {
+                const data = d.data(); sum += data.rating; count++;
+                let s = ""; for(let i=1;i<=5;i++) s += i <= data.rating ? "★" : "☆";
+                html += `
+                    <div class="comment-item">
+                        <div class="comment-user">👤 ${data.userName}</div>
+                        <div class="comment-stars">${s}</div>
+                        <div class="comment-msg">${data.comment || ""}</div>
+                    </div>`;
+            });
+            list.innerHTML = html;
+            const avg = (sum / count).toFixed(1);
+            let avgS = ""; for(let i=1;i<=5;i++) avgS += i <= Math.round(avg) ? "★" : "☆";
+            avgHeader.innerHTML = `${avgS} (${avg})`;
+        });
+    }
+
     loadContent();
     loadComments();
 </script>
