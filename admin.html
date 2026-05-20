@@ -23,16 +23,23 @@
         .preview-box img { max-height: 100px; max-width: 100%; border-radius: 5px; object-fit: contain; }
         .btn-save { width: 100%; padding: 20px; background: var(--success); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.3s; margin-top: 20px; }
         .btn-save:disabled { background: #555; color: #aaa; cursor: not-allowed; }
-        .article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        
+        /* สไตล์สำหรับการแบ่งหมวดหมู่แบบแยกบล็อก */
+        .category-section { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #333; }
+        .category-header { display: flex; align-items: center; justify-content: space-between; background: #252525; padding: 10px 15px; border-left: 4px solid var(--primary); border-radius: 4px; margin-bottom: 15px; }
+        .category-header h3 { margin: 0; font-family: 'Prompt'; font-size: 16px; color: #fff; }
+        .category-count { background: var(--accent); font-size: 12px; padding: 2px 8px; border-radius: 20px; }
+
+        .article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
         .article-card { background: #2a2a2a; border-radius: 12px; overflow: hidden; border: 1px solid #3d3d3d; display: flex; flex-direction: column; }
-        .article-thumb { width: 100%; height: 160px; background: #111; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .article-thumb { width: 100%; height: 130px; background: #111; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .article-thumb img { width: 100%; height: 100%; object-fit: cover; }
-        .article-info { padding: 15px; flex-grow: 1; }
-        .article-info h4 { margin: 0 0 8px 0; color: #fff; font-size: 16px; }
-        .article-btns { display: flex; gap: 8px; padding: 12px; background: rgba(0,0,0,0.2); }
-        .btn-edit { flex: 1; background: #444; color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; }
-        .btn-del { background: var(--danger); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; }
-        .category-group-title { background: var(--accent); color: white; padding: 10px 20px; border-radius: 8px; margin: 30px 0 15px 0; font-family: 'Prompt'; font-size: 18px; }
+        .article-info { padding: 12px; flex-grow: 1; }
+        .article-info h4 { margin: 0 0 6px 0; color: #fff; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .article-info-meta { font-size: 12px; color: #aaa; margin-top: 4px; display: flex; justify-content: space-between; }
+        .article-btns { display: flex; gap: 6px; padding: 10px; background: rgba(0,0,0,0.2); }
+        .btn-edit { flex: 1; background: #444; color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+        .btn-del { background: #c0392b; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 
         /* สไตล์ตาราง QC ความคิดเห็น */
         .comment-table-container { width: 100%; overflow-x: auto; margin-top: 15px; }
@@ -47,7 +54,6 @@
         .btn-approve { background: #27ae60; color: white; }
         .btn-reject { background: #c0392b; color: white; }
 
-        /* สไตล์กล่องสถิติดาวในบทความ */
         .article-stats { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #444; font-size: 12px; color: #aaa; }
         .stat-stars { color: #f1c40f; font-weight: bold; }
     </style>
@@ -55,6 +61,7 @@
 <body>
 
 <div class="container">
+    <!-- ฟอร์มจัดการเนื้อหา (ไม่มีช่องเลือกสถานะรออนุมัติแล้ว) -->
     <div class="form-card">
         <h2 id="formHeader">✍️ จัดการเนื้อหา (อัปโหลดรูปภาพจากเครื่อง & ลิ้งก์ YouTube)</h2>
         <form id="postForm">
@@ -83,13 +90,6 @@
                         <select id="authorName"><option value="คริสตจักร">คริสตจักร</option></select>
                         <button type="button" class="btn-add-inline" onclick="addNewAuthor()">+</button>
                     </div>
-                </div>
-                <div>
-                    <label>สถานะการแสดงผล</label>
-                    <select id="status">
-                        <option value="pending">⏳ รอตรวจสอบ (Pending)</option>
-                        <option value="published">✅ อนุมัติ (Published)</option>
-                    </select>
                 </div>
             </div>
 
@@ -128,13 +128,14 @@
                 <textarea id="extraContent" rows="3"></textarea>
             </div>
 
-            <button type="submit" class="btn-save" id="btnSubmit">🚀 บันทึกข้อมูลและอัปโหลดรูปภาพทั้งหมด</button>
+            <button type="submit" class="btn-save" id="btnSubmit">🚀 บันทึกข้อมูลและแสดงผลทันที</button>
             <button type="button" onclick="resetForm()" style="width:100%; background:none; border:none; color:#888; cursor:pointer; margin-top:10px;">ยกเลิกการแก้ไข</button>
         </form>
     </div>
 
+    <!-- ศูนย์ตรวจสอบความคิดเห็นของผู้เข้าชมเว็บ (ยังคงการตรวจสอบและอนุมัติไว้) -->
     <div class="form-card">
-        <h2>⭐️ ศูนย์คัดกรองคุณภาพ (QC Comments & Ratings)</h2>
+        <h2>⭐️ ศูนย์คัดกรองคุณภาพ (QC Comments & Ratings จากผู้เข้าชม)</h2>
         <div class="comment-table-container">
             <table class="comment-table">
                 <thead>
@@ -154,15 +155,50 @@
         </div>
     </div>
 
+    <!-- บล็อกรายการแยกตามหมวดหมู่ชัดเจนเห็นได้ง่าย -->
     <div class="form-card">
-        <h2>📑 รายการเนื้อหา (แยกตามหมวดหมู่ > ผู้แต่ง > เวลา)</h2>
-        <div id="articleContainer">กำลังโหลดข้อมูล...</div>
+        <h2>📑 รายการเนื้อหาทั้งหมดภายในเว็บไซต์</h2>
+        
+        <!-- ข่าวสารคริสตจักร -->
+        <div class="category-section">
+            <div class="category-header">
+                <h3>📢 ข่าวสารคริสตจักร</h3>
+                <span class="category-count" id="count-news">0 รายการ</span>
+            </div>
+            <div class="article-grid" id="grid-news"></div>
+        </div>
+
+        <!-- คำพยานชีวิต -->
+        <div class="category-section">
+            <div class="category-header">
+                <h3>🌟 คำพยานชีวิต</h3>
+                <span class="category-count" id="count-testimony">0 รายการ</span>
+            </div>
+            <div class="article-grid" id="grid-testimony"></div>
+        </div>
+
+        <!-- คำเทศนา -->
+        <div class="category-section">
+            <div class="category-header">
+                <h3>🎙️ คำเทศนา (วิดีโอ)</h3>
+                <span class="category-count" id="count-sermon">0 ราย放</span>
+            </div>
+            <div class="article-grid" id="grid-sermon"></div>
+        </div>
+
+        <!-- บทความทั่วไป -->
+        <div class="category-section">
+            <div class="category-header">
+                <h3>📖 บทความทั่วไป</h3>
+                <span class="category-count" id="count-general">0 รายการ</span>
+            </div>
+            <div class="article-grid" id="grid-general"></div>
+        </div>
     </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-
 import {
     getFirestore,
     collection,
@@ -174,7 +210,6 @@ import {
     getDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
 import {
     getStorage,
     ref,
@@ -186,30 +221,21 @@ const firebaseConfig = {
     apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
     authDomain: "bbcchurch-6ffc3.firebaseapp.com",
     projectId: "bbcchurch-6ffc3",
-
-    // ✅ แก้ตรงนี้สำคัญมาก
     storageBucket: "bbcchurch-6ffc3.firebasestorage.app",
-
     appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 const storage = getStorage(app);
 
 let allArticles = [];
-let allComments = [];
-
-
 
 // =========================
-// Preview
+// Preview Image
 // =========================
-
 window.forcePreview = (url, id) => {
     const box = document.getElementById(id);
-
     if(url){
         box.innerHTML = `<img src="${url}">`;
     }else{
@@ -217,532 +243,303 @@ window.forcePreview = (url, id) => {
     }
 };
 
-
-
 // =========================
 // Upload Helper
 // =========================
-
 async function uploadImageHelper(fileInputId, hiddenInputId, previewId){
-
     const fileInput = document.getElementById(fileInputId);
-
-    // ไม่มีไฟล์ใหม่
     if(fileInput.files.length === 0){
         return document.getElementById(hiddenInputId).value || "";
     }
-
     const file = fileInput.files[0];
-
-    // จำกัดขนาด 5MB
-    if(file.size > 5 * 1024 * 1024){
-        throw new Error("ไฟล์ใหญ่เกิน 5MB");
-    }
-
-    // ตรวจชนิดไฟล์
-    if(!file.type.startsWith("image/")){
-        throw new Error("อนุญาตเฉพาะไฟล์รูปภาพ");
-    }
+    if(file.size > 5 * 1024 * 1024){ throw new Error("ไฟล์ใหญ่เกิน 5MB"); }
+    if(!file.type.startsWith("image/")){ throw new Error("อนุญาตเฉพาะไฟล์รูปภาพ"); }
 
     const fileName = `uploads/${Date.now()}_${file.name}`;
-
     const storageRef = ref(storage, fileName);
 
     return new Promise((resolve, reject)=>{
-
         const uploadTask = uploadBytesResumable(storageRef, file);
-
         uploadTask.on(
             "state_changed",
-
             (snapshot)=>{
-
-                const progress = (
-                    snapshot.bytesTransferred /
-                    snapshot.totalBytes
-                ) * 100;
-
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                 document.getElementById(previewId).innerHTML = `
                     <div style="padding:10px;">
-                        <div style="margin-bottom:8px;">
-                            ⏳ อัปโหลด ${progress.toFixed(0)}%
+                        <div style="margin-bottom:8px;">⏳ อัปโหลด ${progress.toFixed(0)}%</div>
+                        <div style="width:100%; height:10px; background:#333; border-radius:20px; overflow:hidden;">
+                            <div style="width:${progress}%; height:100%; background:#4dabff;"></div>
                         </div>
-
-                        <div style="
-                            width:100%;
-                            height:10px;
-                            background:#333;
-                            border-radius:20px;
-                            overflow:hidden;
-                        ">
-                            <div style="
-                                width:${progress}%;
-                                height:100%;
-                                background:#4dabff;
-                            "></div>
-                        </div>
-                    </div>
-                `;
+                    </div>`;
             },
-
-            (error)=>{
-                console.error(error);
-                reject(error);
-            },
-
+            (error)=>{ reject(error); },
             async ()=>{
-
                 const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-
                 document.getElementById(hiddenInputId).value = downloadURL;
-
                 forcePreview(downloadURL, previewId);
-
                 resolve(downloadURL);
             }
         );
     });
 }
 
-
-
-// =========================
-// Local Preview
-// =========================
-
 function setupLocalPreview(fileId, preId){
-
-    document.getElementById(fileId)
-    .addEventListener("change", function(){
-
+    document.getElementById(fileId).addEventListener("change", function(){
         if(this.files && this.files[0]){
-
             const reader = new FileReader();
-
             reader.onload = function(e){
-
                 document.getElementById(preId).innerHTML = `
-                    <img 
-                        src="${e.target.result}"
-                        style="
-                            max-width:100%;
-                            max-height:120px;
-                            border-radius:8px;
-                        "
-                    >
-                    <div style="
-                        margin-top:8px;
-                        color:#4dabff;
-                        font-size:12px;
-                    ">
-                        พร้อมอัปโหลด
-                    </div>
-                `;
+                    <img src="${e.target.result}" style="max-width:100%; max-height:120px; border-radius:8px;">
+                    <div style="margin-top:8px; color:#4dabff; font-size:12px;">พร้อมอัปโหลด</div>`;
             };
-
             reader.readAsDataURL(this.files[0]);
         }
     });
 }
-
 setupLocalPreview("thumbFile", "pre1");
 setupLocalPreview("arc1File", "pre2");
 setupLocalPreview("arc2File", "pre3");
 
-
-
 // =========================
-// Authors
+// Realtime Authors
 // =========================
-
 onSnapshot(collection(db, "authors"), (snap)=>{
-
     const select = document.getElementById("authorName");
-
-    select.innerHTML = `
-        <option value="คริสตจักร">
-            คริสตจักร
-        </option>
-    `;
-
+    select.innerHTML = `<option value="คริสตจักร">คริสตจักร</option>`;
     snap.forEach((d)=>{
-
         const data = d.data();
-
-        select.innerHTML += `
-            <option value="${data.name}">
-                ${data.name}
-            </option>
-        `;
+        select.innerHTML += `<option value="${data.name}">${data.name}</option>`;
     });
 });
-
-
 
 window.addNewAuthor = async ()=>{
-
     const name = prompt("ชื่อผู้แต่งใหม่");
-
     if(!name) return;
-
-    await addDoc(collection(db, "authors"), {
-        name,
-        createdAt: serverTimestamp()
-    });
+    await addDoc(collection(db, "authors"), { name, createdAt: serverTimestamp() });
 };
 
-
-
 // =========================
-// Articles Realtime
+// Realtime Articles
 // =========================
-
 onSnapshot(collection(db, "articles"), (snap)=>{
-
     allArticles = [];
-
     snap.forEach((d)=>{
-
-        allArticles.push({
-            id: d.id,
-            ...d.data()
-        });
+        allArticles.push({ id: d.id, ...d.data() });
     });
-
-    renderArticles();
+    renderArticlesByCategories();
 });
 
-
-
 // =========================
-// Render Articles
+// Render Articles (แยกหมวดหมู่ชัดเจน)
 // =========================
+window.renderArticlesByCategories = () => {
+    const categories = {
+        "📢 ข่าวสารคริสตจักร": { grid: document.getElementById("grid-news"), count: document.getElementById("count-news"), list: [] },
+        "🌟 คำพยานชีวิต": { grid: document.getElementById("grid-testimony"), count: document.getElementById("count-testimony"), list: [] },
+        "🎙️ คำเทศนา (วิดีโอ)": { grid: document.getElementById("grid-sermon"), count: document.getElementById("count-sermon"), list: [] },
+        "📖 บทความทั่วไป": { grid: document.getElementById("grid-general"), count: document.getElementById("count-general"), list: [] }
+    };
 
-window.renderArticles = ()=>{
-
-    const container = document.getElementById("articleContainer");
-
-    container.innerHTML = "";
-
-    if(allArticles.length === 0){
-
-        container.innerHTML = `
-            <div style="color:#888;">
-                ยังไม่มีบทความ
-            </div>
-        `;
-
-        return;
-    }
-
-    allArticles.sort((a,b)=>
-        new Date(b.displayDate) - new Date(a.displayDate)
-    );
-
-    const grid = document.createElement("div");
-
-    grid.className = "article-grid";
-
-    allArticles.forEach((r)=>{
-
-        const card = document.createElement("div");
-
-        card.className = "article-card";
-
-        card.innerHTML = `
-            <div class="article-thumb">
-                ${
-                    r.thumbUrl
-                    ? `<img src="${r.thumbUrl}">`
-                    : "🖼️"
-                }
-            </div>
-
-            <div class="article-info">
-
-                <h4>${r.title || "-"}</h4>
-
-                <div style="
-                    font-size:13px;
-                    color:#999;
-                    margin-top:5px;
-                ">
-                    ${r.displayDate || "-"}
-                </div>
-
-                <div style="
-                    margin-top:10px;
-                    color:${
-                        r.status === "published"
-                        ? "#27ae60"
-                        : "#e67e22"
-                    };
-                    font-size:13px;
-                    font-weight:bold;
-                ">
-                    ${
-                        r.status === "published"
-                        ? "✅ อนุมัติแล้ว"
-                        : "⏳ รอตรวจสอบ"
-                    }
-                </div>
-
-            </div>
-
-            <div class="article-btns">
-                <button
-                    class="btn-edit"
-                    onclick="editArt('${r.id}')"
-                >
-                    แก้ไข
-                </button>
-
-                <button
-                    class="btn-del"
-                    onclick="delArt('${r.id}')"
-                >
-                    ลบ
-                </button>
-            </div>
-        `;
-
-        grid.appendChild(card);
+    // ล้างข้อมูลเก่าใน Grid ทั้งหมด
+    Object.keys(categories).forEach(key => {
+        categories[key].grid.innerHTML = "";
     });
 
-    container.appendChild(grid);
+    // เรียงวันที่ล่าสุดขึ้นก่อน
+    allArticles.sort((a,b) => new Date(b.displayDate) - new Date(a.displayDate));
+
+    // แยกกลุ่มข้อมูลเข้า Array หมวดหมู่ของตัวเอง
+    allArticles.forEach(art => {
+        if (categories[art.category]) {
+            categories[art.category].list.push(art);
+        } else {
+            // ป้องกันกรณีตัวสะกดหมวดหมู่ในดาทาเบสไม่ตรง ให้ลงกลุ่มบทความทั่วไปไว้ก่อน
+            categories["📖 บทความทั่วไป"].list.push(art);
+        }
+    });
+
+    // วาด Card ลงแต่ละหน้าต่างหมวดหมู่
+    Object.keys(categories).forEach(key => {
+        const cat = categories[key];
+        cat.count.innerText = `${cat.list.length} รายการ`;
+
+        if (cat.list.length === 0) {
+            cat.grid.innerHTML = `<div style="color:#666; font-size:13px; padding:10px;">ไม่มีข้อมูลในหมวดหมู่นี้</div>`;
+            return;
+        }
+
+        cat.list.forEach(r => {
+            const card = document.createElement("div");
+            card.className = "article-card";
+            card.innerHTML = `
+                <div class="article-thumb">
+                    ${r.thumbUrl ? `<img src="${r.thumbUrl}">` : "🖼️"}
+                </div>
+                <div class="article-info">
+                    <h4>${r.title || "-"}</h4>
+                    <div class="article-info-meta">
+                        <span>👤 ${r.authorName || "-"}</span>
+                        <span>📅 ${r.displayDate || "-"}</span>
+                    </div>
+                </div>
+                <div class="article-btns">
+                    <button class="btn-edit" onclick="editArt('${r.id}')">แก้ไข</button>
+                    <button class="btn-del" onclick="delArt('${r.id}')">ลบ</button>
+                </div>
+            `;
+            cat.grid.appendChild(card);
+        });
+    });
 };
 
+// =========================
+// Realtime Comments (ส่วนของผู้ชมที่ยังต้อง Approve)
+// =========================
+onSnapshot(collection(db, "comments"), (snap) => {
+    const tbody = document.getElementById("commentTableBody");
+    tbody.innerHTML = "";
+    
+    let hasComments = false;
+    snap.forEach((d) => {
+        hasComments = true;
+        const comment = { id: d.id, ...d.data() };
+        const tr = document.createElement("tr");
+        
+        let statusBadge = comment.status === "approved" 
+            ? `<span class="badge badge-approved">✅ อนุมัติแล้ว</span>`
+            : `<span class="badge badge-pending">⏳ รอตรวจสอบ</span>`;
+            
+        let actionButtons = comment.status !== "approved"
+            ? `<button class="btn-action btn-approve" onclick="approveComment('${comment.id}')">อนุมัติ</button>`
+            : ``;
+        actionButtons += `<button class="btn-action btn-reject" onclick="deleteComment('${comment.id}')">ลบ</button>`;
 
+        tr.innerHTML = `
+            <td><strong>${comment.articleTitle || "ไม่ระบุเรื่อง"}</strong></td>
+            <td>${comment.visitorName || "ผู้เยี่ยมชมทั่วไป"}</td>
+            <td><span class="stat-stars">⭐ ${comment.rating || 0}</span></td>
+            <td>${comment.text || "-"}</td>
+            <td>${statusBadge}</td>
+            <td>${actionButtons}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    if(!hasComments) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">ไม่มีข้อมูลความคิดเห็นที่ส่งเข้ามา</td></tr>`;
+    }
+});
+
+window.approveComment = async (id) => {
+    try {
+        await updateDoc(doc(db, "comments", id), { status: "approved" });
+        alert("อนุมัติความคิดเห็นเรียบร้อยแล้ว");
+    } catch(err) { alert("เกิดข้อผิดพลาด: " + err.message); }
+};
+
+window.deleteComment = async (id) => {
+    if(confirm("ต้องการลบความคิดเห็นนี้ใช่หรือไม่?")) {
+        await deleteDoc(doc(db, "comments", id));
+    }
+};
 
 // =========================
-// Submit Form
+// Submit Form (อัปโหลดเนื้อหา - บันทึกแล้วแสดงผลทันที)
 // =========================
-
-document.getElementById("postForm")
-.onsubmit = async (e)=>{
-
+document.getElementById("postForm").onsubmit = async (e)=>{
     e.preventDefault();
-
     const btn = document.getElementById("btnSubmit");
-
     btn.disabled = true;
-
-    btn.innerText = "⏳ กำลังอัปโหลด...";
+    btn.innerText = "⏳ กำลังบันทึกข้อมูล...";
 
     try{
-
-        // upload รูป
-        const thumbUrl = await uploadImageHelper(
-            "thumbFile",
-            "thumbUrl",
-            "pre1"
-        );
-
-        const arc1 = await uploadImageHelper(
-            "arc1File",
-            "arc1",
-            "pre2"
-        );
-
-        const arc2 = await uploadImageHelper(
-            "arc2File",
-            "arc2",
-            "pre3"
-        );
-
+        const thumbUrl = await uploadImageHelper("thumbFile", "thumbUrl", "pre1");
+        const arc1 = await uploadImageHelper("arc1File", "arc1", "pre2");
+        const arc2 = await uploadImageHelper("arc2File", "arc2", "pre3");
         const id = document.getElementById("editId").value;
 
         const data = {
-
-            displayDate:
-                document.getElementById("customDate").value,
-
-            title:
-                document.getElementById("title").value,
-
-            series:
-                document.getElementById("series").value,
-
-            bibleRef:
-                document.getElementById("bibleRef").value,
-
-            category:
-                document.getElementById("category").value,
-
-            authorName:
-                document.getElementById("authorName").value,
-
-            status:
-                document.getElementById("status").value,
-
+            displayDate: document.getElementById("customDate").value,
+            title: document.getElementById("title").value,
+            series: document.getElementById("series").value,
+            bibleRef: document.getElementById("bibleRef").value,
+            category: document.getElementById("category").value,
+            authorName: document.getElementById("authorName").value,
+            status: "published", // เซ็ตเป็นแสดงผลทันที ไม่ต้องมีหน้าอนุมัติบทความ
             thumbUrl,
             arc1,
             arc2,
-
-            yt1:
-                document.getElementById("yt1").value,
-
-            yt2:
-                document.getElementById("yt2").value,
-
-            mainContent:
-                document.getElementById("mainContent").value,
-
-            extraContent:
-                document.getElementById("extraContent").value,
-
+            yt1: document.getElementById("yt1").value,
+            yt2: document.getElementById("yt2").value,
+            mainContent: document.getElementById("mainContent").value,
+            extraContent: document.getElementById("extraContent").value,
             updatedAt: serverTimestamp()
         };
 
         if(id){
-
-            await updateDoc(
-                doc(db, "articles", id),
-                data
-            );
-
+            await updateDoc(doc(db, "articles", id), data);
         }else{
-
             data.createdAt = serverTimestamp();
-
-            await addDoc(
-                collection(db, "articles"),
-                data
-            );
+            await addDoc(collection(db, "articles"), data);
         }
 
-        alert("✅ บันทึกสำเร็จ");
-
+        alert("✅ บันทึกข้อมูลสำเร็จและแสดงผลบนเว็บไซต์ทันที");
         resetForm();
-
     }catch(err){
-
         console.error(err);
-
         alert("❌ " + err.message);
-
     }finally{
-
         btn.disabled = false;
-
-        btn.innerText =
-            "🚀 บันทึกข้อมูลและอัปโหลดรูปภาพทั้งหมด";
+        btn.innerText = "🚀 บันทึกข้อมูลและแสดงผลทันที";
     }
 };
 
-
-
 // =========================
-// Edit
+// Edit & Reset & Delete Article
 // =========================
-
 window.editArt = async (id)=>{
-
-    const snap = await getDoc(
-        doc(db, "articles", id)
-    );
-
+    const snap = await getDoc(doc(db, "articles", id));
     if(!snap.exists()) return;
-
     const r = snap.data();
 
     document.getElementById("editId").value = id;
-
-    document.getElementById("customDate").value =
-        r.displayDate || "";
-
-    document.getElementById("title").value =
-        r.title || "";
-
-    document.getElementById("series").value =
-        r.series || "";
-
-    document.getElementById("bibleRef").value =
-        r.bibleRef || "";
-
-    document.getElementById("category").value =
-        r.category || "";
-
-    document.getElementById("authorName").value =
-        r.authorName || "";
-
-    document.getElementById("status").value =
-        r.status || "pending";
-
-    document.getElementById("thumbUrl").value =
-        r.thumbUrl || "";
-
-    document.getElementById("arc1").value =
-        r.arc1 || "";
-
-    document.getElementById("arc2").value =
-        r.arc2 || "";
-
-    document.getElementById("yt1").value =
-        r.yt1 || "";
-
-    document.getElementById("yt2").value =
-        r.yt2 || "";
-
-    document.getElementById("mainContent").value =
-        r.mainContent || "";
-
-    document.getElementById("extraContent").value =
-        r.extraContent || "";
+    document.getElementById("customDate").value = r.displayDate || "";
+    document.getElementById("title").value = r.title || "";
+    document.getElementById("series").value = r.series || "";
+    document.getElementById("bibleRef").value = r.bibleRef || "";
+    document.getElementById("category").value = r.category || "";
+    document.getElementById("authorName").value = r.authorName || "คริสตจักร";
+    document.getElementById("thumbUrl").value = r.thumbUrl || "";
+    document.getElementById("arc1").value = r.arc1 || "";
+    document.getElementById("arc2").value = r.arc2 || "";
+    document.getElementById("yt1").value = r.yt1 || "";
+    document.getElementById("yt2").value = r.yt2 || "";
+    document.getElementById("mainContent").value = r.mainContent || "";
+    document.getElementById("extraContent").value = r.extraContent || "";
 
     forcePreview(r.thumbUrl, "pre1");
     forcePreview(r.arc1, "pre2");
     forcePreview(r.arc2, "pre3");
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
 };
 
-
-
-// =========================
-// Reset
-// =========================
-
 window.resetForm = ()=>{
-
     document.getElementById("postForm").reset();
-
     document.getElementById("editId").value = "";
-
     document.getElementById("thumbUrl").value = "";
     document.getElementById("arc1").value = "";
     document.getElementById("arc2").value = "";
-
-    document.getElementById("pre1").innerHTML =
-        "<small>ไม่มีรูปปก</small>";
-
-    document.getElementById("pre2").innerHTML =
-        "<small>ไม่มีรูปรายละเอียด 1</small>";
-
-    document.getElementById("pre3").innerHTML =
-        "<small>ไม่มีรูปรายละเอียด 2</small>";
+    document.getElementById("pre1").innerHTML = "<small>ไม่มีรูปปก</small>";
+    document.getElementById("pre2").innerHTML = "<small>ไม่มีรูปรายละเอียด 1</small>";
+    document.getElementById("pre3").innerHTML = "<small>ไม่มีรูปรายละเอียด 2</small>";
 };
-
-
-
-// =========================
-// Delete
-// =========================
 
 window.delArt = async (id)=>{
-
-    if(confirm("ยืนยันลบบทความ ?")){
-
-        await deleteDoc(
-            doc(db, "articles", id)
-        );
+    if(confirm("ยืนยันการลบเนื้อหานี้ออกจากระบบอย่างถาวร?")){
+        await deleteDoc(doc(db, "articles", id));
     }
 };
-
-</script>
 </script>
 </body>
 </html>
