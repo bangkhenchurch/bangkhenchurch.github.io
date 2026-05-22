@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ติดต่อเรา - Bangkhen Baptist Church</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { overflow-x: hidden; width: 100%; }
+        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
+        .container { padding: 40px 5%; width: 100%; max-width: 800px; margin: auto; }
+        .section-title { font-family: 'Prompt'; font-size: 26px; margin-bottom: 25px; color: #4dabff; border-left: 5px solid #4dabff; padding-left: 15px; }
+
+        /* Navigation Menu */
+        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .navbar img { width: 35px; border-radius: 50%; }
+        .horizontal-menu { background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto; border-radius: 50px; }
+        .horizontal-menu a { padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s; display: flex; align-items: center; gap: 5px; }
+        .horizontal-menu a:hover, .horizontal-menu a.active { color: #fff; background: #4dabff; }
+
+        /* Contact Details Card */
+        .contact-box { background: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .contact-item { margin-bottom: 25px; font-size: 16px; color: #ddd; }
+        .contact-label { font-family: 'Prompt'; font-size: 18px; color: #4dabff; margin-bottom: 5px; font-weight: 600; }
+        
+        /* Map and Image Wrapper */
+        .map-wrapper { width: 100%; height: 350px; border-radius: 12px; overflow: hidden; margin-top: 20px; border: 1px solid #333; }
+        .map-wrapper iframe { width: 100%; height: 100%; border: 0; }
+        
+        .qr-code { width: 160px; border-radius: 10px; margin-top: 10px; transition: 0.3s; }
+        .qr-code:hover { transform: scale(1.05); }
+
+        footer { background: #0a2c6d; text-align: center; padding: 40px 20px; margin-top: 60px; }
+        footer img { width: 50px; border-radius: 50%; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
+    <span style="font-family:'Prompt'; font-weight: 600;">Bangkhen Baptist Church</span>
+</nav>
+
+<nav class="horizontal-menu">
+    <a href="index.html">🏠 หน้าแรก</a>
+    <a href="article.html?view=เทศนา">🎙️ คำเทศนา</a>
+    <a href="article.html?view=บทความ">📖 บทความ</a>
+    <a href="article.html?view=คำพยาน">🙏 คำพยาน</a>
+    <a href="article.html?view=ข่าวสาร">📢 ข่าวสาร</a>
+    <a href="contact.html" class="active">📞 ติดต่อเรา</a>
+</nav>
+
+<div class="container">
+    <h2 class="section-title">📍 ข้อมูลการติดต่อคริสตจักร</h2>
+    
+    <div class="contact-box">
+        <div class="contact-item">
+            <div class="contact-label">🏢 สถานที่ตั้งคริสตจักร</div>
+            <p>2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</p>
+        </div>
+
+        <div class="contact-item">
+            <div class="contact-label">💬 LINE Official Account</div>
+            <a href="https://lin.ee/NhFf2Rf" target="_blank">
+                <img src="https://qr-official.line.me/gs/M_082xyooj_BW.png?oat_สารบัญ" alt="LINE QR Code" class="qr-code">
+            </a>
+            <p style="font-size: 13px; color: #aaa; margin-top: 5px;">(คลิกหรือสแกนคิวอาร์โค้ดเพื่อเพิ่มเพื่อน)</p>
+        </div>
+
+        <div class="contact-item">
+            <div class="contact-label">🗺️ แผนที่ Google Maps</div>
+            <div class="map-wrapper">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.3312015383506!2d100.5721111!3d13.8341667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29d06efdcd77b%3A0xe67db50df36fa7c5!2z4LiE4Lij4Li04Liq4LiV4LiI4Lix4LiB4Lij4LmB4Lia4LmH4Lia4LiV4Li04Liq4LiV4Lia4Liy4LiH4LmA4LiC4LiZ!5e0!3m2!1sth!2sth!4v1716382000000!5m2!1sth!2sth" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'"><br>
+    <strong style="font-family:'Prompt'; font-size:18px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
+    <div style="margin-top: 5px; font-size:13px; color:#aaa;">© คริสตจักรแบ๊บติสต์บางเขน - สงวนลิขสิทธิ์</div>
+</footer>
+
+</body>
+</html>
