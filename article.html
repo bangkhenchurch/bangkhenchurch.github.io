@@ -3,121 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>อ่านบทความ - BBC Church</title>
+    <title>คริสตจักรแบ๊บติสต์บางเขน - ระบบข้อมูลข่าวสาร</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #4dabff; --dark-bg: #121212; --card-bg: #1e1e1e; }
+        :root { --primary: #4dabff; --dark-bg: #121212; --card-bg: #1e1e1e; --success: #27ae60; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--dark-bg); color: #e0e0e0; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
         .container { max-width: 850px; margin: 20px auto; padding: 0 20px; }
-        .article-card { background: var(--card-bg); padding: 30px; border-radius: 15px; border: 1px solid #333; margin-top: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        h1 { font-family: 'Prompt'; color: white; font-size: 28px; margin-bottom: 10px; line-height: 1.3; }
+        
+        /* สไตล์ปุ่มเมนูนำทางด้านบน */
+        .nav-menu { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; border: 1px solid #333; }
+        .nav-item { background: #252525; color: white; text-align: center; padding: 10px 5px; border-radius: 8px; text-decoration: none; font-family: 'Prompt'; font-size: 13px; border: 1px solid #444; transition: 0.2s; }
+        .nav-item:active { background: var(--primary); border-color: var(--primary); }
+        .nav-active { background: var(--primary); border-color: var(--primary); font-weight: bold; }
+
+        /* ส่วนแสดงผลหลัก */
+        .view-section { display: none; }
+        .view-active { display: block; }
+
+        /* การ์ดบทความ */
+        .article-card { background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid #333; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        h1 { font-family: 'Prompt'; color: white; font-size: 24px; margin-bottom: 10px; line-height: 1.3; }
         .article-meta { color: #aaa; font-size: 14px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .article-meta b { color: var(--primary); }
         .media-full-width { width: 100%; max-width: 100%; height: auto; object-fit: contain; border-radius: 10px; margin-bottom: 20px; display: block; }
-        .content-text { line-height: 1.8; font-size: 17px; white-space: pre-wrap; color: #eee; margin: 25px 0; font-family: 'Sarabun', sans-serif; }
-        .extra-text { line-height: 1.6; font-size: 15px; white-space: pre-wrap; color: #aaa; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border-left: 3px solid #ff9f43; margin: 20px 0; }
-        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; margin: 20px 0; border-radius: 12px; overflow: hidden; background: #000; }
-        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .content-text { line-height: 1.8; font-size: 16px; white-space: pre-wrap; color: #eee; margin: 25px 0; }
         
+        /* สไตล์ลิสต์รายการหมวดหมู่แบบย่อย */
+        .list-card { background: var(--card-bg); padding: 15px; border-radius: 12px; border: 1px solid #333; margin-bottom: 15px; display: flex; gap: 15px; align-items: center; text-decoration: none; color: white; }
+        .list-thumb { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; background: #333; }
+        .list-info { flex: 1; }
+        .list-title { font-family: 'Prompt'; font-size: 16px; color: white; margin-bottom: 5px; line-height: 1.3; }
+        .list-meta { font-size: 12px; color: #aaa; }
+
+        /* ระบบรีวิวและความคิดเห็น */
         .comment-display-area { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
         .comment-item { background: #252525; padding: 15px; border-radius: 10px; margin-bottom: 15px; border-left: 4px solid var(--primary); }
-        .comment-user { font-weight: bold; color: var(--primary); margin-bottom: 5px; font-family: 'Prompt'; display: flex; justify-content: space-between; align-items: center; }
-        .comment-text { color: #ccc; font-size: 15px; white-space: pre-wrap; }
-        
-        .rating-form { background: #1a1a1a; padding: 25px; border-radius: 15px; border: 1px dashed #444; margin: 40px 0; }
+        .comment-user { font-weight: bold; color: var(--primary); margin-bottom: 5px; font-family: 'Prompt'; display: flex; justify-content: space-between; }
+        .comment-text { color: #ccc; font-size: 14px; white-space: pre-wrap; }
+        .rating-form { background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px dashed #444; margin: 30px 0; }
         .u-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; margin-bottom: 12px; font-size: 15px; }
-        .btn-submit-rating { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
-        .btn-submit-rating:active { background: #358ee0; }
+        .btn-submit-rating { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
 
-        .contact-section { background: #ffffff; color: #333; padding: 30px; border-radius: 20px; margin-top: 40px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        /* ฟอร์มติดต่อเรา */
+        .contact-section { background: #ffffff; color: #333; padding: 25px; border-radius: 20px; margin-top: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .contact-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; font-size: 15px; background: #fff; color: #333; }
-        
-        .counter-section { text-align: center; border-top: 1px solid #333; padding: 30px 15px; background: #1a1a1a; border-radius: 15px; margin: 40px 0; color: #ffffff; overflow: hidden; }
-        .counter-section img { max-width: 100% !important; height: auto !important; display: inline-block; }
-        .qr-code { width: 140px; border: 4px solid white; border-radius: 10px; margin-top: 10px; transition: transform 0.3s; }
+        .btn-contact-submit { width: 100%; padding: 16px; background: var(--success); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
 
-        footer { background: #051937; color: white; text-align: center; padding: 40px 20px; margin-top: 50px; border-top: 3px solid var(--primary); }
-        footer img { width: 60px; margin-bottom: 10px; }
-        .footer-address { font-size: 14px; color: #aaa; margin-top: 10px; line-height: 1.5; }
+        /* ส่วนสถิติและท้ายเว็บ */
+        .counter-section { text-align: center; border-top: 1px solid #333; padding: 25px 15px; background: #1a1a1a; border-radius: 15px; margin: 30px 0; color: #ffffff; }
+        .qr-code { width: 130px; border: 4px solid white; border-radius: 10px; margin-top: 10px; }
+        footer { background: #051937; color: white; text-align: center; padding: 35px 20px; margin-top: 40px; border-top: 3px solid var(--primary); }
+        footer img { width: 55px; margin-bottom: 10px; }
+        .footer-address { font-size: 13px; color: #aaa; margin-top: 10px; line-height: 1.5; }
+        .no-data { text-align: center; padding: 40px; color: #888; font-size: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div style="margin-top: 20px;">
-        <a href="index.html" style="color: var(--primary); text-decoration: none; font-family: 'Prompt'; font-weight: bold;">← กลับหน้าหลัก</a>
+    
+    <div class="nav-menu">
+        <a href="index.html" class="nav-item">🏠 หน้าแรก</a>
+        <a href="?view=เทศนา" id="menu-เทศนา" class="nav-item">🎙️ คำเทศนา</a>
+        <a href="?view=บทความ" id="menu-บทความ" class="nav-item">📖 บทความ</a>
+        <a href="?view=คำพยาน" id="menu-คำพยาน" class="nav-item">🙏 คำพยาน</a>
+        <a href="?view=ข่าวสาร" id="menu-ข่าวสาร" class="nav-item">📢 ข่าวสาร</a>
+        <a href="?view=ติดต่อ" id="menu-ติดต่อ" class="nav-item">✉️ ติดต่อเรา</a>
     </div>
 
-    <article class="article-card">
-        <div id="catDisp" style="color:var(--primary); font-family:'Prompt'; font-weight:bold; margin-bottom:5px;"></div>
-        <h1 id="artTitle">กำลังโหลดเนื้อหา...</h1>
-        <div id="artRatingHeader" style="color: #f1c40f; font-family: 'Prompt'; margin-bottom: 15px;">☆☆☆☆☆ (0)</div>
-        <div id="artMeta" class="article-meta"></div>
-        <div id="topDisplay"></div>
-        <div id="artBody" class="content-text"></div>
-        <div id="artExtra" class="extra-text" style="display: none;"></div>
-        <div id="detailsDisplay"></div>
-        <div class="comment-display-area" id="commentList"></div>
-    </article>
+    <div id="section-read" class="view-section">
+        <article class="article-card">
+            <div id="catDisp" style="color:var(--primary); font-family:'Prompt'; font-weight:bold; margin-bottom:5px;"></div>
+            <h1 id="artTitle">⏳ กำลังโหลดเนื้อหา...</h1>
+            <div id="artRatingHeader" style="color: #f1c40f; font-family: 'Prompt'; margin-bottom: 15px;">☆☆☆☆☆ (0)</div>
+            <div id="artMeta" class="article-meta"></div>
+            <div id="topDisplay"></div>
+            <div id="artBody" class="content-text"></div>
+            <div id="detailsDisplay"></div>
+            <div class="comment-display-area" id="commentList"></div>
+        </article>
 
-    <div class="rating-form">
-        <h3 style="font-family: 'Prompt'; color: white; margin-bottom: 15px;">⭐️ ให้คะแนนและแบ่งปันพระพร</h3>
-        <select id="uStars" class="u-input" style="color: #f1c40f; font-weight: bold;">
-            <option value="5">⭐⭐⭐⭐⭐ (ยอดเยี่ยม)</option>
-            <option value="4">⭐⭐⭐⭐ (ดีมาก)</option>
-            <option value="3">⭐⭐⭐ (ดี)</option>
-            <option value="2">⭐⭐ (พอใช้)</option>
-            <option value="1">⭐ (ควรปรับปรุง)</option>
-        </select>
-        <input type="text" id="uName" class="u-input" placeholder="ชื่อของคุณ">
-        <textarea id="uMsg" class="u-input" rows="3" placeholder="เขียนความประทับใจของคุณเพื่อหนุนใจคริสตจักร..."></textarea>
-        <button id="submitRatingBtn" class="btn-submit-rating">🚀 ส่งความคิดเห็น</button>
-    </div>
-
-    <div class="contact-section">
-        <div style="text-align: center; margin-bottom: 20px;">
-            <h2 style="color: #2c3e50; font-family: 'Prompt';">✉️ ติดต่อเรา / สนใจรับข้อมูล</h2>
+        <div class="rating-form">
+            <h3 style="font-family: 'Prompt'; color: white; margin-bottom: 15px;">⭐️ ให้คะแนนและแบ่งปันพระพร</h3>
+            <select id="uStars" class="u-input" style="color: #f1c40f; font-weight: bold;">
+                <option value="5">⭐⭐⭐⭐⭐ (ยอดเยี่ยม)</option>
+                <option value="4">⭐⭐⭐⭐ (ดีมาก)</option>
+                <option value="3">⭐⭐⭐ (ดี)</option>
+                <option value="2">⭐⭐ (พอใช้)</option>
+                <option value="1">⭐ (ควรปรับปรุง)</option>
+            </select>
+            <input type="text" id="uName" class="u-input" placeholder="ชื่อของคุณ">
+            <textarea id="uMsg" class="u-input" rows="3" placeholder="เขียนความประทับใจแชร์พระพรหนุนใจ..."></textarea>
+            <button id="submitRatingBtn" class="btn-submit-rating">🚀 ส่งความคิดเห็น</button>
         </div>
-        <form id="contactForm">
-            <div style="margin-bottom: 5px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50;">ชื่อ-นามสกุล</label>
-                <input type="text" id="contactName" class="contact-input" required placeholder="ระบุชื่อของคุณ">
+    </div>
+
+    <div id="section-list" class="view-section">
+        <h2 id="list-heading" style="font-family:'Prompt'; margin-bottom:15px; border-left:4px solid var(--primary); padding-left:10px;">รายการ</h2>
+        <div id="category-items-container"></div>
+    </div>
+
+    <div id="section-contact" class="view-section">
+        <div class="contact-section">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: #2c3e50; font-family: 'Prompt';">✉️ ติดต่อเรา / สนใจรับข้อมูล</h2>
             </div>
-            <div style="margin-bottom: 5px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50;">เบอร์โทรศัพท์</label>
-                <input type="tel" id="contactPhone" class="contact-input" required placeholder="08X-XXX-XXXX">
-            </div>
-            <div style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
-                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 8px;">ความต้องการ</label>
-                <label style="display: block; margin-bottom: 6px; cursor: pointer;">
-                    <input type="checkbox" name="opt" value="ต้องการไปโบสถ์" id="opt1"> ต้องการไปร่วมโบสถ์
-                </label>
-                <label style="display: block; cursor: pointer;">
-                    <input type="checkbox" name="opt" value="ศึกษาที่บ้าน" id="opt2"> ต้องการศึกษาที่บ้าน (จัดส่งเอกสาร)
-                </label>
-            </div>
-            <div id="addressBox" style="display:none; margin-bottom: 15px;">
-                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 5px;">ที่อยู่สำหรับส่งเอกสาร</label>
-                <textarea id="contactAddress" class="contact-input" rows="3" placeholder="กรุณาระบุที่อยู่จัดส่งโดยละเอียด"></textarea>
-            </div>
-            <div style="margin-bottom: 5px;">
-                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 5px;">ข้อความเพิ่มเติม</label>
-                <textarea id="contactNote" class="contact-input" rows="3" placeholder="ข้อสอบถามเพิ่มเติม หรือเรื่องที่ต้องการให้ร่วมอธิษฐานเผื่อ"></textarea>
-            </div>
-            <button type="submit" id="sendBtn" style="width: 100%; padding: 16px; background: #27ae60; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s;">ส่งข้อมูลติดต่อ</button>
-        </form>
+            <form id="contactForm">
+                <div style="margin-bottom: 5px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50;">ชื่อ-นามสกุล</label>
+                    <input type="text" id="contactName" class="contact-input" required placeholder="ระบุชื่อของคุณ">
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold; color: #2c3e50;">เบอร์โทรศัพท์</label>
+                    <input type="tel" id="contactPhone" class="contact-input" required placeholder="08X-XXX-XXXX">
+                </div>
+                <div style="margin-bottom: 15px; background: #f9f9f9; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
+                    <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 8px;">ความต้องการ</label>
+                    <label style="display: block; margin-bottom: 6px; cursor: pointer; color:#333;">
+                        <input type="checkbox" name="opt" value="ต้องการไปโบสถ์" id="opt1"> ต้องการไปร่วมโบสถ์
+                    </label>
+                    <label style="display: block; cursor: pointer; color:#333;">
+                        <input type="checkbox" name="opt" value="ศึกษาที่บ้าน" id="opt2"> ต้องการศึกษาที่บ้าน (จัดส่งเอกสาร)
+                    </label>
+                </div>
+                <div id="addressBox" style="display:none; margin-bottom: 15px;">
+                    <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 5px;">ที่อยู่สำหรับส่งเอกสาร</label>
+                    <textarea id="contactAddress" class="contact-input" rows="3" placeholder="กรุณาระบุที่อยู่จัดส่งโดยละเอียด"></textarea>
+                </div>
+                <div style="margin-bottom: 5px;">
+                    <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 5px;">ข้อความเพิ่มเติม</label>
+                    <textarea id="contactNote" class="contact-input" rows="3" placeholder="เรื่องที่ต้องการสอบถาม หรือขอให้ร่วมอธิษฐานเผื่อ..."></textarea>
+                </div>
+                <button type="submit" id="sendBtn" class="btn-contact-submit">ส่งข้อมูลติดต่อ</button>
+            </form>
+        </div>
     </div>
 
     <div class="counter-section">
-        <div style="margin-bottom: 30px;">
-            <h3 style="font-family: 'Prompt'; margin-bottom: 15px;">ติดต่อเราผ่าน LINE</h3>
+        <div style="margin-bottom: 25px;">
+            <h3 style="font-family: 'Prompt'; margin-bottom: 10px;">ติดต่อเราผ่าน LINE</h3>
             <a href="https://lin.ee/NhFf2Rf" target="_blank">
                 <img src="https://qr-official.line.me/gs/M_082xyooj_BW.png?oat_สารบัญ" alt="LINE" class="qr-code">
             </a>
         </div>
-        <h3 style="margin-bottom: 15px; font-family: 'Prompt';">สถิติผู้เยี่ยมชม</h3>
+        <h3 style="margin-bottom: 10px; font-family: 'Prompt';">สถิติผู้เยี่ยมชม</h3>
         <a href="https://info.flagcounter.com/iWY4">
             <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
         </a>
@@ -127,8 +158,8 @@
 <footer>
     <div class="footer-info">
         <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'"><br>
-        <strong style="font-family:'Prompt'; font-size:18px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
-        <div style="margin-top: 10px; color: #4dabff; font-weight: bold;">🕒 นมัสการ: วันอาทิตย์ 09.00 - 12.00 น.</div>
+        <strong style="font-family:'Prompt'; font-size:17px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
+        <div style="margin-top: 8px; color: #4dabff; font-weight: bold; font-size:14px;">🕒 นมัสการ: วันอาทิตย์ 09.00 - 12.00 น.</div>
         <div class="footer-address">
             2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 <br>📞 โทร: 02-5798764
         </div>
@@ -137,7 +168,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, query, where, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, query, where, getDocs, orderBy, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
@@ -149,45 +180,35 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const artId = new URLSearchParams(window.location.search).get('id');
 
-    // ฟังก์ชันเปิด/ปิดกล่องที่อยู่จัดส่งเอกสาร
-    document.getElementById('opt2').onchange = function() {
-        document.getElementById('addressBox').style.display = this.checked ? 'block' : 'none';
-    };
+    // ดึงค่าตัวแปรจาก URL Link เพื่อดูว่าจะแสดงหน้าไหน
+    const urlParams = new URLSearchParams(window.location.search);
+    const artId = urlParams.get('id');
+    const viewType = urlParams.get('view');
 
-    // ส่งฟอร์มข้อมูลติดต่อเข้าคอลเลกชัน contacts
-    document.getElementById('contactForm').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('sendBtn');
-        btn.disabled = true;
-        btn.innerText = "⏳ กำลังส่งข้อมูล...";
-
-        const options = Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(cb => cb.value);
-        
-        try {
-            await addDoc(collection(db, "contacts"), {
-                articleId: artId || "general",
-                name: document.getElementById('contactName').value,
-                phone: document.getElementById('contactPhone').value,
-                needs: options,
-                address: document.getElementById('contactAddress').value || "",
-                note: document.getElementById('contactNote').value || "",
-                createdAt: serverTimestamp()
-            });
-            alert("✅ ส่งข้อมูลติดต่อสำเร็จ คริสตจักรได้รับข้อมูลแล้ว พระเจ้าอวยพรครับ!");
-            document.getElementById('contactForm').reset();
-            document.getElementById('addressBox').style.display = 'none';
-        } catch (err) {
-            console.error(err);
-            alert("❌ เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "ส่งข้อมูลติดต่อ";
+    // ระบบ Routing สลับหน้าจออัตโนมัติ ป้องกันปัญหาหน้าขาว 404
+    function routeView() {
+        if (artId) {
+            // กรณีเปิดลิ้งก์เพื่ออ่านบทความแบบเจาะจงรายชิ้น
+            document.getElementById('section-read').classList.add('view-active');
+            loadSingleContent();
+        } else if (viewType === 'ติดต่อ') {
+            // กรณีเปิดหน้าฟอร์มติดต่อเรา
+            document.getElementById('section-contact').classList.add('view-active');
+            document.getElementById('menu-ติดต่อ').classList.add('nav-active');
+        } else if (viewType) {
+            // กรณีเปิดดูรายการแยกหมวดหมู่ (คำเทศนา, บทความ, คำพยาน, ข่าวสาร)
+            document.getElementById('section-list').classList.add('view-active');
+            const menuBtn = document.getElementById('menu-' + viewType);
+            if (menuBtn) menuBtn.classList.add('nav-active');
+            loadCategoryList(viewType);
+        } else {
+            // หากเข้ามาแบบว่างเปล่า ให้โยนกลับหน้าแรกอินเด็กซ์ทันทีเพื่อเซฟผู้ใช้
+            window.location.href = "index.html";
         }
-    };
+    }
 
-    // แปลงลิ้งก์วิดีโอหรือรูปภาพแสดงผลบนหน้าเว็บ
+    // --- ฟังก์ชัน 1: ดึงเนื้อหาอ่านบทความแบบตัวเดี่ยว ---
     function createMediaHTML(url) {
         if (!url || url === "" || url === "undefined") return "";
         const yid = (url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/) || [])[1];
@@ -195,12 +216,7 @@
         return `<img src="${url}" class="media-full-width" onerror="this.style.display='none';">`;
     }
 
-    // โหลดเนื้อหาบทความหลักเชื่อมโยงกับระบบหลังบ้าน
-    async function loadContent() {
-        if(!artId) {
-            document.getElementById('artTitle').innerText = "⚠️ ไม่พบรหัสบทความ";
-            return;
-        }
+    async function loadSingleContent() {
         try {
             const snap = await getDoc(doc(db, "articles", artId));
             if(snap.exists()) {
@@ -218,23 +234,11 @@
                 document.getElementById('catDisp').innerText = "☀️ " + category;
                 document.getElementById('artMeta').innerHTML = `${prefix}<b>${finalName}</b> | วันที่: <b>${r.displayDate || '-'}</b>`;
 
-                // การแสดงผลสื่อหลัก (รูปปก และ ลิ้งก์ยูทูบ)
                 let topHtml = createMediaHTML(r.thumbUrl);
                 if(r.yt1) topHtml += createMediaHTML(r.yt1);
-                if(r.yt2) topHtml += createMediaHTML(r.yt2);
                 document.getElementById('topDisplay').innerHTML = topHtml;
-                
-                // ดึงข้อมูลฟิลด์เนื้อหาหลัก (mainContent) ออกมาแสดง
                 document.getElementById('artBody').innerText = r.mainContent || r.content || "";
 
-                // ตรวจสอบหมายเหตุหรือเนื้อหาเพิ่มเติม (extraContent)
-                if (r.extraContent && r.extraContent.trim() !== "") {
-                    const extraBox = document.getElementById('artExtra');
-                    extraBox.innerText = "📝 หมายเหตุ / ข้อมูลเพิ่มเติม:\n" + r.extraContent;
-                    extraBox.style.display = "block";
-                }
-
-                // การแสดงผลรูปภาพรายละเอียดประกอบบทความ
                 let detailsHtml = "";
                 if(r.arc1) detailsHtml += createMediaHTML(r.arc1);
                 if(r.arc2) detailsHtml += createMediaHTML(r.arc2);
@@ -242,75 +246,120 @@
 
                 loadRatings();
             } else {
-                document.getElementById('artTitle').innerText = "❌ ไม่พบเนื้อหาบทความนี้ในระบบ";
+                document.getElementById('artTitle').innerText = "❌ ไม่พบข้อมูลบทความนี้ในระบบคริสตจักร";
             }
         } catch(err) {
             console.error(err);
-            document.getElementById('artTitle').innerText = "❌ เกิดข้อผิดพลาดในการโหลดข้อมูล";
+            document.getElementById('artTitle').innerText = "❌ ระบบเกิดข้อผิดพลาดในการดึงข้อมูล";
         }
     }
 
-    // โหลดความคิดเห็นเรียลไทม์ที่ได้รับการอนุมัติแล้ว (คอลเลกชัน comments)
+    // --- ฟังก์ชัน 2: ดึงข้อมูลรายการคัดแยกตามหมวดหมู่มาโชว์ ---
+    async function loadCategoryList(type) {
+        document.getElementById('list-heading').innerText = "รายการในหมวดหมู่: " + type;
+        const container = document.getElementById('category-items-container');
+        container.innerHTML = "<div class='no-data'>⏳ กำลังรวบรวมเนื้อหาในหมวดหมู่...</div>";
+        
+        try {
+            const q = query(collection(db, "articles"), where("category", "==", type));
+            const snapshot = await getDocs(q);
+            
+            if(!snapshot.empty) {
+                let html = "";
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const imgUrl = data.thumbUrl || 'logo.png';
+                    const author = data.authorName || data.author || 'คริสตจักร';
+                    html += `
+                        <a href="?id=${doc.id}" class="list-card">
+                            <img src="${imgUrl}" class="list-thumb" onerror="this.src='logo.png'">
+                            <div class="list-info">
+                                <div class="list-title">${data.title || 'ไม่มีหัวข้อ'}</div>
+                                <div class="list-meta">👤 ${author} | 🗓️ ${data.displayDate || '-'}</div>
+                            </div>
+                        </a>
+                    `;
+                });
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = `<div class='no-data'>🙏 ขณะนี้ยังไม่มีเนื้อหาในหมวดหมู่ ${type} บันทึกอยู่ในระบบ</div>`;
+            }
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = "<div class='no-data'>❌ ไม่สามารถโหลดรายการได้ กรุณาลองใหม่อีกครั้ง</div>";
+        }
+    }
+
+    // --- ฟังก์ชัน 3: ระบบความคิดเห็นเรียลไทม์ (คอลเลกชัน comments) ---
     function loadRatings() {
         const q = query(collection(db, "comments"), where("articleId", "==", artId), where("status", "==", "approved"));
         onSnapshot(q, (snapshot) => {
-            let html = '<h3 style="font-family:\'Prompt\'; font-size:18px; margin-bottom:15px; color:white;">🌟 ข้อความหนุนใจ / แบ่งปันพระพร</h3>';
+            let html = '<h3 style="font-family:\'Prompt\'; font-size:16px; margin-bottom:15px; color:white;">🌟 ข้อความแบ่งปันพระพรจากพี่น้อง</h3>';
             let totalStars = 0;
             if (!snapshot.empty) {
                 snapshot.forEach((doc) => {
                     const data = doc.data();
-                    const ratingVal = data.rating || 0;
-                    const visitor = data.visitorName || "ผู้เยี่ยมชมทั่วไป";
-                    const textContent = data.text || "";
-                    totalStars += ratingVal;
-                    html += `<div class="comment-item">
-                                <div class="comment-user">
-                                    <span>👤 ${visitor}</span>
-                                    <span style="color:#f1c40f;">${'⭐'.repeat(ratingVal)}</span>
-                                </div>
-                                <div class="comment-text">${textContent}</div>
-                             </div>`;
+                    totalStars += (data.rating || 0);
+                    html += `<div class="comment-item"><div class="comment-user"><span>👤 ${data.visitorName || 'ผู้เยี่ยมชม'}</span><span style="color:#f1c40f;">${'⭐'.repeat(data.rating || 0)}</span></div><div class="comment-text">${data.text || ''}</div></div>`;
                 });
                 document.getElementById('commentList').innerHTML = html;
                 const avg = (totalStars / snapshot.size).toFixed(1);
-                document.getElementById('artRatingHeader').innerText = `${'⭐'.repeat(Math.round(avg))} (${avg}/5 จากผู้ร่วมแบ่งปันพระพร ${snapshot.size} คน)`;
+                document.getElementById('artRatingHeader').innerText = `${'⭐'.repeat(Math.round(avg))} (${avg}/5 จากพี่น้อง ${snapshot.size} คน)`;
             } else {
-                document.getElementById('commentList').innerHTML = `<div style="color:#666; font-size:14px; text-align:center; padding:10px;">ยังไม่มีข้อความแบ่งปันพระพรในบทความนี้ มาร่วมเป็นคนแรกกันครับ!</div>`;
-                document.getElementById('artRatingHeader').innerText = `☆☆☆☆☆ (ยังไม่มีคะแนนรีวิว)`;
+                document.getElementById('commentList').innerHTML = `<div style="color:#666; font-size:13px; text-align:center; padding:10px;">ยังไม่มีข้อความแชร์พระพร มาร่วมเป็นคนแรกเพื่อหนุนใจกันครับ!</div>`;
             }
         });
     }
 
-    // ส่งคะแนนรีวิวและข้อความหนุนใจเข้าคอลเลกชัน comments ให้ตรงกับหลังบ้าน
     document.getElementById('submitRatingBtn').onclick = async () => {
         const name = document.getElementById('uName').value;
         const msg = document.getElementById('uMsg').value;
         const stars = parseInt(document.getElementById('uStars').value);
-        const titleText = document.getElementById('artTitle').innerText;
-
-        if(!name || !name.trim() || !msg || !msg.trim()) {
-            return alert("⚠️ กรุณากรอกชื่อและเขียนข้อความแชร์พระพรให้ครบถ้วนก่อนส่งครับ");
-        }
-
+        if(!name.trim() || !msg.trim()) return alert("⚠️ กรุณากรอกชื่อและข้อความแชร์พระพรก่อนครับ");
         try {
             await addDoc(collection(db, "comments"), {
-                articleId: artId,
-                articleTitle: titleText,
-                visitorName: name.trim(),
-                text: msg.trim(),
-                rating: stars,
-                status: "pending", // เซ็ตสถานะเริ่มต้นเป็นรอแอดมินอนุมัติผ่านศูนย์ QC
+                articleId: artId, articleTitle: document.getElementById('artTitle').innerText, visitorName: name.trim(), text: msg.trim(), rating: stars, status: "pending", createdAt: serverTimestamp()
+            });
+            alert("🙏 ขอบคุณสำหรับคำหนุนใจครับ! ข้อความจะแสดงผลเมื่อได้รับการอนุมัติผ่านศูนย์ QC เรียบร้อยแล้วครับ");
+            document.getElementById('uName').value = ""; document.getElementById('uMsg').value = "";
+        } catch (e) { alert("เกิดข้อผิดพลาดในการส่งข้อมูล"); }
+    };
+
+    // --- ฟังก์ชัน 4: จัดการฟอร์มติดต่อเราสิทธิพิเศษส่งเข้าฐานข้อมูล ---
+    document.getElementById('opt2').onchange = function() {
+        document.getElementById('addressBox').style.display = this.checked ? 'block' : 'none';
+    };
+
+    document.getElementById('contactForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('sendBtn');
+        btn.disabled = true;
+        btn.innerText = "⏳ กำลังส่งข้อมูล...";
+        const options = Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(cb => cb.value);
+        
+        try {
+            await addDoc(collection(db, "contacts"), {
+                articleId: artId || "general_menu",
+                name: document.getElementById('contactName').value,
+                phone: document.getElementById('contactPhone').value,
+                needs: options,
+                address: document.getElementById('contactAddress').value || "",
+                note: document.getElementById('contactNote').value || "",
                 createdAt: serverTimestamp()
             });
-            alert("🙏 ขอบคุณสำหรับคะแนนและคำแบ่งปันหนุนใจครับ! ข้อความของคุณจะปรากฏบนหน้าเว็บทันทีหลังจากที่แอดมินกดยืนยันผ่านศูนย์ QC เรียบร้อยแล้วครับ");
-            document.getElementById('uName').value = ""; 
-            document.getElementById('uMsg').value = "";
-        } catch (e) { 
-            alert("❌ เกิดข้อผิดพลาด ไม่สามารถส่งความคิดเห็นได้ในขณะนี้"); 
+            alert("✅ ส่งข้อมูลติดต่อเรียบร้อย คริสตจักรจะติดต่อกลับโดยเร็วที่สุด พระเจ้าอวยพรครับ!");
+            document.getElementById('contactForm').reset();
+            document.getElementById('addressBox').style.display = 'none';
+        } catch (err) {
+            alert("❌ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "ส่งข้อมูลติดต่อ";
         }
     };
 
-    loadContent();
+    // เปิดทำงานสลับหน้าจอตามเงื่อนไขทันทีเมื่อเปิดไฟล์
+    routeView();
 </script>
 </body>
 </html>
