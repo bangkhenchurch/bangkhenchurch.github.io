@@ -17,7 +17,7 @@
         .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .navbar img { width: 35px; border-radius: 50%; }
         .horizontal-menu { background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto; border-radius: 50px; }
-        .horizontal-menu a { padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s; display: flex; align-items: center; gap: 5px; }
+        .horizontal-menu a { padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .horizontal-menu a:hover, .horizontal-menu a.active { color: #fff; background: #4dabff; }
 
         /* Detail View Styles */
@@ -44,7 +44,7 @@
         .info-label { color: #4dabff; font-weight: bold; }
         .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
 
-        .counter-section { text-align: center; padding: 40px 20px; background: #121212; border-top: 1px solid #333; }
+        .counter-section { text-align: center; padding: 40px 20px; background: #121212; border-top: 1px solid #333; scroll-margin-top: 80px; }
         footer { background: #0a2c6d; text-align: center; padding: 40px 20px; margin-top: 40px; }
         footer img { width: 50px; border-radius: 50%; margin-bottom: 10px; }
 
@@ -66,7 +66,8 @@
     <a href="article.html?view=เทศนา" id="menu-เทศนา">🎙️ คำเทศนา</a>
     <a href="article.html?view=บทความ" id="menu-บทความ">📖 บทความ</a>
     <a href="article.html?view=คำพยาน" id="menu-คำพยาน">🙏 คำพยาน</a>
-    <a href="article.html?view=ข่าวสาร" id="menu-ข่าวสาร">📢 ข่ายสาร</a>
+    <a href="article.html?view=ข่าวสาร" id="menu-ข่าวสาร">📢 ข่าวสาร</a>
+    <a onclick="scrollToContact()" id="menu-ติดต่อ">📞 ติดต่อเรา</a>
 </nav>
 
 <div class="container">
@@ -94,7 +95,7 @@
         <div id="category-grid" class="grid-container">กำลังโหลดรายการ...</div>
     </div>
 
-    <div class="counter-section">
+    <div class="counter-section" id="contact-zone">
         <div style="margin-bottom: 30px;">
             <h3 style="font-family: 'Prompt'; margin-bottom: 15px;">ติดต่อเราผ่าน LINE</h3>
             <a href="https://lin.ee/NhFf2Rf" target="_blank">
@@ -113,6 +114,16 @@
     <strong style="font-family:'Prompt'; font-size:18px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
     <div style="margin-top: 5px; font-size:13px; color:#aaa;">2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</div>
 </footer>
+
+<script>
+    // ฟังก์ชันสั่งให้เลื่อนหน้าจอลงมาด้านล่างสุดตรงโซนติดต่อทันทีเมื่อกดปุ่มเมนู
+    function scrollToContact() {
+        const zone = document.getElementById('contact-zone');
+        if(zone) {
+            zone.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -136,6 +147,7 @@
         return (match && match[2].length === 11) ? `https://img.youtube.com/vi/${match[2]}/mqdefault.jpg` : null;
     }
 
+    // ฟังก์ชันแปลงลิงก์สำหรับการเล่นแบบฝัง
     function getYoutubeEmbed(url) {
         if (!url) return null;
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -159,7 +171,6 @@
                 document.getElementById('det-date').innerText = data.displayDate || '';
                 document.getElementById('det-author').innerText = data.authorName || data.author || 'คริสตจักร';
                 
-                // ตรวจสอบฟิลด์หมวดหมู่ รองรับทั้งตัวเล็กและตัวใหญ่
                 const cat = data.category || data.Category || "";
                 let prefix = "ผู้เขียน:";
                 if (cat.includes("เทศนา")) prefix = "ผู้เทศนา:";
@@ -196,14 +207,13 @@
         });
 
     } else if (viewCategory) {
-        // --- ส่วนการโหลดแยกหมวดหมู่ (แก้ไขให้ค้นหาฉลาดขึ้นดึงข้อมูลข้าม Case-sensitive ได้) ---
+        // --- ส่วนการโหลดแยกหมวดหมู่กลุ่มกลุ่มข้อมูล ---
         document.getElementById('category-list-view').style.display = 'block';
         document.getElementById('category-page-title').innerText = `📋 รายการในหมวดหมู่: ${viewCategory}`;
         
         const activeMenu = document.getElementById(`menu-${viewCategory}`);
         if (activeMenu) activeMenu.classList.add('active');
 
-        // ดึงข้อมูลทั้งหมดของคอลเลกชัน articles มาจัดระเบียบเรียงตามวันที่ล่าสุด
         const qAll = query(collection(db, "articles"), orderBy("displayDate", "desc"));
         
         getDocs(qAll).then((snap) => {
@@ -213,10 +223,8 @@
 
             snap.forEach((doc) => {
                 const d = doc.data();
-                // อ่านข้อมูลจากฟิลด์ category (รองรับทั้งพิมพ์เล็ก c และพิมพ์ใหญ่ C เพื่อความปลอดภัย)
                 const currentCat = d.category || d.Category || "";
 
-                // เช็คคำค้นหาแบบยืดหยุ่น เช่น ขอแค่มีคำว่า "เทศนา" แฝงอยู่ก็นับมาแสดงทันที
                 if (currentCat.indexOf(viewCategory) !== -1) {
                     count++;
                     const finalThumb = d.thumbUrl || getYoutubeThumb(d.youtubeUrl) || 'logo.png';
