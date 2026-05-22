@@ -24,7 +24,6 @@
         .btn-save { width: 100%; padding: 20px; background: var(--success); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; transition: 0.3s; margin-top: 20px; }
         .btn-save:disabled { background: #555; color: #aaa; cursor: not-allowed; }
         
-        /* สไตล์สำหรับการแบ่งหมวดหมู่แบบแยกบล็อก */
         .category-section { margin-top: 25px; padding-top: 15px; border-top: 1px dashed #333; }
         .category-header { display: flex; align-items: center; justify-content: space-between; background: #252525; padding: 10px 15px; border-left: 4px solid var(--primary); border-radius: 4px; margin-bottom: 15px; }
         .category-header h3 { margin: 0; font-family: 'Prompt'; font-size: 16px; color: #fff; }
@@ -41,7 +40,6 @@
         .btn-edit { flex: 1; background: #444; color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 13px; }
         .btn-del { background: #c0392b; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 
-        /* สไตล์ตาราง QC ความคิดเห็น */
         .comment-table-container { width: 100%; overflow-x: auto; margin-top: 15px; }
         .comment-table { width: 100%; border-collapse: collapse; background: #222; text-align: left; font-size: 14px; }
         .comment-table th, .comment-table td { padding: 12px; border: 1px solid #333; }
@@ -61,7 +59,6 @@
 <body>
 
 <div class="container">
-    <!-- ฟอร์มจัดการเนื้อหา (ไม่มีช่องเลือกสถานะรออนุมัติแล้ว) -->
     <div class="form-card">
         <h2 id="formHeader">✍️ จัดการเนื้อหา (อัปโหลดรูปภาพจากเครื่อง & ลิ้งก์ YouTube)</h2>
         <form id="postForm">
@@ -88,7 +85,7 @@
                     <label>ผู้เขียน/ผู้เทศนา</label>
                     <div class="author-input-group">
                         <select id="authorName"><option value="คริสตจักร">คริสตจักร</option></select>
-                        <button type="button" class="btn-add-inline" onclick="addNewAuthor()">+</button>
+                        <button type="button" class="btn-add-inline" id="btnAddAuthor">+</button>
                     </div>
                 </div>
             </div>
@@ -133,7 +130,6 @@
         </form>
     </div>
 
-    <!-- ศูนย์ตรวจสอบความคิดเห็นของผู้เข้าชมเว็บ (ยังคงการตรวจสอบและอนุมัติไว้) -->
     <div class="form-card">
         <h2>⭐️ ศูนย์คัดกรองคุณภาพ (QC Comments & Ratings จากผู้เข้าชม)</h2>
         <div class="comment-table-container">
@@ -155,11 +151,9 @@
         </div>
     </div>
 
-    <!-- บล็อกรายการแยกตามหมวดหมู่ชัดเจนเห็นได้ง่าย -->
     <div class="form-card">
         <h2>📑 รายการเนื้อหาทั้งหมดภายในเว็บไซต์</h2>
         
-        <!-- ข่าวสารคริสตจักร -->
         <div class="category-section">
             <div class="category-header">
                 <h3>📢 ข่าวสารคริสตจักร</h3>
@@ -168,7 +162,6 @@
             <div class="article-grid" id="grid-news"></div>
         </div>
 
-        <!-- คำพยานชีวิต -->
         <div class="category-section">
             <div class="category-header">
                 <h3>🌟 คำพยานชีวิต</h3>
@@ -177,16 +170,14 @@
             <div class="article-grid" id="grid-testimony"></div>
         </div>
 
-        <!-- คำเทศนา -->
         <div class="category-section">
             <div class="category-header">
                 <h3>🎙️ คำเทศนา (วิดีโอ)</h3>
-                <span class="category-count" id="count-sermon">0 ราย放</span>
+                <span class="category-count" id="count-sermon">0 รายการ</span>
             </div>
             <div class="article-grid" id="grid-sermon"></div>
         </div>
 
-        <!-- บทความทั่วไป -->
         <div class="category-section">
             <div class="category-header">
                 <h3>📖 บทความทั่วไป</h3>
@@ -231,9 +222,6 @@ const storage = getStorage(app);
 
 let allArticles = [];
 
-// =========================
-// Preview Image
-// =========================
 window.forcePreview = (url, id) => {
     const box = document.getElementById(id);
     if(url){
@@ -243,9 +231,6 @@ window.forcePreview = (url, id) => {
     }
 };
 
-// =========================
-// Upload Helper
-// =========================
 async function uploadImageHelper(fileInputId, hiddenInputId, previewId){
     const fileInput = document.getElementById(fileInputId);
     if(fileInput.files.length === 0){
@@ -312,11 +297,20 @@ onSnapshot(collection(db, "authors"), (snap)=>{
     });
 });
 
-window.addNewAuthor = async ()=>{
-    const name = prompt("ชื่อผู้แต่งใหม่");
-    if(!name) return;
-    await addDoc(collection(db, "authors"), { name, createdAt: serverTimestamp() });
-};
+// ผูกฟังก์ชันเพิ่มผู้แต่งผ่านระบบ Event Listener แทนเพื่อหลีกเลี่ยงปัญหาบนโมบายล์เบราว์เซอร์
+document.getElementById("btnAddAuthor").addEventListener("click", async () => {
+    const name = prompt("กรุณากรอกชื่อผู้แต่ง / ผู้เทศนาคนใหม่:");
+    if(!name || name.trim() === "") return;
+    try {
+        await addDoc(collection(db, "authors"), { 
+            name: name.trim(), 
+            createdAt: serverTimestamp() 
+        });
+        alert("✅ เพิ่มรายชื่อผู้แต่งสำเร็จ");
+    } catch (err) {
+        alert("❌ ไม่สามารถเพิ่มผู้แต่งได้: " + err.message);
+    }
+});
 
 // =========================
 // Realtime Articles
@@ -340,25 +334,20 @@ window.renderArticlesByCategories = () => {
         "📖 บทความทั่วไป": { grid: document.getElementById("grid-general"), count: document.getElementById("count-general"), list: [] }
     };
 
-    // ล้างข้อมูลเก่าใน Grid ทั้งหมด
     Object.keys(categories).forEach(key => {
         categories[key].grid.innerHTML = "";
     });
 
-    // เรียงวันที่ล่าสุดขึ้นก่อน
     allArticles.sort((a,b) => new Date(b.displayDate) - new Date(a.displayDate));
 
-    // แยกกลุ่มข้อมูลเข้า Array หมวดหมู่ของตัวเอง
     allArticles.forEach(art => {
         if (categories[art.category]) {
             categories[art.category].list.push(art);
         } else {
-            // ป้องกันกรณีตัวสะกดหมวดหมู่ในดาทาเบสไม่ตรง ให้ลงกลุ่มบทความทั่วไปไว้ก่อน
             categories["📖 บทความทั่วไป"].list.push(art);
         }
     });
 
-    // วาด Card ลงแต่ละหน้าต่างหมวดหมู่
     Object.keys(categories).forEach(key => {
         const cat = categories[key];
         cat.count.innerText = `${cat.list.length} รายการ`;
@@ -393,7 +382,7 @@ window.renderArticlesByCategories = () => {
 };
 
 // =========================
-// Realtime Comments (ส่วนของผู้ชมที่ยังต้อง Approve)
+// Realtime Comments
 // =========================
 onSnapshot(collection(db, "comments"), (snap) => {
     const tbody = document.getElementById("commentTableBody");
@@ -444,7 +433,7 @@ window.deleteComment = async (id) => {
 };
 
 // =========================
-// Submit Form (อัปโหลดเนื้อหา - บันทึกแล้วแสดงผลทันที)
+// Submit Form
 // =========================
 document.getElementById("postForm").onsubmit = async (e)=>{
     e.preventDefault();
@@ -465,7 +454,7 @@ document.getElementById("postForm").onsubmit = async (e)=>{
             bibleRef: document.getElementById("bibleRef").value,
             category: document.getElementById("category").value,
             authorName: document.getElementById("authorName").value,
-            status: "published", // เซ็ตเป็นแสดงผลทันที ไม่ต้องมีหน้าอนุมัติบทความ
+            status: "published", 
             thumbUrl,
             arc1,
             arc2,
