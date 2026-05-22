@@ -198,7 +198,7 @@
                 <div>
                     <strong style="color:#4dabff; font-size:18px; font-family:'Prompt';">🗺️ แผนที่ Google Maps</strong>
                     <div class="map-wrapper">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m13!1d3874.3217409255284!2d100.56784407590494!3d13.819717195431668!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29d76813ffff7%3A0x7d025b90f4fa86ad!2z4LiE4Lij4Li04Liq4LiI4LiB4Lix4LiB4LiV4Liy4Lia4LmM4LiV4Li04Liq4LmM4Lia4Liy4LiH4LmA4LiC4LiZ!5e0!3m2!1sth!2sth!4v1714700000000!5m2!1sth!2sth" allowfullscreen="" loading="lazy"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.331182276551!2d100.570181!3d13.819114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29d7990159f3d%3A0x63351336df7a00f8!2z4LiE4Lij4Li04Liq4LiV4LiI4Lix4Lii4LmB4Lia4LmK4LiV4Li04Liq4LiV4Lia4Liy4LiH4LmA4LiC4LiZ!5e0!3m2!1sth!2sth!4v1650000000000!5m2!1sth!2sth" allowfullscreen="" loading="lazy"></iframe>
                     </div>
                 </div>
             </div>
@@ -406,7 +406,7 @@
             document.getElementById('category-list-view').style.display = 'block';
         }
     }).catch(err => {
-        console.error("Error context query Firestore:", err);
+        console.error("Error query Firestore:", err);
     });
 
     // แสดงบทความตัวเต็ม
@@ -419,6 +419,8 @@
             if(snap.exists()) {
                 const data = snap.data();
                 document.getElementById('det-title').innerText = data.title || 'ไม่มีหัวข้อ';
+                
+                // แก้ไขดึงเนื้อหารองรับ Case-insensitive ทั้ง content และ Content
                 document.getElementById('det-content').innerText = data.content || data.Content || 'ไม่มีเนื้อหารายละเอียดระบุไว้ในฐานข้อมูล';
                 document.getElementById('det-date').innerText = data.displayDate || '';
                 document.getElementById('det-author').innerText = data.authorName || data.author || 'คริสตจักร';
@@ -460,7 +462,7 @@
         });
     }
 
-    // แสดงรายการการ์ดแบบค้นหารองรับพิมพ์เล็ก-ใหญ่ และสอดคล้องกับเมนู
+    // แสดงรายการการ์ดแยกหมวดหมู่
     function renderCategoryGrid(category) {
         document.getElementById('full-article-view').style.display = 'none';
         document.getElementById('contact-page-view').style.display = 'none';
@@ -476,7 +478,6 @@
 
         allArticlesList.forEach(d => {
             const currentCat = (d.category || d.Category || "").toString();
-            // ปรับเงื่อนไขให้ใช้ตรวจสอบคำที่ครอบคลุม เพื่อไม่ให้ติดปัญหาเรื่อง Case-sensitive หรืออักษรพิเศษ
             if (currentCat.includes(category) || category.includes(currentCat)) {
                 count++;
                 const finalThumb = d.thumbUrl || getYoutubeThumb(d.youtubeUrl) || 'logo.png';
