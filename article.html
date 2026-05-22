@@ -3,229 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>คลังข้อมูล - Bangkhen Baptist Church</title>
+    <title>Bangkhen Baptist Church</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { overflow-x: hidden; width: 100%; }
         body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
-        
-        /* Top Navigation Bar */
-        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 1000; }
-        .nav-brand { display: flex; align-items: center; gap: 12px; }
+        .container { padding: 20px 5%; width: 100%; max-width: 1200px; margin: auto; }
+        .section-title { font-family: 'Prompt'; font-size: 24px; margin: 30px 0 20px 0; color: #4dabff; border-left: 5px solid #4dabff; padding-left: 15px; }
+
+        /* Navigation Menu */
+        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .navbar img { width: 35px; border-radius: 50%; }
-        .navbar span { font-family: 'Prompt'; font-weight: 600; font-size: 16px; color: #fff; }
-        
-        /* ปุ่มเปิด Sidebar สำหรับจอมือถือ */
-        .sidebar-toggle { background: #ff6b6b; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-family: 'Prompt'; font-size: 14px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 5px; box-shadow: 0 4px 10px rgba(255,107,107,0.4); }
+        .horizontal-menu { background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto; border-radius: 50px; }
+        .horizontal-menu a { padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .horizontal-menu a:hover, .horizontal-menu a.active { color: #fff; background: #4dabff; }
 
-        /* Menu Grid Style */
-        .menu-grid { background: #1e1e1e; border: 1px solid #333; padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 600px; margin: 20px auto 10px auto; border-radius: 15px; }
-        .menu-grid a { background: #2a2a2a; border: 1px solid #444; padding: 12px 5px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 13px; border-radius: 10px; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
-        .menu-grid a:hover { color: #fff; background: #3a3a3a; border-color: #4dabff; }
-        .menu-grid a.active { color: #fff; background: #4dabff; border-color: #4dabff; font-weight: bold; }
-
-        /* Main Layout */
-        .main-layout { display: flex; max-width: 1300px; margin: auto; padding: 10px 2%; gap: 20px; position: relative; }
-
-        /* Left Sidebar Design */
-        .sidebar-left { width: 300px; background: #1a1a1a; border: 1px solid #333; border-radius: 15px; padding: 20px; height: fit-content; position: sticky; top: 90px; }
-        .sidebar-title { font-family: 'Prompt'; font-size: 18px; color: #ffbc42; border-bottom: 2px solid #ffbc42; padding-bottom: 8px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        
-        .tree-category { margin-bottom: 20px; background: #222; border-radius: 10px; padding: 10px; border-left: 4px solid #4dabff; }
-        .tree-category.article-border { border-left-color: #4dabff; }
-        .tree-category.witness-border { border-left-color: #2ecc71; }
-        .tree-category.sermon-border { border-left-color: #e74c3c; }
-
-        .tree-cat-title { font-family: 'Prompt'; font-size: 15px; color: #fff; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-        .tree-sub { margin-left: 10px; margin-bottom: 10px; }
-        .tree-sub-title { font-size: 13px; color: #aaa; font-weight: bold; margin: 5px 0; font-family: 'Prompt'; display: flex; justify-content: space-between; }
-        
-        .tree-list { list-style: none; padding-left: 10px; }
-        .tree-list li { margin: 4px 0; }
-        .tree-list a { color: #ddd; text-decoration: none; font-size: 13px; display: block; padding: 3px 8px; border-radius: 4px; background: #2d2d2d; transition: 0.2s; cursor: pointer; }
-        .tree-list a:hover { background: #4dabff; color: #fff; }
-
-        /* Right Content Area */
-        .content-area { flex-grow: 1; width: calc(100% - 320px); }
-        .section-title { font-family: 'Prompt'; font-size: 22px; margin-bottom: 20px; color: #4dabff; border-left: 5px solid #4dabff; padding-left: 12px; }
-
-        /* Detail View */
-        .detail-box { background: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .detail-title { font-family: 'Prompt'; font-size: 26px; color: #ffffff; margin-bottom: 15px; font-weight: 600; line-height: 1.4; }
-        .detail-meta { font-size: 13px; color: #bbb; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; background: #252525; padding: 10px; border-radius: 8px; }
+        /* Detail View Styles */
+        .detail-box { background: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 30px; margin-bottom: 30px; }
+        .detail-title { font-family: 'Prompt'; font-size: 28px; color: #fff; margin-bottom: 15px; line-height: 1.4; }
+        .detail-meta { font-size: 14px; color: #aaa; margin-bottom: 25px; display: flex; flex-wrap: wrap; gap: 15px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        .meta-item { display: flex; align-items: center; gap: 5px; }
         .meta-label { color: #4dabff; font-weight: bold; }
-        .detail-content { font-size: 17px; color: #f0f0f0; white-space: pre-line; margin-top: 25px; line-height: 1.8; text-align: justify; word-break: break-word; }
+        .detail-banner { width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px; margin-bottom: 25px; display: block; background: #2a2a2a; }
+        .detail-content { font-size: 16px; color: #ddd; white-space: pre-line; margin-bottom: 30px; text-align: justify; word-break: break-word; }
         
-        .detail-banner { width: 100%; max-height: 480px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; display: block; background: #2a2a2a; border: 1px solid #333; }
-        .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+        /* Video Container */
+        .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
         /* Grid Lists */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
-        .card:hover { transform: translateY(-3px); border-color: #4dabff; }
-        .card img { width: 100%; height: 160px; object-fit: cover; background: #2a2a2a; }
-        .card-content { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-family: 'Prompt'; font-size: 16px; margin-bottom: 6px; color: #fff; font-weight: 600; }
-        .card-info { font-size: 12px; color: #bbb; margin-bottom: 8px; flex-grow: 1; }
-        .card-meta { font-size: 11px; color: #777; border-top: 1px solid #333; padding-top: 8px; display: flex; justify-content: space-between; }
+        .card:hover { transform: translateY(-5px); border-color: #4dabff; }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #2a2a2a; }
+        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-family: 'Prompt'; font-size: 18px; margin-bottom: 8px; color: #fff; }
+        .card-info { font-size: 13px; color: #bbb; margin-bottom: 10px; flex-grow: 1; }
         .info-label { color: #4dabff; font-weight: bold; }
+        .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
 
-        /* Contact Box */
-        .contact-box { background: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 25px; text-align: center; }
-        .map-wrapper { width: 100%; height: 320px; border-radius: 10px; overflow: hidden; margin-top: 15px; border: 1px solid #333; }
-        .map-wrapper iframe { width: 100%; height: 100%; border: 0; }
+        .counter-section { text-align: center; padding: 40px 20px; background: #121212; border-top: 1px solid #333; }
+        footer { background: #0a2c6d; text-align: center; padding: 40px 20px; margin-top: 40px; }
+        footer img { width: 50px; border-radius: 50%; margin-bottom: 10px; }
 
-        .counter-section { text-align: center; padding: 30px 20px; background: #121212; border-top: 1px solid #333; margin-top: 40px; width: 100%; }
-        footer { background: #0a2c6d; text-align: center; padding: 30px 20px; width: 100%; }
-        footer img { width: 45px; border-radius: 50%; margin-bottom: 8px; }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .sidebar-left { display: none; position: fixed; top: 0; left: -320px; width: 280px; height: 100%; z-index: 2000; background: #151515; overflow-y: auto; transition: 0.3s; box-shadow: 5px 0 15px rgba(0,0,0,0.7); }
-            .sidebar-left.open { display: block; left: 0; top: 0; padding-top: 30px; }
-            .content-area { width: 100%; }
-            .menu-grid { padding: 10px; gap: 6px; }
-            .menu-grid a { font-size: 11px; padding: 8px 2px; }
+        @media (max-width: 768px) {
             .detail-title { font-size: 22px; }
+            .detail-box { padding: 15px; }
         }
     </style>
 </head>
 <body>
 
 <nav class="navbar">
-    <div class="nav-brand">
-        <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
-        <span>Bangkhen Baptist Church</span>
-    </div>
-    <button class="sidebar-toggle" onclick="toggleSidebar()">📂 แผนผังเมนู</button>
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
+    <span style="font-family:'Prompt'; font-weight: 600;">Bangkhen Baptist Church</span>
 </nav>
 
-<nav class="menu-grid">
+<nav class="horizontal-menu">
     <a href="index.html">🏠 หน้าแรก</a>
     <a href="article.html?view=เทศนา" id="menu-เทศนา">🎙️ คำเทศนา</a>
     <a href="article.html?view=บทความ" id="menu-บทความ">📖 บทความ</a>
     <a href="article.html?view=คำพยาน" id="menu-คำพยาน">🙏 คำพยาน</a>
     <a href="article.html?view=ข่าวสาร" id="menu-ข่าวสาร">📢 ข่าวสาร</a>
-    <a href="article.html?view=ติดต่อ" id="menu-ติดต่อ">📞 ติดต่อเรา</a>
+    <a href="contact.html">📞 ติดต่อเรา</a>
 </nav>
 
-<div class="main-layout">
-    
-    <aside class="sidebar-left" id="sidebarMenu">
-        <div class="sidebar-title">🗂️ แผนผังคลังข้อมูลคริสตจักร</div>
-        
-        <div class="tree-category article-border">
-            <div class="tree-cat-title" style="color:#4dabff">📖 แผนผังบทความ</div>
-            <div class="tree-sub">
-                <div class="tree-sub-title">📅 ประจำเดือน/ปี</div>
-                <ul class="tree-list" id="article-date-tree"><li>กำลังโหลด...</li></ul>
+<div class="container">
+    <div id="full-article-view" style="display: none;">
+        <div class="detail-box">
+            <h1 id="det-title" class="detail-title">กำลังโหลดหัวข้อ...</h1>
+            <div class="detail-meta">
+                <span class="meta-item"><span class="meta-label" id="det-author-prefix">ผู้เขียน:</span> <span id="det-author">...</span></span>
+                <span class="meta-item" id="det-series-box"><span class="meta-label">ซีรีย์:</span> <span id="det-series">...</span></span>
+                <span class="meta-item" id="det-bible-box"><span class="meta-label">ข้อพระธรรม:</span> <span id="det-bible">...</span></span>
+                <span class="meta-item">📅 <span id="det-date">...</span></span>
             </div>
-            <div class="tree-sub">
-                <div class="tree-sub-title">🔖 เรียงตามซีรีย์</div>
-                <ul class="tree-list" id="article-series-tree"><li>กำลังโหลด...</li></ul>
+            
+            <div id="det-video-box" class="video-wrapper" style="display: none;">
+                <iframe id="det-iframe" src="" title="YouTube player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
-            <div class="tree-sub">
-                <div class="tree-sub-title">✍️ เรียงตามผู้แต่ง</div>
-                <ul class="tree-list" id="article-author-tree"><li>กำลังโหลด...</li></ul>
-            </div>
+
+            <img id="det-cover" class="detail-banner" src="logo.png" alt="Cover">
+            <div id="det-content" class="detail-content">กำลังโหลดเนื้อหา...</div>
         </div>
+    </div>
 
-        <div class="tree-category witness-border">
-            <div class="tree-cat-title" style="color:#2ecc71">🙏 แผนผังคำพยาน</div>
-            <div class="tree-sub">
-                <div class="tree-sub-title">📅 ประจำเดือน/ปี</div>
-                <ul class="tree-list" id="witness-date-tree"><li>กำลังโหลด...</li></ul>
-            </div>
-            <div class="tree-sub">
-                <div class="tree-sub-title">👤 ผู้เขียนคำพยาน</div>
-                <ul class="tree-list" id="witness-author-tree"><li>กำลังโหลด...</li></ul>
-            </div>
+    <div id="category-list-view" style="display: none;">
+        <h2 id="category-page-title" class="section-title">รายการบทความ</h2>
+        <div id="category-grid" class="grid-container">กำลังโหลดรายการ...</div>
+    </div>
+
+    <div class="counter-section">
+        <div style="margin-bottom: 30px;">
+            <h3 style="font-family: 'Prompt'; margin-bottom: 15px;">ติดต่อเราผ่าน LINE</h3>
+            <a href="https://lin.ee/NhFf2Rf" target="_blank">
+                <img src="https://qr-official.line.me/gs/M_082xyooj_BW.png?oat_สารบัญ" alt="LINE" style="width:150px; border-radius:10px;">
+            </a>
         </div>
-
-        <div class="tree-category sermon-border">
-            <div class="tree-cat-title" style="color:#e74c3c">🎙️ แผนผังคำเทศนา</div>
-            <div class="tree-sub">
-                <div class="tree-sub-title">📅 ประจำเดือน/ปี</div>
-                <ul class="tree-list" id="sermon-date-tree"><li>กำลังโหลด...</li></ul>
-            </div>
-            <div class="tree-sub">
-                <div class="tree-sub-title">🎙️ ผู้เทศนา</div>
-                <ul class="tree-list" id="sermon-author-tree"><li>กำลังโหลด...</li></ul>
-            </div>
-        </div>
-    </aside>
-
-    <main class="content-area">
-        
-        <div id="full-article-view" style="display: none;">
-            <div class="detail-box">
-                <h1 id="det-title" class="detail-title">กำลังโหลดหัวข้อ...</h1>
-                <div class="detail-meta">
-                    <span class="meta-item"><span class="meta-label" id="det-author-prefix">ผู้เขียน:</span> <span id="det-author">...</span></span>
-                    <span class="meta-item" id="det-series-box"><span class="meta-label">ซีรีย์:</span> <span id="det-series">...</span></span>
-                    <span class="meta-item" id="det-bible-box"><span class="meta-label">ข้อพระธรรม:</span> <span id="det-bible">...</span></span>
-                    <span>📅 <span id="det-date">...</span></span>
-                </div>
-                <div id="det-video-box" class="video-wrapper" style="display: none;">
-                    <iframe id="det-iframe" src="" title="YouTube" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-                <img id="det-cover" class="detail-banner" src="logo.png">
-                <div id="det-content" class="detail-content">กำลังโหลดรายละเอียดเนื้อหา...</div>
-            </div>
-        </div>
-
-        <div id="category-list-view" style="display: none;">
-            <h2 id="category-page-title" class="section-title">รายการข้อมูล</h2>
-            <div id="category-grid" class="grid-container">กำลังโหลดรายการ...</div>
-        </div>
-
-        <div id="contact-page-view" style="display: none;">
-            <h2 class="section-title">📍 ข้อมูลการติดต่อคริสตจักร</h2>
-            <div class="contact-box">
-                <div style="margin-bottom: 20px;">
-                    <strong style="color:#4dabff; font-size:18px; font-family:'Prompt';">🏢 สถานที่ตั้งคริสตจักร</strong>
-                    <p style="margin-top:5px;">2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <strong style="color:#4dabff; font-size:18px; font-family:'Prompt';">💬 LINE Official Account</strong><br>
-                    <a href="https://lin.ee/NhFf2Rf" target="_blank">
-                        <img src="https://qr-official.line.me/gs/M_082xyooj_BW.png?oat_สารบัญ" alt="LINE" style="width: 140px; border-radius: 10px; margin-top:8px;">
-                    </a>
-                </div>
-                <div>
-                    <strong style="color:#4dabff; font-size:18px; font-family:'Prompt';">🗺️ แผนที่ Google Maps</strong>
-                    <div class="map-wrapper">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.331182276551!2d100.570181!3d13.819114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29d7990159f3d%3A0x63351336df7a00f8!2z4LiE4Lij4Li04Liq4LiV4LiI4Lix4Lii4LmB4Lia4LmK4LiV4Li04Liq4LiV4Lia4Liy4LiH4LmA4LiC4LiZ!5e0!3m2!1sth!2sth!4v1650000000000!5m2!1sth!2sth" allowfullscreen="" loading="lazy"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-</div>
-
-<div class="counter-section">
-    <h3 style="margin-bottom: 12px; font-family: 'Prompt'; font-size:15px;">สถิติผู้เยี่ยมชม</h3>
-    <a href="https://info.flagcounter.com/iWY4">
-        <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
-    </a>
+        <h3 style="margin-bottom: 15px; font-family: 'Prompt';">สถิติผู้เยี่ยมชม</h3>
+        <a href="https://info.flagcounter.com/iWY4">
+            <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
+        </a>
+    </div>
 </div>
 
 <footer>
     <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'"><br>
-    <strong style="font-family:'Prompt'; font-size:15px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
-    <div style="margin-top: 5px; font-size:12px; color:#aaa;">© คริสตจักรแบ๊บติสต์บางเขน</div>
+    <strong style="font-family:'Prompt'; font-size:18px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
+    <div style="margin-top: 5px; font-size:13px; color:#aaa;">2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</div>
 </footer>
-
-<script>
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebarMenu');
-        sidebar.classList.toggle('open');
-    }
-</script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -242,12 +130,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const articleId = urlParams.get('id');
-    const viewCategory = urlParams.get('view');
-
-    let allArticlesList = [];
-
     function getYoutubeThumb(url) {
         if (!url) return null;
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -262,192 +144,50 @@
         return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}?autoplay=1&mute=1` : null;
     }
 
-    function parseMonthYear(dateStr) {
-        if(!dateStr) return "ไม่ระบุวันที่";
-        const parts = dateStr.split(/[-/]/);
-        if(parts.length >= 2) {
-            let year = parts[0].length === 4 ? parts[0] : parts[2];
-            let month = parts[1];
-            const monthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-            const mIndex = parseInt(month, 10) - 1;
-            return (mIndex >= 0 && mIndex < 12) ? `${monthNames[mIndex]} ${year}` : "ไม่ระบุเดือน";
-        }
-        return "ทั่วไป";
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+    const viewCategory = urlParams.get('view');
 
-    function buildSidebarTree(articles) {
-        const trees = {
-            "บทความ": { dates: new Set(), series: new Set(), authors: new Set() },
-            "คำพยาน": { dates: new Set(), authors: new Set() },
-            "เทศนา": { dates: new Set(), authors: new Set() }
-        };
-
-        articles.forEach(item => {
-            const cat = (item.category || item.Category || "").toString();
-            let mappedKey = "";
-            if (cat.includes("บทความ")) mappedKey = "บทความ";
-            else if (cat.includes("พยาน")) mappedKey = "คำพยาน";
-            else if (cat.includes("เทศนา")) mappedKey = "เทศนา";
-
-            if(mappedKey) {
-                const mYear = parseMonthYear(item.displayDate);
-                trees[mappedKey].dates.add(mYear);
-                
-                const author = item.authorName || item.author || "คริสตจักร";
-                trees[mappedKey].authors.add(author);
-
-                if(mappedKey === "บทความ" && item.series) {
-                    trees[mappedKey].series.add(item.series);
-                }
-            }
-        });
-
-        renderTreeNodes("article-date-tree", trees["บทความ"].dates, "บทความ", "date");
-        renderTreeNodes("article-series-tree", trees["บทความ"].series, "บทความ", "series");
-        renderTreeNodes("article-author-tree", trees["บทความ"].authors, "บทความ", "author");
-
-        renderTreeNodes("witness-date-tree", trees["คำพยาน"].dates, "คำพยาน", "date");
-        renderTreeNodes("witness-author-tree", trees["คำพยาน"].authors, "คำพยาน", "author");
-
-        renderTreeNodes("sermon-date-tree", trees["เทศนา"].dates, "เทศนา", "date");
-        renderTreeNodes("sermon-author-tree", trees["เทศนา"].authors, "เทศนา", "author");
-    }
-
-    function renderTreeNodes(elementId, dataset, category, filterType) {
-        const ul = document.getElementById(elementId);
-        if(!ul) return;
-        ul.innerHTML = "";
-        if(dataset.size === 0) {
-            ul.innerHTML = "<li>ไม่มีข้อมูล</li>";
-            return;
-        }
-        dataset.forEach(value => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.innerText = `• ${value}`;
-            a.onclick = () => {
-                filterContentFromTree(category, filterType, value);
-                document.getElementById('sidebarMenu').classList.remove('open');
-            };
-            li.appendChild(a);
-            ul.appendChild(li);
-        });
-    }
-
-    function filterContentFromTree(category, filterType, targetValue) {
-        document.getElementById('full-article-view').style.display = 'none';
-        document.getElementById('contact-page-view').style.display = 'none';
-        document.getElementById('category-list-view').style.display = 'block';
-        document.getElementById('category-page-title').innerText = `📋 กรอง: ${category} (${targetValue})`;
-        
-        const gridContainer = document.getElementById('category-grid');
-        gridContainer.innerHTML = "";
-        let count = 0;
-
-        allArticlesList.forEach(d => {
-            const currentCat = (d.category || d.Category || "").toString();
-            if (currentCat.includes(category)) {
-                let match = false;
-                if (filterType === 'date' && parseMonthYear(d.displayDate) === targetValue) match = true;
-                if (filterType === 'series' && d.series === targetValue) match = true;
-                if (filterType === 'author' && (d.authorName === targetValue || d.author === targetValue)) match = true;
-
-                if (match) {
-                    count++;
-                    const finalThumb = d.thumbUrl || getYoutubeThumb(d.youtubeUrl) || 'logo.png';
-                    const rawAuthor = d.authorName || d.author || "คริสตจักร";
-                    let prefix = "ผู้เขียน: ";
-                    if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
-
-                    const sHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
-                    const bHtml = d.bibleRef ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef}</div>` : '';
-
-                    const card = `
-                    <div class="card" onclick="window.location.href='article.html?id=${d.id}'">
-                        <img src="${finalThumb}" onerror="this.src='logo.png'">
-                        <div class="card-content">
-                            <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
-                            <div class="card-info">
-                                <div><span class="info-label">${prefix}</span> ${rawAuthor}</div>
-                                ${sHtml} ${bHtml}
-                            </div>
-                            <div class="card-meta">
-                                <span>📅 ${d.displayDate || ''}</span>
-                                <span style="color:#4dabff">อ่านต่อ...</span>
-                            </div>
-                        </div>
-                    </div>`;
-                    gridContainer.insertAdjacentHTML('beforeend', card);
-                }
-            }
-        });
-        if(count === 0) { gridContainer.innerHTML = "<p style='color:#aaa; text-align:center; padding:30px; grid-column:1/-1;'>ไม่พบข้อมูล</p>"; }
-    }
-
-    // เริ่มดึงข้อมูลจาก Firestore
-    const qAll = query(collection(db, "articles"), orderBy("displayDate", "desc"));
-    getDocs(qAll).then((snap) => {
-        snap.forEach(doc => {
-            allArticlesList.push({ id: doc.id, ...doc.data() });
-        });
-        
-        buildSidebarTree(allArticlesList);
-
-        if (articleId) {
-            renderFullArticle(articleId);
-        } else if (viewCategory === 'ติดต่อ') {
-            document.getElementById('full-article-view').style.display = 'none';
-            document.getElementById('category-list-view').style.display = 'none';
-            document.getElementById('contact-page-view').style.display = 'block';
-            const actM = document.getElementById('menu-ติดต่อ'); if(actM) actM.classList.add('active');
-        } else if (viewCategory) {
-            renderCategoryGrid(viewCategory);
-        } else {
-            document.getElementById('category-list-view').style.display = 'block';
-        }
-    }).catch(err => {
-        console.error("Error query Firestore:", err);
-    });
-
-    // แสดงบทความตัวเต็ม
-    function renderFullArticle(id) {
-        document.getElementById('category-list-view').style.display = 'none';
-        document.getElementById('contact-page-view').style.display = 'none';
+    if (articleId) {
         document.getElementById('full-article-view').style.display = 'block';
         
-        getDoc(doc(db, "articles", id)).then((snap) => {
-            if(snap.exists()) {
-                const data = snap.data();
+        getDoc(doc(db, "articles", articleId)).then((docSnap) => {
+            if (docSnap.exists()) {
+                const data = docSnap.data();
                 document.getElementById('det-title').innerText = data.title || 'ไม่มีหัวข้อ';
                 
-                // แก้ไขดึงเนื้อหารองรับ Case-insensitive ทั้ง content และ Content
+                // 1. ดักตรวจทั้ง .content พิมพ์เล็ก และ .Content พิมพ์ใหญ่ ป้องกันรายละเอียดว่างเปล่า
                 document.getElementById('det-content').innerText = data.content || data.Content || 'ไม่มีเนื้อหารายละเอียดระบุไว้ในฐานข้อมูล';
                 document.getElementById('det-date').innerText = data.displayDate || '';
                 document.getElementById('det-author').innerText = data.authorName || data.author || 'คริสตจักร';
                 
                 const cat = (data.category || data.Category || "").toString();
+                let prefix = "ผู้เขียน:";
                 if (cat.includes("เทศนา")) {
-                    document.getElementById('det-author-prefix').innerText = "ผู้เทศนา:";
-                    const actM = document.getElementById('menu-เทศนา'); if(actM) actM.classList.add('active');
+                    prefix = "ผู้เทศนา:";
+                    const menu = document.getElementById('menu-เทศนา'); if(menu) menu.classList.add('active');
                 } else if (cat.includes("พยาน")) {
-                    document.getElementById('det-author-prefix').innerText = "เจ้าของคำพยาน:";
-                    const actM = document.getElementById('menu-คำพยาน'); if(actM) actM.classList.add('active');
+                    prefix = "เจ้าของคำพยาน:";
+                    const menu = document.getElementById('menu-คำพยาน'); if(menu) menu.classList.add('active');
                 } else if (cat.includes("บทความ")) {
-                    const actM = document.getElementById('menu-บทความ'); if(actM) actM.classList.add('active');
+                    const menu = document.getElementById('menu-บทความ'); if(menu) menu.classList.add('active');
+                } else if (cat.includes("ข่าวสาร")) {
+                    const menu = document.getElementById('menu-ข่าวสาร'); if(menu) menu.classList.add('active');
+                }
+                document.getElementById('det-author-prefix').innerText = prefix;
+
+                if (data.series) {
+                    document.getElementById('det-series').innerText = data.series;
+                    document.getElementById('det-series-box').style.display = 'inline-flex';
+                } else {
+                    document.getElementById('det-series-box').style.display = 'none';
                 }
 
-                if (data.series) { 
-                    document.getElementById('det-series').innerText = data.series; 
-                    document.getElementById('det-series-box').style.display = 'inline';
-                } else { 
-                    document.getElementById('det-series-box').style.display = 'none'; 
-                }
-
-                if (data.bibleRef) { 
-                    document.getElementById('det-bible').innerText = data.bibleRef; 
-                    document.getElementById('det-bible-box').style.display = 'inline';
-                } else { 
-                    document.getElementById('det-bible-box').style.display = 'none'; 
+                if (data.bibleRef) {
+                    document.getElementById('det-bible').innerText = data.bibleRef;
+                    document.getElementById('det-bible-box').style.display = 'inline-flex';
+                } else {
+                    document.getElementById('det-bible-box').style.display = 'none';
                 }
 
                 const embedUrl = getYoutubeEmbed(data.youtubeUrl);
@@ -457,58 +197,79 @@
                 } else {
                     document.getElementById('det-video-box').style.display = 'none';
                 }
-                document.getElementById('det-cover').src = data.thumbUrl || getYoutubeThumb(data.youtubeUrl) || 'logo.png';
-            }
-        });
-    }
 
-    // แสดงรายการการ์ดแยกหมวดหมู่
-    function renderCategoryGrid(category) {
-        document.getElementById('full-article-view').style.display = 'none';
-        document.getElementById('contact-page-view').style.display = 'none';
+                const thumb = data.thumbUrl || getYoutubeThumb(data.youtubeUrl) || 'logo.png';
+                document.getElementById('det-cover').src = thumb;
+            } else {
+                document.getElementById('det-title').innerText = 'ไม่พบเนื้อหาที่ท่านค้นหา';
+                document.getElementById('det-content').innerText = 'บทความนี้อาจถูกลบหรือย้ายหมวดหมู่แล้ว';
+            }
+        }).catch(err => {
+            console.error(err);
+            document.getElementById('det-title').innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
+        });
+
+    } else if (viewCategory) {
         document.getElementById('category-list-view').style.display = 'block';
-        document.getElementById('category-page-title').innerText = `📋 รายการในหมวดหมู่: ${category}`;
+        document.getElementById('category-page-title').innerText = `📋 รายการในหมวดหมู่: ${viewCategory}`;
         
-        const activeMenu = document.getElementById(`menu-${category}`);
+        // ควบคุมปุ่มเมนูให้ Active ตามหมวดหมู่ที่กดเลือก
+        const activeMenu = document.getElementById(`menu-${viewCategory}`);
         if (activeMenu) activeMenu.classList.add('active');
 
-        const gridContainer = document.getElementById('category-grid');
-        gridContainer.innerHTML = "";
-        let count = 0;
+        const qAll = query(collection(db, "articles"), orderBy("displayDate", "desc"));
+        
+        getDocs(qAll).then((snap) => {
+            const gridContainer = document.getElementById('category-grid');
+            gridContainer.innerHTML = "";
+            let count = 0;
 
-        allArticlesList.forEach(d => {
-            const currentCat = (d.category || d.Category || "").toString();
-            if (currentCat.includes(category) || category.includes(currentCat)) {
-                count++;
-                const finalThumb = d.thumbUrl || getYoutubeThumb(d.youtubeUrl) || 'logo.png';
-                const rawAuthor = d.authorName || d.author || "คริสตจักร";
-                let prefix = "ผู้เขียน: ";
-                if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
+            snap.forEach((doc) => {
+                const d = doc.data();
+                // 2. แปลงเป็น String และทำให้รองรับการเช็กชื่อหมวดหมู่ที่ยืดหยุ่นขึ้น (Case-Insensitive)
+                const currentCat = (d.category || d.Category || "").toString();
 
-                const sHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
-                const bHtml = d.bibleRef ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef}</div>` : '';
+                if (currentCat.includes(viewCategory) || viewCategory.includes(currentCat)) {
+                    count++;
+                    const finalThumb = d.thumbUrl || getYoutubeThumb(d.youtubeUrl) || 'logo.png';
+                    const rawAuthor = d.authorName || d.author || "คริสตจักร";
+                    
+                    let prefix = "ผู้เขียน: ";
+                    if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
+                    else if (currentCat.includes("พยาน")) prefix = "เจ้าของคำพยาน: ";
 
-                const card = `
-                <div class="card" onclick="window.location.href='article.html?id=${d.id}'">
-                    <img src="${finalThumb}" onerror="this.src='logo.png'">
-                    <div class="card-content">
-                        <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
-                        <div class="card-info">
-                            <div><span class="info-label">${prefix}</span> ${rawAuthor}</div>
-                            ${sHtml} ${bHtml}
+                    const seriesHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
+                    const bibleHtml = d.bibleRef ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef}</div>` : '';
+
+                    const card = `
+                    <div class="card" onclick="location.href='article.html?id=${doc.id}'">
+                        <img src="${finalThumb}" alt="${d.title || ''}" onerror="this.src='logo.png'">
+                        <div class="card-content">
+                            <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
+                            <div class="card-info">
+                                <div><span class="info-label">${prefix}</span> ${rawAuthor}</div>
+                                ${seriesHtml}
+                                ${bibleHtml}
+                            </div>
+                            <div class="card-meta">
+                                <span>📅 ${d.displayDate || ''}</span>
+                                <span style="color:#4dabff">อ่านต่อ...</span>
+                            </div>
                         </div>
-                        <div class="card-meta">
-                            <span>📅 ${d.displayDate || ''}</span>
-                            <span style="color:#4dabff">อ่านต่อ...</span>
-                        </div>
-                    </div>
-                </div>`;
-                gridContainer.insertAdjacentHTML('beforeend', card);
+                    </div>`;
+                    gridContainer.insertAdjacentHTML('beforeend', card);
+                }
+            });
+
+            if (count === 0) {
+                gridContainer.innerHTML = `<p style='color:#aaa; text-align:center; padding: 40px 0; grid-column: 1/-1;'>🙏 ขณะนี้ยังไม่มีเนื้อหาในหมวดหมู่ ${viewCategory} บันทึกอยู่ในระบบ</p>`;
             }
+        }).catch(err => {
+            console.error(err);
+            document.getElementById('category-grid').innerHTML = "<p style='color:red; text-align:center; padding: 20px;'>เกิดข้อผิดพลาดในการโหลดข้อมูล กรุณาลองใหม่อีกครั้ง</p>";
         });
-        if(count === 0) { 
-            gridContainer.innerHTML = `<p style='color:#aaa; text-align:center; padding: 40px 0; grid-column: 1/-1;'>🙏 ขณะนี้ยังไม่มีเนื้อหาในหมวดหมู่ ${category} บันทึกอยู่ในระบบ</p>`; 
-        }
+    } else {
+        location.href = 'index.html';
     }
 </script>
 </body>
