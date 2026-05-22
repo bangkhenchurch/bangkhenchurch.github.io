@@ -63,11 +63,6 @@
         .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 
-        /* Contact View Styles */
-        .contact-box { background: #1e1e1e; border: 1px solid #333; border-radius: 15px; padding: 30px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .map-wrapper { width: 100%; height: 350px; border-radius: 12px; overflow: hidden; margin-top: 20px; border: 1px solid #333; }
-        .map-wrapper iframe { width: 100%; height: 100%; border: 0; }
-
         /* Grid Lists */
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
         .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
@@ -90,7 +85,8 @@
             .content-area { width: 100%; }
             .horizontal-menu { padding: 8px; gap: 5px; border-radius: 20px; }
             .horizontal-menu a { font-size: 13px; padding: 8px 12px; }
-            .detail-title { font-size: 22px; .detail-box { padding: 15px; } }
+            .detail-title { font-size: 22px; }
+            .detail-box { padding: 15px; }
         }
     </style>
 </head>
@@ -110,7 +106,7 @@
     <a href="article.html?view=บทความ" id="menu-บทความ">📖 บทความ</a>
     <a href="article.html?view=คำพยาน" id="menu-คำพยาน">🙏 คำพยาน</a>
     <a href="article.html?view=ข่าวสาร" id="menu-ข่าวสาร">📢 ข่าวสาร</a>
-    <a href="article.html?view=ติดต่อ" id="menu-ติดต่อ">📞 ติดต่อเรา</a>
+    <a href="contact.html" id="menu-ติดต่อ">📞 ติดต่อเรา</a>
 </nav>
 
 <div class="main-layout">
@@ -183,28 +179,6 @@
         <div id="category-list-view" style="display: none;">
             <h2 id="category-page-title" class="section-title">รายการบทความ</h2>
             <div id="category-grid" class="grid-container">กำลังโหลดรายการ...</div>
-        </div>
-
-        <div id="contact-page-view" style="display: none;">
-            <h2 class="section-title">📞 ข้อมูลการติดต่อคริสตจักร</h2>
-            <div class="contact-box">
-                <div style="margin-bottom: 25px;">
-                    <strong style="color:#4dabff; font-size:18px; font-family:'Prompt';">🏢 สถานที่ตั้งคริสตจักร</strong>
-                    <p style="margin-top:8px; font-size:15px; color:#ddd;">2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</p>
-                </div>
-                <div style="margin-bottom: 25px;">
-                    <strong style="color:#4dabff; font-size:18px; font-family:'Prompt';">💬 LINE Official Account</strong><br>
-                    <a href="https://lin.ee/NhFf2Rf" target="_blank">
-                        <img src="https://qr-official.line.me/gs/M_082xyooj_BW.png?oat_สารบัญ" alt="LINE Official" style="width: 150px; border-radius: 12px; margin-top:10px; border: 1px solid #333;">
-                    </a>
-                </div>
-                <div>
-                    <strong style="color:#4dabff; font-size:18px; font-family:'Prompt';">🗺️ แผนที่ Google Maps</strong>
-                    <div class="map-wrapper">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3874.346765792244!2d100.5684615!3d13.8182181!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29db195c276f7%3A0xb366cfc5bc617b0d!2z4LiE4Lij4Li04Liq4LiV4LiI4Lix4LiB4Lij4LmB4Lia4Lib4LiV4Li04Liq4Lia4Lix4LiH4LmA4LiC4LiZ!5e0!3m2!1sth!2sth!4v1716380000000" allowfullscreen="" loading="lazy"></iframe>
-                    </div>
-                </div>
-            </div>
         </div>
 
     </main>
@@ -339,11 +313,9 @@
 
     function filterContentFromTree(category, filterType, targetValue) {
         document.getElementById('full-article-view').style.display = 'none';
-        document.getElementById('contact-page-view').style.display = 'none';
         document.getElementById('category-list-view').style.display = 'block';
         document.getElementById('category-page-title').innerText = `📋 กรอง: ${category} (${targetValue})`;
         
-        // ล้างสถานะ active เมนูด้านบนทั้งหมด
         document.querySelectorAll('.horizontal-menu a').forEach(el => el.classList.remove('active'));
 
         const gridContainer = document.getElementById('category-grid');
@@ -391,7 +363,7 @@
         if(count === 0) { gridContainer.innerHTML = "<p style='color:#aaa; text-align:center; padding:30px; grid-column:1/-1;'>ไม่พบข้อมูล</p>"; }
     }
 
-    // เริ่มดึงข้อมูลจาก Firestore เพื่อสร้างต้นไม้ Sidebar และจัดหน้า
+    // เรียกดึงข้อมูลหลักจากฐานข้อมูล
     const qAll = query(collection(db, "articles"), orderBy("displayDate", "desc"));
     getDocs(qAll).then((snap) => {
         snap.forEach(doc => {
@@ -402,23 +374,17 @@
 
         if (articleId) {
             renderFullArticle(articleId);
-        } else if (viewCategory === 'ติดต่อ') {
-            document.getElementById('full-article-view').style.display = 'none';
-            document.getElementById('category-list-view').style.display = 'none';
-            document.getElementById('contact-page-view').style.display = 'block';
-            const actM = document.getElementById('menu-ติดต่อ'); if(actM) actM.classList.add('active');
         } else if (viewCategory) {
             renderCategoryGrid(viewCategory);
         } else {
             document.getElementById('category-list-view').style.display = 'block';
         }
     }).catch(err => {
-        console.error("Error configuration Firestore:", err);
+        console.error("Firestore Error:", err);
     });
 
     function renderFullArticle(id) {
         document.getElementById('category-list-view').style.display = 'none';
-        document.getElementById('contact-page-view').style.display = 'none';
         document.getElementById('full-article-view').style.display = 'block';
         
         getDoc(doc(db, "articles", id)).then((snap) => {
@@ -426,7 +392,6 @@
                 const data = snap.data();
                 document.getElementById('det-title').innerText = data.title || data.Title || 'ไม่มีหัวข้อ';
                 
-                // ค้นหาฟิลด์เนื้อหาแบบครอบจักรวาล ป้องกันปัญหาฟิลด์ชื่อไม่ตรง
                 const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || 'ไม่มีเนื้อหารายละเอียดระบุไว้ในฐานข้อมูล';
                 document.getElementById('det-content').innerText = mainContent;
                 
@@ -476,7 +441,6 @@
 
     function renderCategoryGrid(category) {
         document.getElementById('full-article-view').style.display = 'none';
-        document.getElementById('contact-page-view').style.display = 'none';
         document.getElementById('category-list-view').style.display = 'block';
         document.getElementById('category-page-title').innerText = `📋 รายการในหมวดหมู่: ${category}`;
         
@@ -489,7 +453,9 @@
 
         allArticlesList.forEach(d => {
             const currentCat = (d.category || d.Category || "").toString();
-            if (currentCat.includes(category) || category.includes(currentCat)) {
+            
+            // ตรวจสอบความถูกต้องของหมวดหมู่เพื่อแยกข่าวสารและบทความอย่างชัดเจน
+            if (currentCat === category || currentCat.includes(category) || category.includes(currentCat)) {
                 count++;
                 const finalThumb = d.thumbUrl || d.thumbnail || getYoutubeThumb(d.youtubeUrl || d.youtube) || 'logo.png';
                 const rawAuthor = d.authorName || d.author || "คริสตจักร";
