@@ -27,7 +27,7 @@
         .meta-item { display: flex; align-items: center; gap: 5px; }
         .meta-label { color: #4dabff; font-weight: bold; }
         .detail-banner { width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px; margin-bottom: 25px; display: block; background: #2a2a2a; }
-        .detail-content { font-size: 16px; color: #ddd; white-space: pre-line; margin-bottom: 30px; text-align: justify; word-break: break-word; }
+        .detail-content { font-size: 16px; color: #ddd; white-space: pre-line; margin-bottom: 30px; }
         
         /* Video Container */
         .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
@@ -63,11 +63,11 @@
 
 <nav class="horizontal-menu">
     <a href="index.html">🏠 หน้าแรก</a>
-    <a href="article.html?view=เทศนา" id="menu-เทศนา">🎙️ คำเทศนา</a>
-    <a href="article.html?view=บทความ" id="menu-บทความ">📖 บทความ</a>
-    <a href="article.html?view=คำพยาน" id="menu-คำพยาน">🙏 คำพยาน</a>
-    <a href="article.html?view=ข่าวสาร" id="menu-ข่าวสาร">📢 ข่าวสาร</a>
-    <a href="contact.html" id="menu-ติดต่อ">📞 ติดต่อเรา</a>
+    <a href="article.html?view=เทศนา">🎙️ คำเทศนา</a>
+    <a href="article.html?view=บทความ">📖 บทความ</a>
+    <a href="article.html?view=คำพยาน">🙏 คำพยาน</a>
+    <a href="article.html?view=ข่าวสาร">📢 ข่าวสาร</a>
+    <a href="contact.html" class="active">📞 ติดต่อเรา</a>
 </nav>
 
 <div class="container">
@@ -154,53 +154,36 @@
         getDoc(doc(db, "articles", articleId)).then((docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                document.getElementById('det-title').innerText = data.title || data.Title || 'ไม่มีหัวข้อ';
-                
-                // แก้ไขจุดนี้: ดักกวาดชื่อฟิลด์ทุกรูปแบบที่มีโอกาสเป็นไปได้ใน Firebase (detail, Detail, content, Content, body)
-                const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || '';
-                document.getElementById('det-content').innerText = mainContent;
-                
-                document.getElementById('det-date').innerText = data.displayDate || data.date || '';
+                document.getElementById('det-title').innerText = data.title || 'ไม่มีหัวข้อ';
+                document.getElementById('det-content').innerText = data.content || '';
+                document.getElementById('det-date').innerText = data.displayDate || '';
                 document.getElementById('det-author').innerText = data.authorName || data.author || 'คริสตจักร';
                 
-                const cat = (data.category || data.Category || "").toString();
+                const cat = data.category || data.Category || "";
                 let prefix = "ผู้เขียน:";
-                if (cat.includes("เทศนา")) {
-                    prefix = "ผู้เทศนา:";
-                    const menu = document.getElementById('menu-เทศนา'); if(menu) menu.classList.add('active');
-                } else if (cat.includes("พยาน")) {
-                    prefix = "เจ้าของคำพยาน:";
-                    const menu = document.getElementById('menu-คำพยาน'); if(menu) menu.classList.add('active');
-                } else if (cat.includes("บทความ")) {
-                    const menu = document.getElementById('menu-บทความ'); if(menu) menu.classList.add('active');
-                } else if (cat.includes("ข่าวสาร")) {
-                    const menu = document.getElementById('menu-ข่าวสาร'); if(menu) menu.classList.add('active');
-                }
+                if (cat.includes("เทศนา")) prefix = "ผู้เทศนา:";
+                else if (cat.includes("พยาน")) prefix = "เจ้าของคำพยาน:";
                 document.getElementById('det-author-prefix').innerText = prefix;
 
                 if (data.series) {
                     document.getElementById('det-series').innerText = data.series;
-                    document.getElementById('det-series-box').style.display = 'inline-flex';
                 } else {
                     document.getElementById('det-series-box').style.display = 'none';
                 }
 
-                if (data.bibleRef || data.bible) {
-                    document.getElementById('det-bible').innerText = data.bibleRef || data.bible;
-                    document.getElementById('det-bible-box').style.display = 'inline-flex';
+                if (data.bibleRef) {
+                    document.getElementById('det-bible').innerText = data.bibleRef;
                 } else {
                     document.getElementById('det-bible-box').style.display = 'none';
                 }
 
-                const embedUrl = getYoutubeEmbed(data.youtubeUrl || data.youtube);
+                const embedUrl = getYoutubeEmbed(data.youtubeUrl);
                 if (embedUrl) {
                     document.getElementById('det-iframe').src = embedUrl;
                     document.getElementById('det-video-box').style.display = 'block';
-                } else {
-                    document.getElementById('det-video-box').style.display = 'none';
                 }
 
-                const thumb = data.thumbUrl || data.thumbnail || getYoutubeThumb(data.youtubeUrl || data.youtube) || 'logo.png';
+                const thumb = data.thumbUrl || getYoutubeThumb(data.youtubeUrl) || 'logo.png';
                 document.getElementById('det-cover').src = thumb;
             } else {
                 document.getElementById('det-title').innerText = 'ไม่พบเนื้อหาที่ท่านค้นหา';
@@ -227,32 +210,32 @@
 
             snap.forEach((doc) => {
                 const d = doc.data();
-                const currentCat = (d.category || d.Category || "").toString();
+                const currentCat = d.category || d.Category || "";
 
-                if (currentCat.includes(viewCategory) || viewCategory.includes(currentCat)) {
+                if (currentCat.indexOf(viewCategory) !== -1) {
                     count++;
-                    const finalThumb = d.thumbUrl || d.thumbnail || getYoutubeThumb(d.youtubeUrl || d.youtube) || 'logo.png';
+                    const finalThumb = d.thumbUrl || getYoutubeThumb(d.youtubeUrl) || 'logo.png';
                     const rawAuthor = d.authorName || d.author || "คริสตจักร";
                     
                     let prefix = "ผู้เขียน: ";
-                    if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
-                    else if (currentCat.includes("พยาน")) prefix = "เจ้าของคำพยาน: ";
+                    if (currentCat.indexOf("เทศนา") !== -1) prefix = "ผู้เทศนา: ";
+                    else if (currentCat.indexOf("พยาน") !== -1) prefix = "เจ้าของคำพยาน: ";
 
                     const seriesHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
-                    const bibleHtml = (d.bibleRef || d.bible) ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef || d.bible}</div>` : '';
+                    const bibleHtml = d.bibleRef ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef}</div>` : '';
 
                     const card = `
                     <div class="card" onclick="location.href='article.html?id=${doc.id}'">
-                        <img src="${finalThumb}" alt="${d.title || ''}" onerror="this.src='logo.png'">
+                        <img src="${finalThumb}" alt="${d.title}" onerror="this.src='logo.png'">
                         <div class="card-content">
-                            <h4 class="card-title">${d.title || d.Title || 'ไม่มีหัวข้อ'}</h4>
+                            <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
                             <div class="card-info">
                                 <div><span class="info-label">${prefix}</span> ${rawAuthor}</div>
                                 ${seriesHtml}
                                 ${bibleHtml}
                             </div>
                             <div class="card-meta">
-                                <span>📅 ${d.displayDate || d.date || ''}</span>
+                                <span>📅 ${d.displayDate || ''}</span>
                                 <span style="color:#4dabff">อ่านต่อ...</span>
                             </div>
                         </div>
