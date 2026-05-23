@@ -78,6 +78,9 @@
         .info-label { color: #4dabff; font-weight: bold; }
         .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
 
+        /* กล่องแจ้งเตือน Error บนหน้าจอ (ลบออกได้ทีหลังเมื่อเสร็จงาน) */
+        .debug-alert { background: #742a2a; border: 2px dashed #ff4a4a; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-family: monospace; font-size: 13px; color: #fff; display: none; }
+
         .counter-section { text-align: center; padding: 40px 20px; background: #121212; border-top: 1px solid #333; }
         footer { background: #0a2c6d; text-align: center; padding: 40px 20px; }
         footer img { width: 50px; border-radius: 50%; margin-bottom: 10px; }
@@ -160,6 +163,7 @@
     </aside>
 
     <main class="content-area">
+        <div id="debug-box" class="debug-alert"></div>
         
         <div id="full-article-view" style="display: none;">
             <div class="detail-box">
@@ -205,6 +209,13 @@
 </footer>
 
 <script>
+    function showDebugMessage(msg) {
+        const box = document.getElementById('debug-box');
+        if(box) {
+            box.style.display = 'block';
+            box.innerHTML += `<div>⚠️ ${msg}</div>`;
+        }
+    }
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebarMenu');
         sidebar.classList.toggle('open');
@@ -223,8 +234,14 @@
         appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    // เปิดใช้งาน Firebase ด้วยความระมัดระวัง
+    let app, db;
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+    } catch(e) {
+        showDebugMessage("ไม่สามารถเชื่อมต่อ Firebase Config ได้: " + e.message);
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
     const articleId = urlParams.get('id');
@@ -370,7 +387,7 @@
         if(count === 0) { gridContainer.innerHTML = "<p style='color:#aaa; text-align:center; padding:30px; grid-column:1/-1;'>ไม่พบข้อมูล</p>"; }
     }
 
-    // ฟังก์ชันจัดการแสดงผลบทความเดี่ยวตัวเต็ม
+    // ฟังก์ชันจัดการแสดงผลบทความเดี่ยวตัวเต็ม (ดึงข้อมูลแบบฉลาดรอบด้าน)
     function renderFullArticle(id) {
         document.getElementById('category-list-view').style.display = 'none';
         document.getElementById('full-article-view').style.display = 'block';
@@ -379,9 +396,11 @@
             if(snap.exists()) {
                 const data = snap.data();
                 
-                document.getElementById('det-title').innerText = data.title || data.Title || data.topic || 'ไม่มีหัวข้อ';
+                // ตรวจหาฟิลด์หัวข้อในทุกๆ รูปแบบ
+                document.getElementById('det-title').innerText = data.title || data.Title || data.topic || data.Topic || 'ไม่มีหัวข้อ';
                 
-                const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || data.Body || 'ไม่มีเนื้อหารายละเอียดระบุไว้ในฐานข้อมูล';
+                // ดึงเนื้อหาหลัก ค้นหาแบบกระจายความเสี่ยงครอบคลุมทุกคีย์
+                const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || data.Body || data.desc || data.description || 'ไม่มีข้อมูลรายละเอียดในเอกสารนี้';
                 document.getElementById('det-content').innerText = mainContent;
                 
                 document.getElementById('det-date').innerText = data.displayDate || data.date || data.Date || '';
@@ -424,10 +443,10 @@
                     document.getElementById('det-video-box').style.display = 'none';
                 }
                 
-                const finalThumb = data.thumbUrl || data.thumbnail || data.Thumb || getYoutubeThumb(data.youtubeUrl || data.youtube || data.yt1) || 'logo.png';
+                const finalThumb = data.thumbUrl || data.thumbnail || data.Thumb || data.imageUrl || data.image || data.img || getYoutubeThumb(data.youtubeUrl || data.youtube || data.yt1) || 'logo.png';
                 document.getElementById('det-cover').src = finalThumb;
 
-                // ตรวจสอบรูปภาพรายละเอียดเพิ่มเติม
+                // ระบบแสดงรูปรายละเอียดเพิ่มเติมสแกนจากฟิลด์ทางเลือก
                 const detailImgUrl = data.detailImg || data.contentImg || data.img || data.imageUrl || data.image || data.detailImage || null;
                 const imgBox = document.getElementById('det-additional-img-box');
                 if (detailImgUrl && detailImgUrl !== finalThumb) {
@@ -436,11 +455,12 @@
                     imgBox.innerHTML = "";
                 }
             } else {
+                showDebugMessage(`ไม่เจอ Document ID: "${id}" ในคอลเลกชัน articles`);
                 document.getElementById('det-title').innerText = "ไม่พบเนื้อหา";
                 document.getElementById('det-content').innerText = "ขออภัย ไม่พบรายการข้อมูลที่ท่านเลือกในฐานข้อมูลคริสตจักร";
             }
         }).catch(err => {
-            console.error("Error fetching doc details:", err);
+            showDebugMessage("เกิดข้อผิดพลาดในการดึงเอกสาร: " + err.message);
         });
     }
 
@@ -461,7 +481,7 @@
             
             if (currentCat === category || currentCat.includes(category) || category.includes(currentCat)) {
                 count++;
-                const finalThumb = d.thumbUrl || d.thumbnail || d.Thumb || getYoutubeThumb(d.youtubeUrl || d.youtube || d.yt1) || 'logo.png';
+                const finalThumb = d.thumbUrl || d.thumbnail || d.Thumb || d.imageUrl || d.image || d.img || getYoutubeThumb(d.youtubeUrl || d.youtube || d.yt1) || 'logo.png';
                 const rawAuthor = d.authorName || d.author || "คริสตจักร";
                 let prefix = "ผู้เขียน: ";
                 if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
@@ -474,7 +494,7 @@
                 <div class="card" onclick="window.location.href='article.html?id=${d.id}'">
                     <img src="${finalThumb}" onerror="this.src='logo.png'">
                     <div class="card-content">
-                        <h4 class="card-title">${d.title || d.Title || 'ไม่มีหัวข้อ'}</h4>
+                        <h4 class="card-title">${d.title || d.Title || d.topic || 'ไม่มีหัวข้อ'}</h4>
                         <div class="card-info">
                             <div><span class="info-label">${prefix}</span> ${rawAuthor}</div>
                             ${sHtml} ${bHtml}
@@ -493,14 +513,20 @@
         }
     }
 
-    // แก้ไขจุดนี้: ดึงข้อมูลแบบปกติไม่ใช้ orderBy เพื่อไม่ให้โดน Firebase บล็อกเมื่อเจอเอกสารที่ไม่มีฟิลด์วันที่
+    // เริ่มทำงานดึงข้อมูลจากฐานข้อมูล
     getDocs(collection(db, "articles")).then((snap) => {
         allArticlesList = []; 
+        
+        if (snap.empty) {
+            showDebugMessage("คำเตือน: คอลเลกชัน 'articles' ในฐานข้อมูลของคุณว่างเปล่า ไม่มีข้อมูลเลยสักชิ้นเดียว");
+        }
+
         snap.forEach(doc => {
-            allArticlesList.push({ id: doc.id, ...doc.data() });
+            const data = doc.data();
+            allArticlesList.push({ id: doc.id, ...data });
         });
         
-        // ใช้ JavaScript เรียงลำดับวันที่บนเครื่องแทนเพื่อความปลอดภัย
+        // เรียงลำดับวันที่ด้วย JavaScript
         allArticlesList.sort((a, b) => {
             const dateA = a.displayDate || a.date || "";
             const dateB = b.displayDate || b.date || "";
@@ -515,9 +541,13 @@
             renderCategoryGrid(viewCategory);
         } else {
             document.getElementById('category-list-view').style.display = 'block';
+            if (allArticlesList.length > 0) {
+                // หากหน้าว่างเปล่าแต่ไม่ได้กรอง ให้แสดงรายการทั้งหมดเป็นค่าตั้งต้น
+                renderCategoryGrid(allArticlesList[0].category || "บทความ");
+            }
         }
     }).catch(err => {
-        console.error("Firestore Error:", err);
+        showDebugMessage("ไม่สามารถเรียกดูคอลเลกชันคลังบทความได้ (Firestore Error): " + err.message);
     });
 </script>
 </body>
