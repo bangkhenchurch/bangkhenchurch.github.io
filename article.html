@@ -58,7 +58,7 @@
         .meta-label { color: #4dabff; font-weight: bold; }
         .detail-banner { width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px; margin-bottom: 25px; display: block; background: #2a2a2a; border: 1px solid #333; }
         
-        /* รูปภาพรายละเอียดเพิ่มเติมด้านในบล็อกเนื้อหา */
+        /* รูปภาพรายละเอียดเพิ่มเติม */
         .detail-additional-img { width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px; margin: 20px 0; display: block; border: 1px solid #3d3d3d; }
         
         .detail-content { font-size: 16px; color: #ddd; white-space: pre-line; margin-bottom: 30px; text-align: justify; word-break: break-word; }
@@ -213,7 +213,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, query, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
@@ -370,7 +370,7 @@
         if(count === 0) { gridContainer.innerHTML = "<p style='color:#aaa; text-align:center; padding:30px; grid-column:1/-1;'>ไม่พบข้อมูล</p>"; }
     }
 
-    // ฟังก์ชันจัดการแสดงผลบทความเดี่ยวตัวเต็ม (ปรับปรุงระบบดึงฟิลด์ให้ปลอดภัย 100%)
+    // ฟังก์ชันจัดการแสดงผลบทความเดี่ยวตัวเต็ม
     function renderFullArticle(id) {
         document.getElementById('category-list-view').style.display = 'none';
         document.getElementById('full-article-view').style.display = 'block';
@@ -379,10 +379,8 @@
             if(snap.exists()) {
                 const data = snap.data();
                 
-                // ตรวจสอบหัวข้อเรื่องทุกรูปแบบตัวแปร
                 document.getElementById('det-title').innerText = data.title || data.Title || data.topic || 'ไม่มีหัวข้อ';
                 
-                // ค้นหาข้อความรายละเอียดหลักจากทุกฟิลด์ที่เป็นไปได้
                 const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || data.Body || 'ไม่มีเนื้อหารายละเอียดระบุไว้ในฐานข้อมูล';
                 document.getElementById('det-content').innerText = mainContent;
                 
@@ -429,7 +427,7 @@
                 const finalThumb = data.thumbUrl || data.thumbnail || data.Thumb || getYoutubeThumb(data.youtubeUrl || data.youtube || data.yt1) || 'logo.png';
                 document.getElementById('det-cover').src = finalThumb;
 
-                // ตรวจสอบและดึงภาพรายละเอียดเพิ่มเติม (สแกนหาจากชื่อฟิลด์ทุกรูปแบบ)
+                // ตรวจสอบรูปภาพรายละเอียดเพิ่มเติม
                 const detailImgUrl = data.detailImg || data.contentImg || data.img || data.imageUrl || data.image || data.detailImage || null;
                 const imgBox = document.getElementById('det-additional-img-box');
                 if (detailImgUrl && detailImgUrl !== finalThumb) {
@@ -495,12 +493,18 @@
         }
     }
 
-    // เรียกทำงานดึงข้อมูลหลักจากฐานข้อมูล
-    const qAll = query(collection(db, "articles"), orderBy("displayDate", "desc"));
-    getDocs(qAll).then((snap) => {
+    // แก้ไขจุดนี้: ดึงข้อมูลแบบปกติไม่ใช้ orderBy เพื่อไม่ให้โดน Firebase บล็อกเมื่อเจอเอกสารที่ไม่มีฟิลด์วันที่
+    getDocs(collection(db, "articles")).then((snap) => {
         allArticlesList = []; 
         snap.forEach(doc => {
             allArticlesList.push({ id: doc.id, ...doc.data() });
+        });
+        
+        // ใช้ JavaScript เรียงลำดับวันที่บนเครื่องแทนเพื่อความปลอดภัย
+        allArticlesList.sort((a, b) => {
+            const dateA = a.displayDate || a.date || "";
+            const dateB = b.displayDate || b.date || "";
+            return dateB.localeCompare(dateA);
         });
         
         buildSidebarTree(allArticlesList);
