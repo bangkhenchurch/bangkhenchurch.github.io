@@ -9,7 +9,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { overflow-x: hidden; width: 100%; }
-        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
+        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.8; }
         
         /* Top Navigation Bar */
         .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 1000; }
@@ -58,10 +58,12 @@
         .meta-label { color: #4dabff; font-weight: bold; }
         .detail-banner { width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px; margin-bottom: 25px; display: block; background: #2a2a2a; border: 1px solid #333; }
         
-        /* รูปภาพรายละเอียดเพิ่มเติม (รูปที่ 2 และ 3) */
+        /* รูปภาพรายละเอียดเพิ่มเติม */
         .detail-additional-img { width: 100%; max-height: 550px; object-fit: contain; border-radius: 12px; margin: 15px 0; display: block; background: #151515; border: 1px solid #3d3d3d; }
         
-        .detail-content { font-size: 16px; color: #ddd; white-space: pre-line; margin-bottom: 30px; text-align: justify; word-break: break-word; }
+        /* เนื้อหาการจัดรูปแบบข้อความ */
+        .detail-content { font-size: 16px; color: #dddddd; margin-bottom: 30px; text-align: justify; word-break: break-word; }
+        .detail-content p { margin-bottom: 15px; text-indent: 30px; line-height: 1.8; }
         
         /* Video Container */
         .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
@@ -78,7 +80,7 @@
         .info-label { color: #4dabff; font-weight: bold; }
         .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
 
-        /* กล่องแจ้งเตือน Error บนหน้าจอ (ลบออกได้ทีหลังเมื่อเสร็จงาน) */
+        /* กล่องแจ้งเตือน Error บนหน้าจอ */
         .debug-alert { background: #742a2a; border: 2px dashed #ff4a4a; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-family: monospace; font-size: 13px; color: #fff; display: none; }
 
         .counter-section { text-align: center; padding: 40px 20px; background: #121212; border-top: 1px solid #333; }
@@ -359,206 +361,4 @@
                     const rawAuthor = d.authorName || d.author || "คริสตจักร";
                     let prefix = "ผู้เขียน: ";
                     if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
-                    else if (currentCat.includes("พยาน")) prefix = "เจ้าของคำพยาน: ";
-
-                    const sHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
-                    const bHtml = (d.bibleRef || d.bible) ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef || d.bible}</div>` : '';
-
-                    const card = `
-                    <div class="card" onclick="window.location.href='article.html?id=${d.id}'">
-                        <img src="${finalThumb}" onerror="this.src='logo.png'">
-                        <div class="card-content">
-                            <h4 class="card-title">${d.title || d.Title || 'ไม่มีหัวข้อ'}</h4>
-                            <div class="card-info">
-                                <div><span class="info-label">${prefix}</span> ${rawAuthor}</div>
-                                ${sHtml} ${bHtml}
-                            </div>
-                            <div class="card-meta">
-                                <span>📅 ${d.displayDate || d.date || ''}</span>
-                                <span style="color:#4dabff">อ่านต่อ...</span>
-                            </div>
-                        </div>
-                    </div>`;
-                    gridContainer.insertAdjacentHTML('beforeend', card);
-                }
-            }
-        });
-        if(count === 0) { gridContainer.innerHTML = "<p style='color:#aaa; text-align:center; padding:30px; grid-column:1/-1;'>ไม่พบข้อมูล</p>"; }
-    }
-
-    // ฟังก์ชันจัดการแสดงผลบทความเดี่ยวตัวเต็ม (ดึงข้อมูลและสแกนหารูปทั้งหมด)
-    function renderFullArticle(id) {
-        document.getElementById('category-list-view').style.display = 'none';
-        document.getElementById('full-article-view').style.display = 'block';
-        
-        getDoc(doc(db, "articles", id)).then((snap) => {
-            if(snap.exists()) {
-                const data = snap.data();
-                
-                document.getElementById('det-title').innerText = data.title || data.Title || data.topic || data.Topic || 'ไม่มีหัวข้อ';
-                
-                const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || data.Body || data.desc || data.description || 'ไม่มีข้อมูลรายละเอียดในเอกสารนี้';
-                document.getElementById('det-content').innerText = mainContent;
-                
-                document.getElementById('det-date').innerText = data.displayDate || data.date || data.Date || '';
-                document.getElementById('det-author').innerText = data.authorName || data.author || data.Author || 'คริสตจักร';
-                
-                const cat = (data.category || data.Category || "").toString();
-                let prefix = "ผู้เขียน:";
-                if (cat.includes("เทศนา")) {
-                    prefix = "ผู้เทศนา:";
-                    const actM = document.getElementById('menu-เทศนา'); if(actM) actM.classList.add('active');
-                } else if (cat.includes("พยาน")) {
-                    prefix = "เจ้าของคำพยาน:";
-                    const actM = document.getElementById('menu-คำพยาน'); if(actM) actM.classList.add('active');
-                } else if (cat.includes("บทความ")) {
-                    const actM = document.getElementById('menu-บทความ'); if(actM) actM.classList.add('active');
-                } else if (cat.includes("ข่าวสาร")) {
-                    const actM = document.getElementById('menu-ข่าวสาร'); if(actM) actM.classList.add('active');
-                }
-                document.getElementById('det-author-prefix').innerText = prefix;
-
-                if (data.series || data.Series) { 
-                    document.getElementById('det-series').innerText = data.series || data.Series; 
-                    document.getElementById('det-series-box').style.display = 'inline';
-                } else { 
-                    document.getElementById('det-series-box').style.display = 'none'; 
-                }
-
-                if (data.bibleRef || data.bible || data.Bible) { 
-                    document.getElementById('det-bible').innerText = data.bibleRef || data.bible || data.Bible; 
-                    document.getElementById('det-bible-box').style.display = 'inline';
-                } else { 
-                    document.getElementById('det-bible-box').style.display = 'none'; 
-                }
-
-                const embedUrl = getYoutubeEmbed(data.youtubeUrl || data.youtube || data.yt1 || data.Youtube);
-                if (embedUrl) {
-                    document.getElementById('det-iframe').src = embedUrl;
-                    document.getElementById('det-video-box').style.display = 'block';
-                } else {
-                    document.getElementById('det-video-box').style.display = 'none';
-                }
-                
-                const finalThumb = data.thumbUrl || data.thumbnail || data.Thumb || data.imageUrl || data.image || data.img || getYoutubeThumb(data.youtubeUrl || data.youtube || data.yt1) || 'logo.png';
-                document.getElementById('det-cover').src = finalThumb;
-
-                // 🛠️ ส่วนจัดการรูปภาพเพิ่มเติม 2 และ 3 (ดึงจากทุกฟิลด์ที่อาจจะถูกตั้งชื่อส่งมา)
-                const imageArea = document.getElementById('det-additional-images-area');
-                imageArea.innerHTML = ""; // ล้างค่าเก่าออกก่อน
-                
-                // รวมกลุ่มคีย์ทางเลือกของ รูปภาพเพิ่มเติมชุดที่ 2
-                const img2 = data.detailImg2 || data.detailImage2 || data.contentImg2 || data.img2 || data.image2 || data.imageUrl2 || null;
-                // รวมกลุ่มคีย์ทางเลือกของ รูปภาพเพิ่มเติมชุดที่ 3
-                const img3 = data.detailImg3 || data.detailImage3 || data.contentImg3 || data.img3 || data.image3 || data.imageUrl3 || null;
-                // เผื่อมีฟิลด์รูปเพิ่มเติมแบบไม่มีเลขระบุ
-                const extraImg = data.detailImg || data.contentImg || data.detailImage || null;
-
-                // ตรวจสอบและวาดรูปเพิ่มเติมชิ้นที่ 1 (ถ้ามีและไม่ซ้ำกับปก)
-                if (extraImg && extraImg !== finalThumb) {
-                    imageArea.insertAdjacentHTML('beforeend', `<img src="${extraImg}" class="detail-additional-img" alt="รูปภาพเพิ่มเติม" onerror="this.style.display='none'">`);
-                }
-                // ตรวจสอบและวาดรูปที่ 2
-                if (img2 && img2 !== finalThumb) {
-                    imageArea.insertAdjacentHTML('beforeend', `<img src="${img2}" class="detail-additional-img" alt="รูปภาพประกอบที่ 2" onerror="this.style.display='none'">`);
-                }
-                // ตรวจสอบและวาดรูปที่ 3
-                if (img3 && img3 !== finalThumb) {
-                    imageArea.insertAdjacentHTML('beforeend', `<img src="${img3}" class="detail-additional-img" alt="รูปภาพประกอบที่ 3" onerror="this.style.display='none'">`);
-                }
-
-            } else {
-                showDebugMessage(`ไม่เจอ Document ID: "${id}" ในคอลเลกชัน articles`);
-                document.getElementById('det-title').innerText = "ไม่พบเนื้อหา";
-                document.getElementById('det-content').innerText = "ขออภัย ไม่พบรายการข้อมูลที่ท่านเลือกในฐานข้อมูลคริสตจักร";
-            }
-        }).catch(err => {
-            showDebugMessage("เกิดข้อผิดพลาดในการดึงเอกสาร: " + err.message);
-        });
-    }
-
-    function renderCategoryGrid(category) {
-        document.getElementById('full-article-view').style.display = 'none';
-        document.getElementById('category-list-view').style.display = 'block';
-        document.getElementById('category-page-title').innerText = `📋 รายการในหมวดหมู่: ${category}`;
-        
-        const activeMenu = document.getElementById(`menu-${category}`);
-        if (activeMenu) activeMenu.classList.add('active');
-
-        const gridContainer = document.getElementById('category-grid');
-        gridContainer.innerHTML = "";
-        let count = 0;
-
-        allArticlesList.forEach(d => {
-            const currentCat = (d.category || d.Category || "").toString();
-            
-            if (currentCat === category || currentCat.includes(category) || category.includes(currentCat)) {
-                count++;
-                const finalThumb = d.thumbUrl || d.thumbnail || d.Thumb || d.imageUrl || d.image || d.img || getYoutubeThumb(d.youtubeUrl || d.youtube || d.yt1) || 'logo.png';
-                const rawAuthor = d.authorName || d.author || "คริสตจักร";
-                let prefix = "ผู้เขียน: ";
-                if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
-                else if (currentCat.includes("พยาน")) prefix = "เจ้าของคำพยาน: ";
-
-                const sHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
-                const bHtml = (d.bibleRef || d.bible) ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef || d.bible}</div>` : '';
-
-                const card = `
-                <div class="card" onclick="window.location.href='article.html?id=${d.id}'">
-                    <img src="${finalThumb}" onerror="this.src='logo.png'">
-                    <div class="card-content">
-                        <h4 class="card-title">${d.title || d.Title || d.topic || 'ไม่มีหัวข้อ'}</h4>
-                        <div class="card-info">
-                            <div><span class="info-label">${prefix}</span> ${rawAuthor}</div>
-                            ${sHtml} ${bHtml}
-                        </div>
-                        <div class="card-meta">
-                            <span>📅 ${d.displayDate || d.date || ''}</span>
-                            <span style="color:#4dabff">อ่านต่อ...</span>
-                        </div>
-                    </div>
-                </div>`;
-                gridContainer.insertAdjacentHTML('beforeend', card);
-            }
-        });
-        if(count === 0) { 
-            gridContainer.innerHTML = `<p style='color:#aaa; text-align:center; padding: 40px 0; grid-column: 1/-1;'>🙏 ขณะนี้ยังไม่มีเนื้อหาในหมวดหมู่ ${category} บันทึกอยู่ในระบบ</p>`; 
-        }
-    }
-
-    getDocs(collection(db, "articles")).then((snap) => {
-        allArticlesList = []; 
-        
-        if (snap.empty) {
-            showDebugMessage("คำเตือน: คอลเลกชัน 'articles' ในฐานข้อมูลของคุณว่างเปล่า");
-        }
-
-        snap.forEach(doc => {
-            const data = doc.data();
-            allArticlesList.push({ id: doc.id, ...data });
-        });
-        
-        allArticlesList.sort((a, b) => {
-            const dateA = a.displayDate || a.date || "";
-            const dateB = b.displayDate || b.date || "";
-            return dateB.localeCompare(dateA);
-        });
-        
-        buildSidebarTree(allArticlesList);
-
-        if (articleId) {
-            renderFullArticle(articleId);
-        } else if (viewCategory) {
-            renderCategoryGrid(viewCategory);
-        } else {
-            document.getElementById('category-list-view').style.display = 'block';
-            if (allArticlesList.length > 0) {
-                renderCategoryGrid(allArticlesList[0].category || "บทความ");
-            }
-        }
-    }).catch(err => {
-        showDebugMessage("ไม่สามารถเรียกดูคลังบทความได้ (Firestore Error): " + err.message);
-    });
-</script>
-</body>
-</html>
+                    else if (currentCat.includes("
