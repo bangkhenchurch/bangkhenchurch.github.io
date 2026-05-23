@@ -58,8 +58,8 @@
         .meta-label { color: #4dabff; font-weight: bold; }
         .detail-banner { width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px; margin-bottom: 25px; display: block; background: #2a2a2a; border: 1px solid #333; }
         
-        /* สไตล์สำหรับรูปภาพรายละเอียดเพิ่มเติมด้านในบล็อกข้อความ */
-        .detail-additional-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 12px; margin: 15px 0; display: block; border: 1px solid #3d3d3d; }
+        /* รูปภาพรายละเอียดเพิ่มเติมด้านในบล็อกเนื้อหา */
+        .detail-additional-img { width: 100%; max-height: 500px; object-fit: cover; border-radius: 12px; margin: 20px 0; display: block; border: 1px solid #3d3d3d; }
         
         .detail-content { font-size: 16px; color: #ddd; white-space: pre-line; margin-bottom: 30px; text-align: justify; word-break: break-word; }
         
@@ -339,7 +339,7 @@
 
                 if (match) {
                     count++;
-                    const finalThumb = d.thumbUrl || d.thumbnail || getYoutubeThumb(d.youtubeUrl || d.youtube) || 'logo.png';
+                    const finalThumb = d.thumbUrl || d.thumbnail || getYoutubeThumb(d.youtubeUrl || d.youtube || d.yt1) || 'logo.png';
                     const rawAuthor = d.authorName || d.author || "คริสตจักร";
                     let prefix = "ผู้เขียน: ";
                     if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
@@ -370,7 +370,7 @@
         if(count === 0) { gridContainer.innerHTML = "<p style='color:#aaa; text-align:center; padding:30px; grid-column:1/-1;'>ไม่พบข้อมูล</p>"; }
     }
 
-    // ฟังก์ชันจัดการแสดงผลบทความเดี่ยวตัวเต็ม (ดึงโดยตรงจากไอดีเพื่อให้โหลดเร็วและสมบูรณ์)
+    // ฟังก์ชันจัดการแสดงผลบทความเดี่ยวตัวเต็ม (ปรับปรุงระบบดึงฟิลด์ให้ปลอดภัย 100%)
     function renderFullArticle(id) {
         document.getElementById('category-list-view').style.display = 'none';
         document.getElementById('full-article-view').style.display = 'block';
@@ -378,14 +378,16 @@
         getDoc(doc(db, "articles", id)).then((snap) => {
             if(snap.exists()) {
                 const data = snap.data();
-                document.getElementById('det-title').innerText = data.title || data.Title || 'ไม่มีหัวข้อ';
                 
-                // แก้ปัญหาเรื่องฟิลด์รายละเอียดไม่แสดงผล โดยจับเช็คทุกประเภทฟิลด์ที่อาจถูกบันทึกไว้
-                const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || 'ไม่มีเนื้อหารายละเอียดระบุไว้ในฐานข้อมูล';
+                // ตรวจสอบหัวข้อเรื่องทุกรูปแบบตัวแปร
+                document.getElementById('det-title').innerText = data.title || data.Title || data.topic || 'ไม่มีหัวข้อ';
+                
+                // ค้นหาข้อความรายละเอียดหลักจากทุกฟิลด์ที่เป็นไปได้
+                const mainContent = data.detail || data.Detail || data.content || data.Content || data.body || data.Body || 'ไม่มีเนื้อหารายละเอียดระบุไว้ในฐานข้อมูล';
                 document.getElementById('det-content').innerText = mainContent;
                 
-                document.getElementById('det-date').innerText = data.displayDate || data.date || '';
-                document.getElementById('det-author').innerText = data.authorName || data.author || 'คริสตจักร';
+                document.getElementById('det-date').innerText = data.displayDate || data.date || data.Date || '';
+                document.getElementById('det-author').innerText = data.authorName || data.author || data.Author || 'คริสตจักร';
                 
                 const cat = (data.category || data.Category || "").toString();
                 let prefix = "ผู้เขียน:";
@@ -402,21 +404,21 @@
                 }
                 document.getElementById('det-author-prefix').innerText = prefix;
 
-                if (data.series) { 
-                    document.getElementById('det-series').innerText = data.series; 
+                if (data.series || data.Series) { 
+                    document.getElementById('det-series').innerText = data.series || data.Series; 
                     document.getElementById('det-series-box').style.display = 'inline';
                 } else { 
                     document.getElementById('det-series-box').style.display = 'none'; 
                 }
 
-                if (data.bibleRef || data.bible) { 
-                    document.getElementById('det-bible').innerText = data.bibleRef || data.bible; 
+                if (data.bibleRef || data.bible || data.Bible) { 
+                    document.getElementById('det-bible').innerText = data.bibleRef || data.bible || data.Bible; 
                     document.getElementById('det-bible-box').style.display = 'inline';
                 } else { 
                     document.getElementById('det-bible-box').style.display = 'none'; 
                 }
 
-                const embedUrl = getYoutubeEmbed(data.youtubeUrl || data.youtube || data.yt1);
+                const embedUrl = getYoutubeEmbed(data.youtubeUrl || data.youtube || data.yt1 || data.Youtube);
                 if (embedUrl) {
                     document.getElementById('det-iframe').src = embedUrl;
                     document.getElementById('det-video-box').style.display = 'block';
@@ -424,11 +426,11 @@
                     document.getElementById('det-video-box').style.display = 'none';
                 }
                 
-                const finalThumb = data.thumbUrl || data.thumbnail || getYoutubeThumb(data.youtubeUrl || data.youtube || data.yt1) || 'logo.png';
+                const finalThumb = data.thumbUrl || data.thumbnail || data.Thumb || getYoutubeThumb(data.youtubeUrl || data.youtube || data.yt1) || 'logo.png';
                 document.getElementById('det-cover').src = finalThumb;
 
-                // ตรวจสอบและดึงภาพรายละเอียดเพิ่มเติม (ถ้ามีและไม่ซ้ำกับภาพหน้าปก)
-                const detailImgUrl = data.detailImg || data.contentImg || data.img || data.imageUrl || null;
+                // ตรวจสอบและดึงภาพรายละเอียดเพิ่มเติม (สแกนหาจากชื่อฟิลด์ทุกรูปแบบ)
+                const detailImgUrl = data.detailImg || data.contentImg || data.img || data.imageUrl || data.image || data.detailImage || null;
                 const imgBox = document.getElementById('det-additional-img-box');
                 if (detailImgUrl && detailImgUrl !== finalThumb) {
                     imgBox.innerHTML = `<img src="${detailImgUrl}" class="detail-additional-img" onerror="this.style.display='none'">`;
@@ -461,7 +463,7 @@
             
             if (currentCat === category || currentCat.includes(category) || category.includes(currentCat)) {
                 count++;
-                const finalThumb = d.thumbUrl || d.thumbnail || getYoutubeThumb(d.youtubeUrl || d.youtube || d.yt1) || 'logo.png';
+                const finalThumb = d.thumbUrl || d.thumbnail || d.Thumb || getYoutubeThumb(d.youtubeUrl || d.youtube || d.yt1) || 'logo.png';
                 const rawAuthor = d.authorName || d.author || "คริสตจักร";
                 let prefix = "ผู้เขียน: ";
                 if (currentCat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
@@ -496,14 +498,13 @@
     // เรียกทำงานดึงข้อมูลหลักจากฐานข้อมูล
     const qAll = query(collection(db, "articles"), orderBy("displayDate", "desc"));
     getDocs(qAll).then((snap) => {
-        allArticlesList = []; // เคลียร์อาเรย์เพื่อป้องกันค่าซ้ำ
+        allArticlesList = []; 
         snap.forEach(doc => {
             allArticlesList.push({ id: doc.id, ...doc.data() });
         });
         
         buildSidebarTree(allArticlesList);
 
-        // จัดการเปิดหน้าจอหลังได้ชุดอาเรย์จาก Firebase สมบูรณ์แล้ว
         if (articleId) {
             renderFullArticle(articleId);
         } else if (viewCategory) {
