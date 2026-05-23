@@ -170,12 +170,28 @@ h1{
     font-weight:bold;
 }
 
+/* สไตล์เพิ่มเติมสำหรับ Contact Section และ Checkbox */
 .contact-section{
-    background:#ffffff;
-    color:#333;
-    padding:30px;
-    border-radius:20px;
+    background:#1a1a1a;
+    color:#ffffff;
+    padding:25px;
+    border-radius:15px;
+    border:1px solid #333;
     margin-top:20px;
+}
+
+.checkbox-group {
+    margin: 15px 0;
+}
+
+.checkbox-label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
+
+.checkbox-label input {
+    margin-right: 8px;
 }
 
 .counter-section{
@@ -287,8 +303,6 @@ footer img{
 
     </article>
 
-    <!-- rating -->
-
     <div class="rating-form">
 
         <h3 style="font-family:'Prompt'; color:white; margin-bottom:10px;">
@@ -314,6 +328,34 @@ footer img{
             ส่งความคิดเห็น
         </button>
 
+    </div>
+
+    <div class="contact-section">
+        <h3 style="font-family:'Prompt'; color:white; margin-bottom:15px;">📬 สนใจติดต่อสอบถาม / ขอคำอธิษฐาน</h3>
+        <form id="contactForm">
+            <input type="text" id="contactName" class="u-input" placeholder="ชื่อของคุณ" required>
+            <input type="tel" id="contactPhone" class="u-input" placeholder="เบอร์โทรศัพท์ของคุณ" required>
+            
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="opt" value="ต้องการให้ติดต่อกลับ"> ต้องการให้เจ้าหน้าที่ติดต่อกลับ
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="opt" value="ต้องการรับเอกสารทางไปรษณีย์" id="opt2"> ต้องการรับสื่อ/หนังสือทางไปรษณีย์ (ติ๊กเพื่อกรอกที่อยู่)
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="opt" value="ขอคำอธิษฐานเผื่อ"> ขอคำอธิษฐานอธิษฐานเผื่อเรื่องพิเศษ
+                </label>
+            </div>
+
+            <div id="addressBox" style="display:none; margin-bottom:10px;">
+                <textarea id="contactAddress" class="u-input" rows="2" placeholder="กรอกที่อยู่จัดส่งของคุณ..."></textarea>
+            </div>
+
+            <textarea id="contactNote" class="u-input" rows="3" placeholder="ข้อความเพิ่มเติม หรือ เรื่องที่ต้องการให้เราอธิษฐานเผื่อ..."></textarea>
+            
+            <button type="submit" id="sendBtn" class="btn-submit-rating">ส่งข้อมูล</button>
+        </form>
     </div>
 
 </div>
@@ -371,7 +413,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔥 FIX: กัน null + debug
 const artId = new URLSearchParams(window.location.search).get('id');
 
 console.log("ARTICLE ID =", artId);
@@ -435,7 +476,7 @@ function createMediaHTML(url) {
     return `<img src="${url}" class="media-full-width">`;
 }
 
-// 🔥 LOAD ARTICLE (FIXED)
+// LOAD ARTICLE
 async function loadContent() {
 
     if (!artId) {
