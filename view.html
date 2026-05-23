@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>รายละเอียด - Bangkhen Baptist Church</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
+        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; }
+        .navbar img { width: 35px; border-radius: 50%; cursor: pointer; }
+        
+        .container { padding: 30px 5%; max-width: 900px; margin: auto; min-height: 80vh; }
+        .back-btn { display: inline-block; margin-bottom: 20px; color: #4dabff; text-decoration: none; font-size: 14px; }
+        
+        #content-area { background: #1e1e1e; padding: 25px; border-radius: 15px; border: 1px solid #333; }
+        #post-image { width: 100%; max-height: 500px; object-fit: cover; border-radius: 10px; margin-bottom: 20px; display: none; }
+        #post-title { font-family: 'Prompt'; font-size: 28px; color: #4dabff; margin-bottom: 10px; }
+        #post-meta { font-size: 13px; color: #888; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        #post-body { font-size: 17px; white-space: pre-wrap; color: #ddd; }
+
+        /* Video Responsive */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 20px; border-radius: 10px; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        footer { background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; margin-top: 50px; }
+        footer img { width: 60px; border-radius: 50%; margin-bottom: 15px; }
+        .footer-info { font-size: 14px; opacity: 0.8; max-width: 800px; margin: 15px auto; line-height: 1.8; }
+        
+        .counter-section { text-align: center; padding: 30px; background: #121212; border-top: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <img src="logo.png" onclick="location.href='index.html'" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
+    <span style="font-family:'Prompt'; font-weight: 600; cursor:pointer;" onclick="location.href='index.html'">Bangkhen Baptist Church</span>
+</nav>
+
+<div class="container">
+    <a href="index.html" class="back-btn">← กลับหน้าหลัก</a>
+    
+    <div id="content-area">
+        <img id="post-image" src="">
+        <h1 id="post-title">กำลังโหลด...</h1>
+        <div id="post-meta"></div>
+        <div id="post-body"></div>
+        <div id="video-area"></div>
+    </div>
+</div>
+
+<div class="counter-section">
+    <a href="https://info.flagcounter.com/8zW3">
+        <img src="https://s11.flagcounter.com/count2/8zW3/bg_121212/txt_EEEEEE/border_333333/columns_4/maxflags_12/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0">
+    </a>
+</div>
+
+<footer>
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'"><br>
+    <strong style="font-family:'Prompt'; font-size:18px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
+    <div class="footer-info">
+        2172/145-147 ซอยพหลโยธิน 40 ถนนพหลโยธิน แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 <br>
+        📞 โทร. 02-579-8764 | ⛪ ร่วมนมัสการ ทุกวันอาทิตย์ 09:00 - 12:00 น.
+    </div>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
+        authDomain: "bbcchurch-6ffc3.firebaseapp.com",
+        projectId: "bbcchurch-6ffc3",
+        storageBucket: "bbcchurch-6ffc3.appspot.com",
+        appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ดึง ID จาก URL
+    const params = new URLSearchParams(window.location.search);
+    const postId = params.get("id");
+
+    if (postId) {
+        async function loadPost() {
+            const docRef = doc(db, "articles", postId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                document.title = data.title + " - BBC Church";
+                document.getElementById("post-title").innerText = data.title;
+                document.getElementById("post-meta").innerHTML = `📅 ${data.displayDate} | 👤 โดย: ${data.author || 'คริสตจักร'} | 📂 ${data.category}`;
+                document.getElementById("post-body").innerText = data.content || data.description || '';
+
+                // จัดการรูปภาพ
+                const mainImg = data.image || data.thumbUrl;
+                if (mainImg) {
+                    const imgEl = document.getElementById("post-image");
+                    imgEl.src = mainImg;
+                    imgEl.style.display = "block";
+                }
+
+                // จัดการวิดีโอ (ถ้ามี)
+                if (data.videoUrl) {
+                    let videoId = "";
+                    if(data.videoUrl.includes("v=")){ videoId = data.videoUrl.split("v=")[1].split("&")[0]; }
+                    else if(data.videoUrl.includes("youtu.be/")){ videoId = data.videoUrl.split("youtu.be/")[1].split("?")[0]; }
+                    
+                    if(videoId){
+                        document.getElementById("video-area").innerHTML = `
+                            <div class="video-container">
+                                <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                            </div>`;
+                    }
+                }
+            } else {
+                document.getElementById("post-title").innerText = "ไม่พบเนื้อหา";
+            }
+        }
+        loadPost();
+    } else {
+        location.href = "index.html";
+    }
+</script>
+</body>
+</html>
