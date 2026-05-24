@@ -2,36 +2,84 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>Bangkhen Baptist Church</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0">
+    <title>คริสตจักรแบ๊บติสต์บางเขน</title>
     <style>
-        /* กำหนดพื้นหลังสีดำตามที่ต้องการ */
-        body {
-            background-color: #121212; 
-            color: #ffffff;
-            font-family: 'Sarabun', sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .main-box {
-            background-color: #1e1e1e;
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border: 1px solid #333;
-        }
+        body { background-color: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 0; }
+        
+        /* 1. แถบบนสุด */
+        .header { display: flex; align-items: center; padding: 15px; background: #111; position: sticky; top: 0; z-index: 100; }
+        .header img { width: 40px; margin-right: 10px; }
+
+        /* 2. เมนูแบบไม่เลื่อนออกข้าง */
+        .menu-bar { display: flex; flex-wrap: wrap; justify-content: center; background: #222; padding: 10px 0; position: sticky; top: 70px; z-index: 99; }
+        .menu-bar a { color: #fff; text-decoration: none; padding: 8px 12px; font-size: 14px; }
+
+        /* 3. Hero Slideshow */
+        .hero { width: 100%; height: 250px; background: #333; display: flex; overflow: hidden; }
+        .hero img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 4. Layout */
+        .container { display: flex; flex-direction: column; padding: 15px; }
+        .sidebar { background: #1a1a1a; padding: 15px; margin-bottom: 20px; border: 1px solid #333; }
+        .content { background: #1a1a1a; padding: 15px; border: 1px solid #333; }
+
+        /* 5. Flag Counter (สีดำ) */
+        .flag-box { background: #000; padding: 15px; text-align: center; color: #fff; }
+
+        /* 6. Footer */
+        .footer { background: #111; padding: 20px; text-align: center; border-top: 2px solid #333; }
     </style>
 </head>
 <body>
 
-    <div class="main-box">
-        <h1>คริสตจักรแบ๊บติสต์บางเขน</h1>
-        <p>เว็บอยู่ในสถานะเริ่มต้นใหม่ครับ</p>
-        <p>ทุกอย่างกลับมาเป็นพื้นหลังสีดำเรียบร้อยแล้ว</p>
+    <div class="header">
+        <img src="logo.png" alt="Logo">
+        <strong>คริสตจักรแบ๊บติสต์บางเขน</strong>
     </div>
+
+    <div class="menu-bar">
+        <a href="#">หน้าแรก</a><a href="#">บทความ</a><a href="#">คำพยาน</a>
+        <a href="#">คำเทศนา</a><a href="#">ข่าวสาร</a><a href="#">ติดต่อเรา</a>
+    </div>
+
+    <div class="hero">
+        <img src="hero_01.png" alt="Hero">
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>🗂️ คลังบทความ</h3>
+            </aside>
+
+        <main class="content">
+            <h2>เนื้อหาหลัก</h2>
+            </main>
+
+        <div class="rating-box" style="background:#222; padding:15px; margin-top:20px;">
+            <h3>ให้คะแนนและแสดงความคิดเห็น</h3>
+            <p>(ระบบจะส่งให้แอดมินตรวจสอบก่อนแสดงผล)</p>
+        </div>
+
+        <div style="text-align:center; padding:20px;">
+            <img src="line-qr.png" alt="LINE QR" style="width:150px;">
+        </div>
+    </div>
+
+    <div class="flag-box">
+        <p style="color:#fff;">สถิติผู้เข้าชม</p>
+        <a href="https://info.flagcounter.com/W1Ud">
+            <img src="https://s05.flagcounter.com/count2/W1Ud/bg_000000/txt_FFFFFF/border_CCCCCC/columns_8/maxflags_250/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0">
+        </a>
+    </div>
+
+    <footer class="footer">
+        <img src="logo.png" style="width:50px;"><br>
+        <p>คริสตจักรแบ๊บติสต์บางเขน</p>
+        <p>2172/145-147 ซอยพหลโยธิน 36 ถนนพหลโยธิน แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900</p>
+        <p>โทร. 02-5798764</p>
+        <p>@bbcchurch 2026</p>
+    </footer>
 
 </body>
 </html>
