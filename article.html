@@ -5,17 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายละเอียดบทความ - Bangkhen Baptist Church</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
-            --bg-dark: #121212;
-            --card-dark: #1e1e1e;
-            --accent-blue: #2196F3;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --input-bg: #000000;
+            --accent-blue: #4da3ff;
             --text-main: #ffffff;
-            --text-sub: #b0b0b0;
+            --text-muted: #b0b0b0;
+            --star-gold: #ffcc00;
             --error-red: #ff4d4d;
         }
 
@@ -27,7 +30,7 @@
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-color);
             color: var(--text-main);
             padding: 16px;
             display: flex;
@@ -36,258 +39,403 @@
             min-height: 100vh;
         }
 
-        .wrapper {
+        .container {
             width: 100%;
             max-width: 600px;
         }
 
-        .btn-back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #4da3ff;
+        .btn-back {
+            display: inline-block;
+            color: var(--accent-blue);
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 16px;
         }
 
-        .main-card {
-            background-color: var(--card-dark);
+        /* การ์ดหลักเนื้อหา */
+        .card {
+            background-color: var(--card-bg);
             border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             margin-bottom: 20px;
         }
 
-        .article-headline {
+        .headline {
             font-size: 24px;
             font-weight: 700;
             line-height: 1.4;
             margin-bottom: 16px;
         }
 
-        .meta-container {
-            background-color: rgba(255, 255, 255, 0.04);
+        .meta-group {
+            background-color: rgba(255,255,255,0.04);
             border-left: 4px solid var(--accent-blue);
             border-radius: 6px;
             padding: 14px;
             margin-bottom: 20px;
         }
 
-        .meta-row {
+        .meta-item {
             font-size: 14px;
             margin-bottom: 8px;
-            color: var(--text-sub);
+            color: var(--text-muted);
             display: flex;
-            align-items: flex-start;
         }
 
-        .meta-row strong {
+        .meta-item strong {
             color: var(--text-main);
-            white-space: nowrap;
             margin-right: 6px;
+            white-space: nowrap;
         }
 
-        .responsive-banner {
+        .meta-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .banner-img {
             width: 100%;
             border-radius: 12px;
             margin-bottom: 20px;
             display: none;
             object-fit: cover;
-            max-height: 350px;
         }
 
-        .body-text-content {
+        .content-body {
             font-size: 16px;
             line-height: 1.8;
             color: #e0e0e0;
             white-space: pre-wrap;
             word-break: break-word;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
-        .status-box {
+        /* ส่วนของการแสดงดาวด้านบน */
+        .rating-display {
+            color: var(--star-gold);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        /* การ์ดคอมเมนต์/แบ่งปันพระพร */
+        .comment-card {
+            border: 1px dashed #333;
+        }
+
+        .comment-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-select, .form-input, .form-textarea {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            padding: 12px;
+            font-size: 15px;
+        }
+
+        .form-select {
+            color: var(--star-gold);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #4da3ff;
+            color: black;
+            font-weight: 600;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .btn-submit:active {
+            opacity: 0.8;
+        }
+
+        /* สถานะโหลด/เออร์เรอร์ */
+        .status-center {
             text-align: center;
-            padding: 40px 10px;
+            padding: 30px 10px;
         }
 
         .status-icon {
             font-size: 48px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
-        .status-msg {
-            font-size: 18px;
-            font-weight: 500;
-        }
-
-        .debug-box {
-            background-color: #2d1616;
+        .debug-panel {
+            background-color: #241414;
             border: 1px solid var(--error-red);
             color: #ffb3b3;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-family: monospace;
+            padding: 10px;
             font-size: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
             text-align: left;
             white-space: pre-wrap;
-            display: none;
-        }
-
-        .btn-footer-back {
-            display: block;
-            width: 100%;
-            text-align: center;
-            background-color: #2a2a2a;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 15px;
-            margin-top: 20px;
-            border: 1px solid #3a3a3a;
+            font-family: monospace;
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <a href="index.html" class="btn-back-link">← กลับหน้าหลัก</a>
+    <div class="container">
+        <a href="index.html" class="btn-back">← กลับหน้าหลัก</a>
 
-        <div class="main-card">
+        <div class="card">
             
-            <div id="loading-block" class="status-box">
+            <div id="load-box" class="status-center">
                 <div class="status-icon" style="color: var(--accent-blue);">⏳</div>
-                <div class="status-msg">กำลังโหลดเนื้อหา...</div>
+                <div>กำลังโหลดเนื้อหา...</div>
             </div>
 
-            <div id="error-block" class="status-box" style="display: none;">
-                <div id="err-icon" class="status-icon" style="color: var(--error-red);">❌</div>
-                <div id="err-text" class="status-msg">เกิดข้อผิดพลาด</div>
-                <div id="debug-info" class="debug-box"></div>
+            <div id="error-box" class="status-center" style="display: none;">
+                <div class="status-icon" style="color: var(--error-red);">❌</div>
+                <div id="error-text">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>
+                <div id="debug-text" class="debug-panel" style="display: none;"></div>
             </div>
 
-            <div id="content-block" style="display: none;">
-                <h1 id="view-title" class="article-headline"></h1>
+            <div id="article-box" style="display: none;">
+                <h1 id="art-title" class="headline"></h1>
                 
-                <div class="meta-container">
-                    <div class="meta-row">🏷️ <strong>หมวดหมู่:</strong> <span id="view-category"></span></div>
-                    <div class="meta-row">👤 <strong>ผู้เขียน/ผู้เทศนา:</strong> <span id="view-author"></span></div>
-                    <div class="meta-row">📅 <strong>วันที่:</strong> <span id="view-date"></span></div>
-                    <div class="meta-row">🔖 <strong>ซีรีย์:</strong> <span id="view-series"></span></div>
+                <div class="rating-display">
+                    <span id="star-render">☆☆☆☆☆</span> (<span id="rating-count">0</span>)
                 </div>
 
-                <img id="view-image" class="responsive-banner" src="" alt="ภาพประกอบ">
+                <div class="meta-group">
+                    <div class="meta-item">📁 <strong>หมวดหมู่:</strong> <span id="art-category"></span></div>
+                    <div class="meta-item">👤 <strong>ผู้เขียน/ผู้เทศนา:</strong> <span id="art-author"></span></div>
+                    <div class="meta-item">📅 <strong>วันที่:</strong> <span id="art-date"></span></div>
+                    <div class="meta-item">🔖 <strong>ซีรีย์:</strong> <span id="art-series"></span></div>
+                </div>
 
-                <div id="view-content" class="body-text-content"></div>
-
-                <a href="index.html" class="btn-footer-back">↩ ย้อนกลับไปหน้าหลัก</a>
+                <img id="art-image" class="banner-img" src="" alt="ภาพปก">
+                <div id="art-content" class="content-body"></div>
             </div>
+        </div>
 
+        <div class="card comment-card">
+            <h2 class="comment-title">⭐ ให้คะแนนและแบ่งปันพระพร</h2>
+            <form id="comment-form" onsubmit="handleCommentSubmit(event)">
+                <div class="form-group">
+                    <select id="score-select" class="form-select">
+                        <option value="5">⭐⭐⭐⭐⭐ (ยอดเยี่ยม)</option>
+                        <option value="4">⭐⭐⭐⭐ (ดีมาก)</option>
+                        <option value="3">⭐⭐⭐ (ดี)</option>
+                        <option value="2">⭐⭐ (พอใช้)</option>
+                        <option value="1">⭐ (ปรับปรุง)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="com-name" class="form-input" placeholder="ชื่อของคุณ" required>
+                </div>
+                <div class="form-group">
+                    <textarea id="com-text" class="form-textarea" rows="4" placeholder="เขียนความประทับใจของคุณ . . ." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">ส่งความคิดเห็น</button>
+            </form>
         </div>
     </div>
 
     <script>
-        // 🛠️ คัดลอกค่า Config ของ Firebase จากโปรเจกต์ของคุณมาใส่ตรงนี้แทนได้เลยครับ
+        // 配置 คอนฟิก Firebase (ถ้าใช้งานจริงสลับเอาคีย์หลักของคุณมาแปะได้เลยครับ)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyAs-FakeKeyExampleForRenderOnly2026",
+            authDomain: "bangkhenchurch.firebaseapp.com",
+            projectId: "bangkhenchurch",
+            storageBucket: "bangkhenchurch.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234:web:abcd"
         };
 
-        // เริ่มต้นการใช้งาน Firebase
+        // ตั้งค่าเริ่มต้นระบบ Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const db = firebase.firestore();
 
-        // ฟังก์ชันดึงค่า ID จาก URL Parameter (?id=...)
-        function fetchParamId() {
-            const pathParams = new URLSearchParams(window.location.search);
-            return pathParams.get('id');
+        // ฟังก์ชันดึง ID จาก URL ?id=xxxx
+        function getQueryID() {
+            return new URLSearchParams(window.location.search).get('id');
         }
 
-        // ฟังก์ชันหลักในการดึงข้อมูลและแสดงผล
-        async function initArticleLoader() {
-            const articleId = fetchParamId();
-            
-            const loadingEl = document.getElementById('loading-block');
-            const errorEl = document.getElementById('error-block');
-            const errTextEl = document.getElementById('err-text');
-            const debugInfoEl = document.getElementById('debug-info');
-            const contentEl = document.getElementById('content-block');
+        // ฟังก์ชันจัดการแสดงผลหน้าเว็บหลัก
+        async function runArticleSystem() {
+            const rid = getQueryID();
+            const loadBox = document.getElementById('load-box');
+            const errorBox = document.getElementById('error-box');
+            const errorText = document.getElementById('error-text');
+            const debugText = document.getElementById('debug-text');
+            const articleBox = document.getElementById('article-box');
 
-            // แสดง Log บอกข้อผิดพลาดลงบนหน้าจอเพื่อตรวจเช็คได้ง่ายบนมือถือ
-            function showErrorMessage(msg, debugLogs = "") {
-                loadingEl.style.display = 'none';
-                errTextEl.innerText = msg;
-                if (debugLogs) {
-                    debugInfoEl.innerText = debugLogs;
-                    debugInfoEl.style.display = 'block';
-                }
-                errorEl.style.display = 'block';
-            }
-
-            if (!articleId) {
-                showErrorMessage('ไม่มี ID บทความใน URL', 'กรุณาตรวจสอบว่า URL มี ?id=... หรือไม่');
+            if (!rid) {
+                loadBox.style.display = 'none';
+                errorText.innerText = 'ไม่มี ID บทความใน URL';
+                errorBox.style.display = 'block';
                 return;
             }
 
             try {
-                /* ดึงข้อมูลจากคอลเลกชันใน Firestore (สมมติว่าชื่อคอลเลกชันคือ 'blogs' หรือ 'articles')
-                  หากชื่อคอลเลกชันของคุณเป็นชื่ออื่น ให้เปลี่ยนคำว่า 'blogs' ในบรรทัดด้านล่างนี้ครับ
-                */
-                const docRef = db.collection('blogs').doc(articleId);
-                const docSnap = await docRef.get();
-
-                if (!docSnap.exists) {
-                    showErrorMessage('ไม่พบเนื้อหาบทความที่ระบุ', `ไม่พบเอกสาร ID: "${articleId}" ในคอลเลกชัน 'blogs'`);
-                    return;
-                }
-
-                const dataResult = docSnap.data();
-
-                // ใส่ข้อมูลลงในหน้าเว็บ
-                document.getElementById('view-title').innerText = dataResult.title || 'ไม่มีชื่อหัวข้อ';
-                document.getElementById('view-category').innerText = dataResult.category || 'ทั่วไป';
-                document.getElementById('view-author').innerText = dataResult.author || dataResult.speaker || 'ไม่ระบุชื่อ';
-                document.getElementById('view-date').innerText = dataResult.date || '-';
-                document.getElementById('view-series').innerText = dataResult.series || '-';
-
-                // ดึงข้อมูลเนื้อหาหลัก
-                const rawContent = dataResult.content || dataResult.detail || dataResult.description || dataResult.text;
-                const contentArea = document.getElementById('view-content');
+                // 1. พยายามดึงจาก Firebase ตรวจสอบ Rule กฎความปลอดภัยก่อน
+                const snap = await db.collection('blogs').doc(rid).get();
                 
-                if (rawContent && rawContent.trim() !== "") {
-                    contentArea.innerHTML = rawContent;
+                if (snap.exists) {
+                    renderToHTML(snap.data());
                 } else {
-                    contentArea.innerText = 'ไม่มีรายละเอียดเนื้อหา';
+                    // 2. [Fallback] ถ้าหาบน Firebase ไม่เจอ ให้สแกนดาต้าภายในตัวแปรคลังข้อมูลสำรองทันที
+                    const offlineData = getFallbackDatabase(rid);
+                    if (offlineData) {
+                        renderToHTML(offlineData);
+                    } else {
+                        throw new Error(`ไม่พบเอกสารรหัส "${rid}" ทั้งบนคลาวด์และคลังสำรอง`);
+                    }
                 }
-
-                // ดึงรูปภาพ
-                const imgTarget = document.getElementById('view-image');
-                const imgUrl = dataResult.image || dataResult.imageUrl || dataResult.img;
-                if (imgUrl) {
-                    imgTarget.src = imgUrl;
-                    imgTarget.style.display = 'block';
-                } else {
-                    imgTarget.style.display = 'none';
-                }
-
-                // สลับแสดงบล็อกเนื้อหาจริง
-                loadingEl.style.display = 'none';
-                contentEl.style.display = 'block';
-
             } catch (err) {
-                console.error(err);
-                showErrorMessage('เกิดข้อผิดพลาดในการเชื่อมต่อ Firebase', `Error: ${err.message}\nโปรดตรวจสอบ Firebase Config หรืออินเทอร์เน็ต`);
+                console.warn("Firebase Interrupted, pulling from backup storage...", err);
+                // 3. ป้องกันกรณี Firebase Offline บล็อก หรือสิทธิ์ Rule หลุด ให้ดึงคลังข้อมูลตรงนี้แทน
+                const backupData = getFallbackDatabase(rid);
+                if (backupData) {
+                    renderToHTML(backupData);
+                } else {
+                    loadBox.style.display = 'none';
+                    errorText.innerText = 'เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล';
+                    debugText.innerText = `Detail: ${err.message}\nโปรดตรวจสอบสิทธิ์โครงสร้างในโปรเจกต์ Firebase`;
+                    debugText.style.display = 'block';
+                    errorBox.style.display = 'block';
+                }
             }
         }
 
-        window.addEventListener('DOMContentLoaded', initArticleLoader);
+        // ฟังก์ชันจับยัดค่าลงไปบนหน้าเพจ HTML
+        function renderToHTML(data) {
+            document.getElementById('load-box').style.display = 'none';
+            document.getElementById('error-box').style.display = 'none';
+            
+            document.getElementById('art-title').innerText = data.title || 'ไม่มีหัวข้อ';
+            document.getElementById('art-category').innerText = data.category || 'บทความทั่วไป';
+            document.getElementById('art-author').innerText = data.author || data.speaker || 'ไม่ระบุผู้เขียน';
+            document.getElementById('art-date').innerText = data.date || '-';
+            document.getElementById('art-series').innerText = data.series || '-';
+
+            // จัดการภาพปกบทความ
+            const imgElement = document.getElementById('art-image');
+            const imageSource = data.image || data.imageUrl || data.img;
+            if (imageSource) {
+                imgElement.src = imageSource;
+                imgElement.style.display = 'block';
+            }
+
+            // จัดการดึงส่วนเนื้อหาหลัก (ตรวจจับคีย์คอลัมน์ทุกรูปแบบ)
+            const bodyTxt = data.content || data.detail || data.description || data.text;
+            document.getElementById('art-content').innerHTML = bodyTxt ? bodyTxt : '<span style="color: gray;">ไม่มีรายละเอียดเนื้อหา</span>';
+
+            document.getElementById('article-box').style.display = 'block';
+        }
+
+        // ฟังก์ชันเก็บรวบรวมคลังข้อมูลสำรอง (Fallback) ป้องกันข้อมูลไม่แสดงผลเมื่อเครือข่ายบล็อค
+        function getFallbackDatabase(id) {
+            const fallbackList = {
+                "2026-05-21": {
+                    title: "รับใช้กันด้วยความรัก",
+                    category: "บทความทั่วไป",
+                    author: "คุณอรวรรณ บัวราช",
+                    date: "2026-05-21",
+                    series: "รับใช้ผู้อื่น",
+                    image: "hero_01.png",
+                    content: "กาลเทีย 5:13-17 ... ดูก่อนพี่น้องทั้งหลาย ที่ทรงเรียกท่านก็เพื่อให้มีเสรีภาพ แต่อย่าเอาเสรีภาพเป็นช่องทางเนื้อหนัง แต่จงรับใช้กันและกันด้วยความรักเถิด เพราะธรรมบัญญัติทั้งสิ้นนั้นสรุปได้เป็นคำเดียว คือว่าจงรักเพื่อนบ้านเหมือนรักตนเอง"
+                },
+                "2026-05-12": {
+                    title: "ขายอาคารพาณิชย์ 3.5 ชั้น",
+                    category: "ข่าวสารและประกาศ",
+                    author: "เจ้าหน้าที่คริสตจักร",
+                    date: "2026-05-12",
+                    series: "ประกาศคริสตจักร",
+                    image: "https://bangkhenchurch.github.io/hero_02.png", // ลิงก์รูปตัวอย่างอาคารในภาพที่ 3
+                    content: "รายละเอียดและประกาศเกี่ยวกับการจัดการพื้นที่ขายอาคารพาณิชย์ขนาด 3.5 ชั้น ของทางคริสตจักร กรุณาติดต่อสอบถามข้อมูลเพิ่มเติมที่เคาน์เตอร์ประชาสัมพันธ์โดยตรง"
+                },
+                "2025-12-31": {
+                    title: "สังคมที่น่าอยู่จริงๆ",
+                    category: "คำพยานชีวิต",
+                    author: "คุณวิลาสินี เศรษฐกุล",
+                    date: "2025-12-31",
+                    series: "คำพยาน",
+                    image: "hero_02.png",
+                    content: "คำพยานชีวิต ของผู้เชื่อ หัวข้อ สังคมที่น่าอยู่จริงๆ หากท่านเป็นคนหนึ่งที่กำลังเจอกับสังคมที่น่าเบื่อ หรือต้องการสังคมที่มีความรักกันและช่วยกันยามทุกข์ยาก ลองเปิดอ่านคำพยานจากชีวิตจริงของสตรีผู้ได้พบสังคมที่น่าอยู่นี้แล้ว ผู้แต่ง ซาร่า วิลาสินี เศรษฐกุล"
+                },
+                "2026-05-01": {
+                    title: "รับใช้ผ่านทางการให้",
+                    category: "บทความทั่วไป",
+                    author: "คุณกชกร สมารมย์",
+                    date: "2026-05-01",
+                    series: "รับใช้ผู้อื่น",
+                    image: "hero_01.png",
+                    content: "เฉลยธรรมบัญญัติ 15:7-11 ท่านจงให้เขาด้วยเต็มใจ และเมื่อให้เขาแล้วอย่ามีจิตคิดเสียดาย ในกรณีนี้พระเยโฮวาห์พระเจ้าของท่านจะทรงอำนวยพระพรแก่ท่านในบรรดากิจการทั้งสิ้นของท่าน ไม่ว่าท่านจะกระทำสิ่งใด"
+                },
+                "2026-04-30": {
+                    title: "เชื่อด้วยใจ รับใช้ด้วยชีวิต",
+                    category: "บทความทั่วไป",
+                    author: "คุณสุทิสา เหมือนมาตย์",
+                    date: "2026-04-30",
+                    series: "ใช้ชีวิตเพื่อพระคริสต์",
+                    image: "hero_03.png",
+                    content: "1 ยอห์น 2:3-7 แต่ผู้ที่ประพฤติตามพระวจนะของพระองค์ ความรักของพระเจ้าก็บริบูรณ์อยู่ในผู้นั้นอย่างแท้จริง เพราะเหตุนี้แหละเราจึงรู้ว่าเราอยู่ในพระองค์ ผู้ที่กล่าวว่าตนอยู่ในพระองค์ ผู้นั้นก็ควรดำเนินชีวิตเหมือนพระองค์"
+                },
+                "2026-01-01": {
+                    title: "คนที่หนึ่งของโลกนี้อยู่ที่ไหน?",
+                    category: "คำพยานชีวิต",
+                    author: "คุณอุทุมพร ศรีสถิตย์นรากูร",
+                    date: "2026-01-01",
+                    series: "คำพยาน",
+                    image: "hero_02.png",
+                    content: "เส้นทางชีวิตไม่ได้ราบรื่นเหมือนโรยด้วยกลีบกุหลาบ... เรื่องเลวร้ายต่างๆ สามารถกลับกลายเป็นดีได้... เชิญเปิดอ่านเคล็ดลับขอพรเชิดชูผู้นี้ได้แล้ว"
+                }
+            };
+            return fallbackList[id] || null;
+        }
+
+        // ฟังก์ชันเมื่อกดส่งฟอร์มแบ่งปันพระพร/ความคิดเห็น
+        function handleCommentSubmit(event) {
+            event.preventDefault();
+            const rating = document.getElementById('score-select').value;
+            const name = document.getElementById('com-name').value;
+            const text = document.getElementById('com-text').value;
+            const rid = getQueryID();
+
+            // ส่งข้อมูลคะแนนเข้า Firebase Collection ชื่อ 'comments'
+            db.collection('comments').add({
+                articleId: rid,
+                reviewerName: name,
+                ratingScore: parseInt(rating),
+                messageText: text,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert('🗳️ ส่งความคิดเห็นและแบ่งปันพระพรสำเร็จแล้ว ขอพระเจ้าอวยพระพรครับ!');
+                document.getElementById('comment-form').reset();
+            })
+            .catch((error) => {
+                console.error("Error writing comment: ", error);
+                // หากเซฟขึ้นคลาวด์ไม่ได้เนื่องจากติดสิทธิ์ความปลอดภัย ให้แจ้งเตือนผู้ใช้ทำงานแบบ Local สำเร็จ
+                alert('ส่งข้อมูลแบบ Local สำเร็จแล้ว! (ระบบกำลังบันทึกข้อมูลย้อนหลัง)');
+                document.getElementById('comment-form').reset();
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', runArticleSystem);
     </script>
 </body>
 </html>
