@@ -105,10 +105,17 @@
             margin-bottom: 15px;
         }
 
-        .rating-display {
-            color: var(--star-gold);
-            font-size: 14px;
+        .rating-summary {
+            font-size: 15px;
+            color: var(--text-muted);
             margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .star-gold {
+            color: var(--star-gold);
         }
 
         .comment-card {
@@ -136,6 +143,7 @@
             color: white;
             padding: 12px;
             font-size: 15px;
+            outline: none;
         }
 
         .btn-submit {
@@ -148,6 +156,38 @@
             border-radius: 8px;
             font-size: 16px;
             cursor: pointer;
+        }
+
+        /* รายชื่อความคิดเห็น */
+        .comments-list-section {
+            margin-top: 20px;
+        }
+
+        .comment-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid #555;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .comment-user {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: #d1d1d1;
+            white-space: pre-wrap;
         }
 
         .status-center {
@@ -194,8 +234,9 @@
             <div id="article-box" style="display: none;">
                 <h1 id="art-title" class="headline"></h1>
                 
-                <div class="rating-display">
-                    <span id="star-render">⭐⭐⭐⭐⭐</span> (5.0)
+                <div class="rating-summary">
+                    <span id="star-render" class="star-gold"></span>
+                    <span id="score-text"></span>
                 </div>
 
                 <div class="meta-group">
@@ -230,11 +271,18 @@
                 </div>
                 <button type="submit" class="btn-submit">ส่งความคิดเห็น</button>
             </form>
+
+            <div class="comments-list-section">
+                <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--text-muted);">บทความแบ่งปันพระพรจากพี่น้อง:</h3>
+                <div id="comments-container">
+                    <div style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 10px;">ยังไม่มีคำแบ่งปันในบทความนี้</div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // ⚙️ เปลี่ยนเป็น Config จริงของคุณได้เลยครับ
+        // กำหนดคอนฟิก Firebase
         const firebaseConfig = {
             apiKey: "YOUR_FIREBASE_API_KEY",
             authDomain: "bangkhenchurch.firebaseapp.com",
@@ -244,18 +292,13 @@
             appId: "1:1234:web:abcd"
         };
 
-        // เริ่มต้นการทำงานของ Firebase พร้อมปิดการตั้งค่า Cache ที่ทำให้เกิดบั๊ก Offline
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
-            // 🛠️ แก้บั๊ก "Client is offline" ด้วยการบังคับดึงข้อมูลสดจากเน็ตโดยตรง ไม่ผ่าน Cache เครื่อง
-            firebase.firestore().settings({ 
-                experimentalForceLongPolling: true,
-                merge: false
-            });
+            // บังคับใช้ Long Polling เพื่อป้องกันบั๊กเครือข่ายมือถือหลุดไปโหมดออฟไลน์
+            firebase.firestore().settings({ experimentalForceLongPolling: true });
         }
         const db = firebase.firestore();
 
-        // ดึง ID จาก URL
         function getQueryID() {
             return new URLSearchParams(window.location.search).get('id');
         }
@@ -265,40 +308,42 @@
             const errorBox = document.getElementById('error-box');
             const errorText = document.getElementById('error-text');
             const debugText = document.getElementById('debug-text');
-            const articleBox = document.getElementById('article-box');
 
             let rid = getQueryID();
             
-            // 🛠️ แก้จุดที่ 1: ถ้าไม่มี ID ใน URL ให้ดึงบทความล่าสุด (2026-05-21) มาแสดงเป็นค่าเริ่มต้นแทน ไม่ให้หน้าเว็บพัง
+            // ป้องกัน URL หลุด: ถ้าไม่มี ID ให้ดึงบทความล่าสุดเป็น Default
             if (!rid) {
                 console.warn("No ID found in URL, defaulting to latest article.");
                 rid = "2026-05-21"; 
             }
 
             try {
-                // พยายามดึงข้อมูลจากคลาวด์ Firebase Firestore
-                const snap = await db.collection('blogs').doc(rid).get();
+                // 🛠️ เปลี่ยนจาก 'blogs' เป็น 'articles' เพื่อให้ตรงกับ Firebase Rules บรรทัดที่ 19
+                const snap = await db.collection('articles').doc(rid).get();
                 
                 if (snap.exists) {
                     renderToHTML(snap.data());
                 } else {
-                    // ถ้าใน Firestore ไม่มีไอดีนี้ ให้ใช้ฐานข้อมูลสำรองในเครื่องทันที
                     const offlineData = getFallbackDatabase(rid);
                     if (offlineData) {
                         renderToHTML(offlineData);
                     } else {
-                        throw new Error(`ไม่พบเอกสารรหัส "${rid}" ในคอลเลกชัน 'blogs'`);
+                        throw new Error(`ไม่พบเอกสารรหัส "${rid}" ในคอลเลกชัน 'articles'`);
                     }
                 }
+
+                // โหลดคอมเมนต์และความคิดเห็นที่เกี่ยวข้อง
+                loadArticleComments(rid);
+
             } catch (err) {
-                console.log("Firebase status issue, rendering from internal fallback...", err);
-                // 🛠️ แก้จุดที่ 2: ดึงคลังข้อมูลสำรองทันทีหาก Firebase บล็อกเครือข่ายมือถือ
+                console.log("Firebase query error, switching to internal backup...", err);
                 const backupData = getFallbackDatabase(rid);
                 if (backupData) {
                     renderToHTML(backupData);
+                    loadArticleComments(rid);
                 } else {
                     loadBox.style.display = 'none';
-                    errorText.innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูลบทความ';
+                    errorText.innerText = 'เกิดข้อผิดพลาดในการดึงข้อมูลข้อมูล';
                     debugText.innerText = `Detail: ${err.message}`;
                     debugText.style.display = 'block';
                     errorBox.style.display = 'block';
@@ -312,11 +357,11 @@
             
             document.getElementById('art-title').innerText = data.title || 'ไม่มีหัวข้อ';
             document.getElementById('art-category').innerText = data.category || 'บทความทั่วไป';
-            document.getElementById('art-author').innerText = data.author || data.speaker || 'ไม่ระบุผู้เขียน';
+            document.getElementById('art-author').innerText = data.author || data.speaker || data.speakerName || 'ไม่ระบุผู้เขียน';
             document.getElementById('art-date').innerText = data.date || '-';
             document.getElementById('art-series').innerText = data.series || '-';
 
-            // รูปภาพปก
+            // จัดการรูปภาพปก
             const imgElement = document.getElementById('art-image');
             const imageSource = data.image || data.imageUrl || data.img;
             if (imageSource) {
@@ -324,14 +369,96 @@
                 imgElement.style.display = 'block';
             }
 
-            // เนื้อหาหลัก
+            // จัดการรายละเอียดเนื้อหาหลัก
             const bodyTxt = data.content || data.detail || data.description || data.text;
             document.getElementById('art-content').innerHTML = bodyTxt ? bodyTxt : 'ไม่มีรายละเอียดเนื้อหา';
 
             document.getElementById('article-box').style.display = 'block';
         }
 
-        // คลังข้อมูลสำหรับทำงานแทนระบบคลาวด์แบบทันที (ป้องกันหน้าจอโหลดค้าง)
+        // ฟังก์ชันดึงรายการความคิดเห็นและคะแนนรีวิวจากคอลเลกชัน 'comments'
+        function loadArticleComments(articleId) {
+            db.collection('comments')
+                .where('articleId', '==', articleId)
+                .orderBy('createdAt', 'desc')
+                .get()
+                .then((querySnapshot) => {
+                    const container = document.getElementById('comments-container');
+                    const starRender = document.getElementById('star-render');
+                    const scoreText = document.getElementById('score-text');
+
+                    if (querySnapshot.empty) {
+                        starRender.innerHTML = "⭐⭐⭐⭐⭐";
+                        scoreText.innerText = "(5.0) | 0 ความคิดเห็น";
+                        container.innerHTML = '<div style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 10px;">ยังไม่มีคำแบ่งปันในบทความนี้</div>';
+                        return;
+                    }
+
+                    let totalScore = 0;
+                    let count = 0;
+                    let html = '';
+
+                    querySnapshot.forEach((doc) => {
+                        const com = doc.data();
+                        totalScore += com.ratingScore || 5;
+                        count++;
+
+                        let stars = '⭐'.repeat(com.ratingScore || 5);
+                        let displayDate = com.createdAt ? new Date(com.createdAt.seconds * 1000).toLocaleDateString('th-TH') : '';
+
+                        html += `
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <span class="comment-user">👤 ${com.reviewerName || 'ผู้ไม่ประสงค์ออกนาม'}</span>
+                                    <span>${stars}</span>
+                                </div>
+                                <div class="comment-text">${com.messageText || ''}</div>
+                                <div style="font-size: 10px; color: var(--text-muted); text-align: right; margin-top: 4px;">${displayDate}</div>
+                            </div>
+                        `;
+                    });
+
+                    // คำนวณคะแนนเฉลี่ย
+                    let avg = (totalScore / count).toFixed(1);
+                    starRender.innerHTML = '⭐'.repeat(Math.round(avg));
+                    scoreText.innerText = `(${avg}) | ${count} ความคิดเห็น`;
+                    container.innerHTML = html;
+                })
+                .catch((error) => {
+                    console.error("Error loading comments: ", error);
+                    // กรณีติดสิทธิ์การโหลดให้คงค่า Default ไว้
+                    document.getElementById('star-render').innerHTML = "⭐⭐⭐⭐⭐";
+                    document.getElementById('score-text').innerText = "(5.0)";
+                });
+        }
+
+        // ฟังก์ชันส่งฟอร์มบันทึกความคิดเห็นลงใน 'comments' (ตรงกับ Rules บรรทัดที่ 58)
+        function handleCommentSubmit(event) {
+            event.preventDefault();
+            const rating = document.getElementById('score-select').value;
+            const name = document.getElementById('com-name').value;
+            const text = document.getElementById('com-text').value;
+            let rid = getQueryID() || "2026-05-21";
+
+            db.collection('comments').add({
+                articleId: rid,
+                reviewerName: name,
+                ratingScore: parseInt(rating),
+                messageText: text,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert('🗳️ ส่งความคิดเห็นและแบ่งปันพระพรสำเร็จแล้ว ขอพระเจ้าอวยพระพรครับ!');
+                document.getElementById('comment-form').reset();
+                loadArticleComments(rid); // รีโหลดแสดงคอมเมนต์ใหม่ทันที
+            })
+            .catch((error) => {
+                console.error("Error writing comment: ", error);
+                alert('ไม่สามารถส่งความคิดเห็นได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง');
+            });
+        }
+
+        // ฐานข้อมูลสำรองกรณีกดลิงก์มาช่วงออฟไลน์ หรือดึงคลาวด์ไม่ได้
         function getFallbackDatabase(id) {
             const fallbackList = {
                 "2026-05-21": {
@@ -390,31 +517,6 @@
                 }
             };
             return fallbackList[id] || null;
-        }
-
-        function handleCommentSubmit(event) {
-            event.preventDefault();
-            const rating = document.getElementById('score-select').value;
-            const name = document.getElementById('com-name').value;
-            const text = document.getElementById('com-text').value;
-            let rid = getQueryID() || "2026-05-21";
-
-            db.collection('comments').add({
-                articleId: rid,
-                reviewerName: name,
-                ratingScore: parseInt(rating),
-                messageText: text,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                alert('🗳️ ส่งความคิดเห็นและแบ่งปันพระพรสำเร็จแล้ว ขอพระเจ้าอวยพระพรครับ!');
-                document.getElementById('comment-form').reset();
-            })
-            .catch((error) => {
-                console.error("Error writing comment: ", error);
-                alert('บันทึกความประทับใจในเครื่องสำเร็จแล้ว! ขอพระเจ้าอวยพระพรครับ');
-                document.getElementById('comment-form').reset();
-            });
         }
 
         window.addEventListener('DOMContentLoaded', runArticleSystem);
