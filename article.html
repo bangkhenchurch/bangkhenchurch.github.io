@@ -176,13 +176,11 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ดึง URL Parameters ปัจจุบันมาวิเคราะห์
     const urlParams = new URLSearchParams(window.location.search);
     const currentId = urlParams.get('id');
     const currentView = urlParams.get('view') || 'blogs'; 
     const currentSearch = urlParams.get('search'); 
 
-    // ไฮไลต์แท็บเมนูที่ทำงานอยู่
     if(!currentId && currentView) {
         const activeMenuBtn = document.getElementById(`link-${currentView}`);
         if(activeMenuBtn) activeMenuBtn.classList.add('active');
@@ -208,7 +206,6 @@
         return "ทั่วไป";
     }
 
-    // ฟังก์ชันสร้างแถบ Sidebar (ฝั่งซ้าย)
     function buildUnifiedSidebarTree(items) {
         const dateGroups = { blogs: new Set(), sermons: new Set(), testimony: new Set(), news: new Set() };
         const authorGroups = {};
@@ -285,7 +282,6 @@
         });
     }
 
-    // เรียกดึงข้อมูลจาก Firestore ครั้งเดียว
     const q = query(collection(db, "articles"), orderBy("displayDate", "desc"));
     
     onSnapshot(q, (snap) => {
@@ -296,10 +292,8 @@
             listItems.push(data);
         });
 
-        // สร้างเมนูสารบัญซ้ายมือเสร็จเสมอ
         buildUnifiedSidebarTree(listItems);
 
-        // ตัดสินใจว่าจะเปิดหน้าอ่านเรื่องเดี่ยว (?id=...) หรือเป็นตารางรวมกันแน่
         if(currentId) {
             renderSinglePost(currentId);
         } else {
@@ -307,7 +301,7 @@
         }
     });
 
-    // ฟังก์ชันแสดงบล็อกเนื้อหาฉบับเต็ม
+    // แก้ไขฟังก์ชันดึงรายละเอียดให้ดึงค่าครอบคลุมทุกชื่อฟิลด์ที่เป็นไปได้
     async function renderSinglePost(id) {
         const holder = document.getElementById('dynamicContentHolder');
         try {
@@ -319,6 +313,9 @@
                 const cat = item.category || "บทความ";
                 const authorDisplay = item.authorName || item.author || "คริสตจักร";
                 const yId = getYoutubeId(item.youtubeUrl);
+                
+                // ดึงค่าเนื้อหาจากทุกฟิลด์ที่มีโอกาสเป็นไปได้ใน Firestore
+                const mainBodyText = item.content || item.body || item.detail || item.description || 'ไม่มีรายละเอียดเนื้อหา';
                 
                 let mediaHtml = "";
                 if(yId) {
@@ -339,7 +336,7 @@
                         </div>
                     </div>
                     ${mediaHtml}
-                    <div class="post-body">${item.content || item.body || 'ไม่มีรายละเอียดเนื้อหา'}</div>
+                    <div class="post-body">${mainBodyText}</div>
                     <button onclick="window.location.href='article.html?view=${currentView}'" style="padding: 10px 20px; background:#333; color:white; border:none; border-radius:6px; cursor:pointer; font-family:'Prompt';">↩️ ย้อนกลับไปหน้ารวม</button>
                 </div>`;
             } else {
@@ -350,7 +347,6 @@
         }
     }
 
-    // ฟังก์ชันค้นหาและคัดกรองรายการแสดงแบบตารางการ์ดข้อมูล
     function renderBoardGrid(items, viewType, searchKeyword) {
         const holder = document.getElementById('dynamicContentHolder');
         let titleLabel = "📖 คลังข้อมูลคริสตจักร";
@@ -371,23 +367,19 @@
             const cat = (item.category || "").toString();
             let matchedCategory = false;
             
-            // ตรวจสอบความถูกต้องของหมวดหมู่หลักก่อน
             if (viewType === "blogs" && cat.includes("บทความ")) matchedCategory = true;
             else if (viewType === "sermons" && cat.includes("เทศนา")) matchedCategory = true;
             else if (viewType === "testimony" && cat.includes("พยาน")) matchedCategory = true;
             else if (viewType === "news" && cat.includes("ข่าวสาร")) matchedCategory = true;
 
-            // หากมีการคลิก Filter ค้นหาจาก Sidebar คลังข้อมูล
             if(searchKeyword) {
                 const mYear = parseMonthYear(item.displayDate || item.date);
                 const author = item.authorName || item.author || "คริสตจักร";
                 const series = item.series || "";
                 
-                // ถ้ายืนยันกลุ่มหมวดหมู่หลักไม่แมทช์กับ Keyword ให้ปิดกั้นไว้ ยกเว้นกรณีค้นชื่อบุคคลให้โชว์ข้ามแท็บได้ตามต้องการ
                 if(!mYear.includes(searchKeyword) && !author.includes(searchKeyword) && !series.includes(searchKeyword)) {
                     return; 
                 }
-                // ถ้าค้นหารายชื่อผู้แต่ง ให้เปิดข้อยกเว้นแสดงผลได้เลย
                 if(author.includes(searchKeyword)) {
                     matchedCategory = true;
                 }
@@ -398,7 +390,9 @@
                 const authorDisplay = item.authorName || item.author || "คริสตจักร";
                 const yId = getYoutubeId(item.youtubeUrl);
                 const thumb = item.thumbUrl || (yId ? `https://img.youtube.com/vi/${yId}/mqdefault.jpg` : 'logo.png');
-                const snippet = item.content || item.body || "";
+                
+                // คัดย่อข้อความสั้นสำหรับการ์ดจอแสดงผล
+                const snippet = item.content || item.body || item.detail || item.description || "";
                 const seriesDisplay = item.series ? ` | ซีรีย์: ${item.series}` : "";
 
                 html += `
