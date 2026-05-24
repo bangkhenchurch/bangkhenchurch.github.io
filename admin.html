@@ -29,7 +29,6 @@
 
         .container { max-width: 1200px; margin: auto; }
         
-        /* Form Styling */
         .admin-card { 
             background: var(--card-bg); 
             padding: 30px; 
@@ -78,7 +77,6 @@
 
         input:focus { border-color: var(--primary); outline: none; }
 
-        /* Author Selector */
         .author-group { display: flex; gap: 10px; }
         .btn-mini { 
             background: var(--primary); 
@@ -88,12 +86,6 @@
         }
         .btn-mini.del { background: var(--danger); }
 
-        /* Media Upload */
-        .media-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 15px;
-        }
         .preview-box {
             background: #080808;
             height: 120px;
@@ -117,7 +109,6 @@
         }
         .btn-save:hover { filter: brightness(1.2); }
 
-        /* Display Table / List */
         .table-container { 
             overflow-x: auto; 
             background: var(--card-bg); 
@@ -130,13 +121,7 @@
         tr:hover { background: #151515; }
 
         .thumb-small { width: 80px; height: 50px; border-radius: 5px; object-fit: cover; background: #000; }
-        
-        .badge {
-            padding: 4px 8px;
-            border-radius: 5px;
-            font-size: 11px;
-            background: #333;
-        }
+        .badge { padding: 4px 8px; border-radius: 5px; font-size: 11px; background: #333; }
     </style>
 </head>
 <body>
@@ -236,21 +221,13 @@
     </div>
 
     <div class="admin-card">
-        <h2>📑 รายการเนื้อหา (เรียงตามวันที่/หมวดหมู่/ผู้แต่ง)</h2>
+        <h2>📑 รายการเนื้อหา</h2>
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
-                        <th>รูปปก</th>
-                        <th>วันที่</th>
-                        <th>หมวดหมู่</th>
-                        <th>หัวข้อ / ซีรีย์</th>
-                        <th>ผู้แต่ง</th>
-                        <th>จัดการ</th>
-                    </tr>
+                    <tr><th>รูปปก</th><th>วันที่</th><th>หมวดหมู่</th><th>หัวข้อ</th><th>ผู้แต่ง</th><th>จัดการ</th></tr>
                 </thead>
-                <tbody id="articleTableBody">
-                    </tbody>
+                <tbody id="articleTableBody"></tbody>
             </table>
         </div>
     </div>
@@ -258,7 +235,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
     const firebaseConfig = {
@@ -273,9 +250,6 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // ==========================================
-    // 1. จัดการรายชื่อผู้แต่ง (Author) Real-time
-    // ==========================================
     onSnapshot(collection(db, "authors"), (snap) => {
         const select = document.getElementById("authorSelect");
         select.innerHTML = '<option value="">-- เลือกผู้แต่ง --</option>';
@@ -296,36 +270,14 @@
         if (id && confirm("ลบรายชื่อนี้?")) await deleteDoc(doc(db, "authors", id));
     };
 
-    // ==========================================
-    // 2. จัดการรูปภาพ (Upload Helper)
-    // ==========================================
     async function uploadFile(fileInput, previewId, hiddenInputId) {
-        return new Promise((resolve) => {
-            const file = fileInput.files[0];
-            if (!file) {
-                resolve(document.getElementById(hiddenInputId).value || "");
-                return;
-            }
-            const storageRef = ref(storage, 'articles/' + Date.now() + "_" + file.name);
-            const uploadTask = uploadBytesResumable(storageRef, file);
-            
-            uploadTask.on('state_changed', 
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    document.getElementById(previewId).innerHTML = `<small>กำลังอัปโหลด ${Math.round(progress)}%</small>`;
-                }, 
-                null, 
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                        document.getElementById(previewId).innerHTML = `<img src="${url}">`;
-                        resolve(url);
-                    });
-                }
-            );
-        });
+        const file = fileInput.files[0];
+        if (!file) return document.getElementById(hiddenInputId).value;
+        const storageRef = ref(storage, 'articles/' + Date.now() + "_" + file.name);
+        const snapshot = await uploadBytesResumable(storageRef, file);
+        return await getDownloadURL(snapshot.ref);
     }
 
-    // ฟังก์ชันพรีวิวภาพเบื้องต้น (Client Side)
     function setupPreview(inputId, preId) {
         document.getElementById(inputId).onchange = (e) => {
             const file = e.target.files[0];
@@ -340,20 +292,13 @@
     setupPreview("filePic1", "prePic1");
     setupPreview("filePic2", "prePic2");
 
-    // ==========================================
-    // 3. บันทึกข้อมูลบทความ
-    // ==========================================
     document.getElementById("articleForm").onsubmit = async (e) => {
         e.preventDefault();
         const btn = document.getElementById("saveBtn");
         btn.disabled = true;
-        btn.innerText = "⏳ กำลังบันทึกและพุชข้อมูล...";
+        btn.innerText = "⏳ กำลังดำเนินการ...";
 
         const id = document.getElementById("editId").value;
-        const thumbUrl = await uploadFile(document.getElementById("fileThumb"), "preThumb", "valThumb");
-        const pic1Url = await uploadFile(document.getElementById("filePic1"), "prePic1", "valPic1");
-        const pic2Url = await uploadFile(document.getElementById("filePic2"), "prePic2", "valPic2");
-
         const data = {
             displayDate: document.getElementById("customDate").value,
             category: document.getElementById("category").value,
@@ -361,9 +306,9 @@
             series: document.getElementById("series").value,
             authorName: document.getElementById("authorSelect").value,
             bibleRef: document.getElementById("bibleRef").value,
-            thumbUrl: thumbUrl,
-            pic1Url: pic1Url,
-            pic2Url: pic2Url,
+            thumbUrl: await uploadFile(document.getElementById("fileThumb"), "preThumb", "valThumb"),
+            pic1Url: await uploadFile(document.getElementById("filePic1"), "prePic1", "valPic1"),
+            pic2Url: await uploadFile(document.getElementById("filePic2"), "prePic2", "valPic2"),
             yt1: document.getElementById("yt1").value,
             yt2: document.getElementById("yt2").value,
             extraLink: document.getElementById("extraLink").value,
@@ -379,67 +324,65 @@
             } else {
                 data.createdAt = serverTimestamp();
                 await addDoc(collection(db, "articles"), data);
-                alert("🚀 บันทึกและแสดงผลทันที!");
+                alert("🚀 บันทึกเรียบร้อย!");
             }
-            window.location.reload(); // รีเฟรชเพื่อความเคลียร์
+            window.location.reload();
         } catch (err) {
             alert("Error: " + err.message);
             btn.disabled = false;
         }
     };
 
-    // ==========================================
-    // 4. แสดงผลบทความด้านล่าง (Sorting)
-    // ==========================================
+    window.editArt = async (id) => {
+        const docSnap = await getDoc(doc(db, "articles", id));
+        if (docSnap.exists()) {
+            const d = docSnap.data();
+            document.getElementById("editId").value = id;
+            document.getElementById("customDate").value = d.displayDate || "";
+            document.getElementById("category").value = d.category || "";
+            document.getElementById("title").value = d.title || "";
+            document.getElementById("series").value = d.series || "";
+            document.getElementById("authorSelect").value = d.authorName || "";
+            document.getElementById("bibleRef").value = d.bibleRef || "";
+            document.getElementById("valThumb").value = d.thumbUrl || "";
+            document.getElementById("preThumb").innerHTML = d.thumbUrl ? `<img src="${d.thumbUrl}">` : "รูปปก";
+            document.getElementById("valPic1").value = d.pic1Url || "";
+            document.getElementById("prePic1").innerHTML = d.pic1Url ? `<img src="${d.pic1Url}">` : "รูป 1";
+            document.getElementById("valPic2").value = d.pic2Url || "";
+            document.getElementById("prePic2").innerHTML = d.pic2Url ? `<img src="${d.pic2Url}">` : "รูป 2";
+            document.getElementById("yt1").value = d.yt1 || "";
+            document.getElementById("yt2").value = d.yt2 || "";
+            document.getElementById("extraLink").value = d.extraLink || "";
+            document.getElementById("mainContent").value = d.mainContent || "";
+            document.getElementById("note").value = d.note || "";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    window.deleteArt = async (id) => {
+        if (confirm("ยืนยันการลบ?")) await deleteDoc(doc(db, "articles", id));
+    };
+
     onSnapshot(collection(db, "articles"), (snap) => {
         const tbody = document.getElementById("articleTableBody");
         tbody.innerHTML = "";
-        
-        let list = [];
-        snap.forEach(d => list.push({id: d.id, ...d.data()}));
-
-        // Sorting Logic: วันที่ > หมวดหมู่ > ซีรีย์ > ผู้แต่ง
-        list.sort((a, b) => {
-            if (b.displayDate !== a.displayDate) return new Date(b.displayDate) - new Date(a.displayDate);
-            if (a.category !== b.category) return a.category.localeCompare(b.category);
-            if (a.series !== b.series) return (a.series || "").localeCompare(b.series || "");
-            return a.authorName.localeCompare(b.authorName);
-        });
-
-        list.forEach(item => {
+        snap.forEach(d => {
+            const item = d.data();
             const tr = document.createElement("tr");
             tr.innerHTML = `
-                <td><img src="${item.thumbUrl || 'https://placehold.co/80x50?text=No+Pic'}" class="thumb-small"></td>
+                <td><img src="${item.thumbUrl || 'https://placehold.co/80x50?text=No'}" class="thumb-small"></td>
                 <td>${item.displayDate}</td>
                 <td><span class="badge">${item.category}</span></td>
-                <td>
-                    <strong>${item.title}</strong><br>
-                    <small style="color:#666">ซีรีย์: ${item.series || '-'}</small>
-                </td>
+                <td><strong>${item.title}</strong></td>
                 <td>${item.authorName}</td>
                 <td>
-                    <button onclick="editArt('${item.id}')" style="cursor:pointer; background:none; border:1px solid #4dabff; color:#4dabff; border-radius:4px; padding:3px 8px;">แก้ไข</button>
-                    <button onclick="deleteArt('${item.id}')" style="cursor:pointer; background:none; border:1px solid #e74c3c; color:#e74c3c; border-radius:4px; padding:3px 8px;">ลบ</button>
+                    <button onclick="editArt('${d.id}')" style="cursor:pointer; background:none; border:1px solid #4dabff; color:#4dabff; border-radius:4px; padding:3px 8px;">แก้ไข</button>
+                    <button onclick="deleteArt('${d.id}')" style="cursor:pointer; background:none; border:1px solid #e74c3c; color:#e74c3c; border-radius:4px; padding:3px 8px;">ลบ</button>
                 </td>
             `;
             tbody.appendChild(tr);
         });
     });
-
-    // ==========================================
-    // 5. Delete & Edit Article
-    // ==========================================
-    window.deleteArt = async (id) => {
-        if (confirm("ยืนยันการลบถาวร?")) await deleteDoc(doc(db, "articles", id));
-    };
-
-    window.editArt = (id) => {
-        // ดึงข้อมูลจาก DOM มาใส่ฟอร์ม (หรือจะดึงใหม่จาก Firebase ก็ได้)
-        // เพื่อความง่ายในตัวอย่างนี้ แนะนำให้กดปุ่มแล้วหน้าจอเลื่อนขึ้นไปข้างบนเพื่อกรอกใหม่
-        alert("กรุณาดูข้อมูลเดิมเพื่อแก้ไข (ระบบกำลังเตรียมข้อมูลบนฟอร์ม)");
-        // Logic การดึงข้อมูลเข้าฟอร์ม...
-    };
-
 </script>
 
 </body>
