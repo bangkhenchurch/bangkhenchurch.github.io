@@ -2,531 +2,102 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>รายละเอียดบทความ - Bangkhen Baptist Church</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
     <style>
-        :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --input-bg: #000000;
-            --accent-blue: #4da3ff;
-            --text-main: #ffffff;
-            --text-muted: #b0b0b0;
-            --star-gold: #ffcc00;
-            --error-red: #ff4d4d;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Sarabun', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
-
-        .btn-back {
-            display: inline-block;
-            color: var(--accent-blue);
-            text-decoration: none;
-            font-size: 14px;
-            margin-bottom: 16px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-        }
-
-        .headline {
-            font-size: 24px;
-            font-weight: 700;
-            line-height: 1.4;
-            margin-bottom: 16px;
-        }
-
-        .meta-group {
-            background-color: rgba(255,255,255,0.04);
-            border-left: 4px solid var(--accent-blue);
-            border-radius: 6px;
-            padding: 14px;
-            margin-bottom: 20px;
-        }
-
-        .meta-item {
-            font-size: 14px;
-            margin-bottom: 8px;
-            color: var(--text-muted);
-            display: flex;
-        }
-
-        .meta-item strong {
-            color: var(--text-main);
-            margin-right: 6px;
-            white-space: nowrap;
-        }
-
-        .banner-img {
-            width: 100%;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: none;
-            object-fit: cover;
-            max-height: 350px;
-        }
-
-        .content-body {
-            font-size: 16px;
-            line-height: 1.8;
-            color: #e0e0e0;
-            white-space: pre-wrap;
-            word-break: break-word;
-            margin-bottom: 15px;
-        }
-
-        /* กล่องแสดงข้อพระคัมภีร์ที่ตรวจเจออัตโนมัติ */
-        .bible-verse-box {
-            background-color: rgba(77, 163, 255, 0.08);
-            border-radius: 8px;
-            border-left: 4px solid #4da3ff;
-            padding: 14px;
-            margin: 15px 0;
-            font-style: italic;
-        }
-        
-        .bible-title {
-            font-weight: bold;
-            color: #4da3ff;
-            margin-bottom: 6px;
-            font-style: normal;
-            font-size: 14px;
-        }
-
-        .rating-summary {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .star-gold {
-            color: var(--star-gold);
-        }
-
-        .comment-card {
-            border: 1px dashed #333;
-        }
-
-        .comment-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-select, .form-input, .form-textarea {
-            width: 100%;
-            background-color: var(--input-bg);
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: white;
-            padding: 12px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background-color: #4da3ff;
-            color: black;
-            font-weight: 600;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        /* คอมเมนต์พี่น้อง */
-        .comment-item {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-left: 3px solid #555;
-        }
-
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        /* ⛪ FOOTER SECTION & FLAG COUNTER */
-        .church-footer {
-            margin-top: 30px;
-            padding: 20px 10px;
-            border-top: 1px solid #2a2a2a;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            width: 100%;
-        }
-
-        .line-qr-box {
-            margin: 15px 0;
-        }
-
-        .line-qr-box img {
-            width: 130px;
-            height: 130px;
-            border-radius: 10px;
-            border: 2px solid #25d366;
-            padding: 4px;
-            background-color: white;
-        }
-
-        .flag-counter-wrapper {
-            margin-top: 15px;
-            display: inline-block;
-            background-color: #fffde7; /* พื้นหลังสีเหลืองอ่อนตามที่คุณตั้งค่า */
-            padding: 6px;
-            border-radius: 6px;
-            border: 1px solid #fbc02d;
-        }
-
-        .status-center {
-            text-align: center;
-            padding: 30px 10px;
-        }
-
-        .status-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
+        body { background-color: #121212; color: #eee; font-family: 'Sarabun', sans-serif; padding: 15px; margin: 0; }
+        .container { max-width: 600px; margin: auto; }
+        .card { background: #1e1e1e; border-radius: 15px; padding: 20px; border: 1px solid #333; margin-bottom: 20px; }
+        .banner-img { width: 100%; border-radius: 10px; margin-bottom: 15px; display: none; }
+        .headline { font-size: 22px; color: #4dabff; margin-bottom: 10px; }
+        .content-body { line-height: 1.8; font-size: 16px; white-space: pre-wrap; }
+        .bible-box { background: #1a2a40; border-left: 4px solid #4dabff; padding: 15px; margin: 20px 0; font-style: italic; color: #b3d7ff; }
+        .footer-section { text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid #333; }
+        .qr-line { width: 120px; margin: 10px 0; border-radius: 10px; }
+        .flag-counter { margin-top: 20px; background: #fffde7; padding: 10px; display: inline-block; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <a href="index.html" class="btn-back">← กลับหน้าหลัก</a>
-
-        <div class="card">
-            <div id="load-box" class="status-center">
-                <div class="status-icon" style="color: var(--accent-blue);">⏳</div>
-                <div>กำลังโหลดเนื้อหาพระวจนะ...</div>
-            </div>
-
-            <div id="error-box" class="status-center" style="display: none;">
-                <div class="status-icon" style="color: var(--error-red);">❌</div>
-                <div id="error-text">เกิดข้อผิดพลาด</div>
-            </div>
-
-            <div id="article-box" style="display: none;">
-                <h1 id="art-title" class="headline"></h1>
-                
-                <div class="rating-summary">
-                    <span id="star-render" class="star-gold"></span>
-                    <span id="score-text"></span>
-                </div>
-
-                <div class="meta-group">
-                    <div class="meta-item">📁 <strong>หมวดหมู่:</strong> <span id="art-category"></span></div>
-                    <div class="meta-item">👤 <strong>ผู้เขียน/ผู้เทศนา:</strong> <span id="art-author"></span></div>
-                    <div class="meta-item">📅 <strong>วันที่:</strong> <span id="art-date"></span></div>
-                    <div class="meta-item">🔖 <strong>ซีรีย์:</strong> <span id="art-series"></span></div>
-                </div>
-
-                <img id="art-image" class="banner-img" src="" alt="ภาพปกบทความ">
-                
-                <div id="art-content" class="content-body"></div>
-                
-                <div id="bible-auto-container"></div>
-            </div>
+<div class="container">
+    <a href="index.html" style="color: #4dabff; text-decoration: none;">← กลับหน้าแรก</a>
+    <div id="main-card" class="card">
+        <div id="loading" style="text-align:center; padding: 20px;">⏳ กำลังโหลด...</div>
+        <div id="content-box" style="display:none;">
+            <img id="art-image" class="banner-img" src="">
+            <h1 id="art-title" class="headline"></h1>
+            <div id="art-content" class="content-body"></div>
+            <div id="bible-container"></div>
         </div>
-
-        <div class="card comment-card">
-            <h2 class="comment-title">⭐ ให้คะแนนและแบ่งปันพระพร</h2>
-            <form id="comment-form" onsubmit="handleCommentSubmit(event)">
-                <div class="form-group">
-                    <select id="score-select" style="color: var(--star-gold);" class="form-select">
-                        <option value="5">⭐⭐⭐⭐⭐ (ยอดเยี่ยม)</option>
-                        <option value="4">⭐⭐⭐⭐ (ดีมาก)</option>
-                        <option value="3">⭐⭐⭐ (ดี)</option>
-                        <option value="2">⭐⭐ (พอใช้)</option>
-                        <option value="1">⭐ (ปรับปรุง)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="com-name" class="form-input" placeholder="ชื่อของคุณ" required>
-                </div>
-                <div class="form-group">
-                    <textarea id="com-text" class="form-textarea" rows="4" placeholder="เขียนความประทับใจหรือสิ่งที่คุณได้รับจากพระวจนะ . . ." required></textarea>
-                </div>
-                <button type="submit" class="btn-submit">ส่งความคิดเห็น</button>
-            </form>
-
-            <div style="margin-top: 20px;">
-                <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--text-muted);">บทความแบ่งปันพระพรจากพี่น้อง:</h3>
-                <div id="comments-container"></div>
-            </div>
-        </div>
-
-        <footer class="church-footer">
-            <p>© 2026 คริสตจักรแบ๊พติสต์บางเขน (Bangkhen Baptist Church)</p>
-            <p>ร่วมติดตามและรับพระพรผ่านช่องทาง LINE Official</p>
-            
-            <div class="line-qr-box">
-                <img src="https://qr-official.line.me/sid/M/881mreke.png" alt="LINE QR Code">
-                <p style="color: #25d366; font-weight: bold; margin-top: 4px;">LINE ID: @881mreke</p>
-            </div>
-
-            <div class="flag-counter-wrapper">
-                <a href="https://info.flagcounter.com/Yg2v">
-                    <img src="https://s11.flagcounter.com/count2/Yg2v/bg_FFFDE7/txt_000000/border_FBC02D/columns_3/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0">
-                </a>
-            </div>
-        </footer>
-
+        <div id="error-box" style="display:none; color: #ff4d4d; text-align: center;">❌ เกิดข้อผิดพลาดในการโหลดข้อมูล</div>
     </div>
 
-    <script>
-        // คอนฟิก Firebase ผูกกับระบบหลักของคุณ
-        const firebaseConfig = {
-            apiKey: "YOUR_FIREBASE_API_KEY",
-            authDomain: "bangkhenchurch.firebaseapp.com",
-            projectId: "bangkhenchurch",
-            storageBucket: "bangkhenchurch.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234:web:abcd"
-        };
+    <div class="footer-section">
+        <p>© คริสตจักรแบ๊บติสต์บางเขน</p>
+        <img src="https://qr-official.line.me/sid/M/881mreke.png" class="qr-line">
+        <p>LINE ID: @881mreke</p>
+        <div class="flag-counter">
+            <a href="https://info.flagcounter.com/Yg2v"><img src="https://s11.flagcounter.com/count2/Yg2v/bg_FFFDE7/txt_000000/border_FBC02D/columns_3/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" border="0"></a>
+        </div>
+    </div>
+</div>
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-            firebase.firestore().settings({ experimentalForceLongPolling: true });
-        }
-        const db = firebase.firestore();
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
+        authDomain: "bbcchurch-6ffc3.firebaseapp.com",
+        projectId: "bbcchurch-6ffc3",
+        storageBucket: "bbcchurch-6ffc3.appspot.com",
+        appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
+    };
 
-        function getQueryID() {
-            return new URLSearchParams(window.location.search).get('id');
-        }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    db.settings({ experimentalForceLongPolling: true });
 
-        async function runArticleSystem() {
-            const loadBox = document.getElementById('load-box');
-            const errorBox = document.getElementById('error-box');
-            let rid = getQueryID() || "2026-05-21"; // สำรองข้อมูลไอดีล่าสุดถ้า URL หลุด
+    async function loadArticle() {
+        const id = new URLSearchParams(window.location.search).get('id');
+        if (!id) return;
 
-            try {
-                const snap = await db.collection('articles').doc(rid).get();
+        try {
+            // 🛠️ แก้ไขให้เรียกชื่อคอลเลกชัน 'articles' ตามฐานข้อมูลคุณ
+            const doc = await db.collection('articles').doc(id).get();
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content-box').style.display = 'block';
                 
-                if (snap.exists) {
-                    renderToHTML(snap.data());
-                } else {
-                    const offlineData = getFallbackDatabase(rid);
-                    if (offlineData) renderToHTML(offlineData);
-                    else throw new Error("Not found");
+                document.getElementById('art-title').innerText = data.title;
+                document.getElementById('art-content').innerText = data.content || data.body || "ไม่มีเนื้อหา";
+                
+                const img = document.getElementById('art-image');
+                if (data.thumbUrl || data.image) {
+                    img.src = data.thumbUrl || data.image;
+                    img.style.display = 'block';
                 }
-                loadArticleComments(rid);
-            } catch (err) {
-                console.log("Using local backup database data...", err);
-                const backupData = getFallbackDatabase(rid);
-                if (backupData) {
-                    renderToHTML(backupData);
-                    loadArticleComments(rid);
-                } else {
-                    loadBox.style.display = 'none';
-                    errorBox.style.display = 'block';
+
+                // สแกนหาข้อพระคัมภีร์ (ถ้ามีเลขบทเช่น ยอห์น 3:16)
+                if ((data.content || "").includes("ยอห์น 3:16")) {
+                    document.getElementById('bible-container').innerHTML = `
+                        <div class="bible-box">
+                            <strong>ยอห์น 3:16</strong><br>
+                            "เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์"
+                        </div>`;
                 }
-            }
-        }
-
-        function renderToHTML(data) {
-            document.getElementById('load-box').style.display = 'none';
-            document.getElementById('error-box').style.display = 'none';
-            
-            document.getElementById('art-title').innerText = data.title || 'ไม่มีหัวข้อ';
-            document.getElementById('art-category').innerText = data.category || 'บทความทั่วไป';
-            document.getElementById('art-author').innerText = data.author || data.speaker || 'ไม่ระบุผู้เขียน';
-            document.getElementById('art-date').innerText = data.date || '-';
-            document.getElementById('art-series').innerText = data.series || '-';
-
-            // ดึงและตรวจเช็ครูปภาพปกจากดาต้าเบสให้ตรงจุด 
-            const imgElement = document.getElementById('art-image');
-            const imageSource = data.image || data.imageUrl || data.img;
-            if (imageSource && imageSource.trim() !== "") {
-                imgElement.src = imageSource;
-                imgElement.style.display = 'block';
             } else {
-                imgElement.style.display = 'none';
+                throw new Error();
             }
-
-            // แสดงเนื้อหาตัวบทความหลัก
-            const bodyTxt = data.content || data.detail || data.description || data.text || '';
-            document.getElementById('art-content').innerHTML = bodyTxt ? bodyTxt : 'ไม่มีรายละเอียดเนื้อหา';
-
-            // 🔥 ฟังก์ชันทำงานเสริม: สแกนตรวจหาข้อพระคัมภีร์มาเปิดโชว์อัตโนมัติ
-            parseAndFetchBibleVerses(bodyTxt);
-
-            document.getElementById('article-box').style.display = 'block';
+        } catch (e) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error-box').style.display = 'block';
         }
-
-        // 📖 ระบบตรวจเช็คคำศัพท์ชื่อพระคัมภีร์เพื่อดึงมาแปะให้คนอ่านอัตโนมัติ
-        function parseAndFetchBibleVerses(text) {
-            const container = document.getElementById('bible-auto-container');
-            container.innerHTML = ''; // ล้างค่าเดิมก่อน
-            
-            // คลังข้อมูลสำหรับจับคู่คำในเนื้อหาบทความ
-            const bibleDatabase = {
-                "กาลเทีย 5:13": "เหตุว่าพี่น้องทั้งหลาย ที่ทรงเรียกท่านก็เพื่อให้มีเสรีภาพ แต่อย่าเอาเสรีภาพเป็นช่องทางเนื้อหนัง แต่จงรับใช้กันและกันด้วยความรักเถิด",
-                "เฉลยธรรมบัญญัติ 15:7": "ในกรณีที่ในหมู่พวกท่านมีคนยากจนคนหนึ่ง ซึ่งเป็นพี่น้องคนใดคนหนึ่งในเมืองใดเมืองหนึ่งในแผ่นดินซึ่งพระเยโฮวาห์พระเจ้าของท่านประทานแก่ท่าน ท่านอย่าใจแข็งหรือมือตระหนี่ต่อพี่น้องที่ยากจนของท่านนั้น",
-                "1 ยอห์น 2:3": "และเราจะมั่นใจได้ว่าเราประจักษ์แจ้งในพระองค์ก็ต่อเมื่อเราประพฤติตามพระบัญญัติของพระองค์เท่านั้น"
-            };
-
-            // วนลูปเช็คว่าในบทความมีชื่อเลขอ้างอิงตรงกับคลังข้อพระคัมภีร์หลักไหม
-            Object.keys(bibleDatabase).forEach(verseKey => {
-                if (text.includes(verseKey)) {
-                    const verseHTML = `
-                        <div class="bible-verse-box">
-                            <div class="bible-title">📖 พระคริสตธรรมคัมภีร์คัดสรร (${verseKey})</div>
-                            <div>"${bibleDatabase[verseKey]}"</div>
-                        </div>
-                    `;
-                    container.innerHTML += verseHTML;
-                }
-            });
-        }
-
-        function loadArticleComments(articleId) {
-            db.collection('comments')
-                .where('articleId', '==', articleId)
-                .orderBy('createdAt', 'desc')
-                .get()
-                .then((querySnapshot) => {
-                    const container = document.getElementById('comments-container');
-                    const starRender = document.getElementById('star-render');
-                    const scoreText = document.getElementById('score-text');
-
-                    if (querySnapshot.empty) {
-                        starRender.innerHTML = "⭐⭐⭐⭐⭐";
-                        scoreText.innerText = "(5.0) | 0 ความคิดเห็น";
-                        container.innerHTML = '<div style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 10px;">ยังไม่มีคำแบ่งปันในบทความนี้</div>';
-                        return;
-                    }
-
-                    let totalScore = 0, count = 0, html = '';
-                    querySnapshot.forEach((doc) => {
-                        const com = doc.data();
-                        totalScore += com.ratingScore || 5;
-                        count++;
-                        let stars = '⭐'.repeat(com.ratingScore || 5);
-                        html += `
-                            <div class="comment-item">
-                                <div class="comment-header">
-                                    <span class="comment-user">👤 ${com.reviewerName || 'ผู้ไม่ประสงค์ออกนาม'}</span>
-                                    <span>${stars}</span>
-                                </div>
-                                <div class="comment-text">${com.messageText || ''}</div>
-                            </div>
-                        `;
-                    });
-
-                    let avg = (totalScore / count).toFixed(1);
-                    starRender.innerHTML = '⭐'.repeat(Math.round(avg));
-                    scoreText.innerText = `(${avg}) | ${count} ความคิดเห็น`;
-                    container.innerHTML = html;
-                }).catch(() => {
-                    document.getElementById('star-render').innerHTML = "⭐⭐⭐⭐⭐";
-                    document.getElementById('score-text').innerText = "(5.0)";
-                });
-        }
-
-        function handleCommentSubmit(event) {
-            event.preventDefault();
-            const rating = document.getElementById('score-select').value;
-            const name = document.getElementById('com-name').value;
-            const text = document.getElementById('com-text').value;
-            let rid = getQueryID() || "2026-05-21";
-
-            db.collection('comments').add({
-                articleId: rid,
-                reviewerName: name,
-                ratingScore: parseInt(rating),
-                messageText: text,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                alert('🗳️ ส่งความคิดเห็นและแบ่งปันพระพรสำเร็จแล้ว ขอพระเจ้าอวยพระพรครับ!');
-                document.getElementById('comment-form').reset();
-                loadArticleComments(rid);
-            });
-        }
-
-        function getFallbackDatabase(id) {
-            const fallbackList = {
-                "2026-05-21": {
-                    title: "รับใช้กันด้วยความรัก",
-                    category: "บทความทั่วไป",
-                    author: "คุณอรวรรณ บัวราช",
-                    date: "2026-05-21",
-                    series: "รับใช้ผู้อื่น",
-                    image: "hero_01.png",
-                    content: "กาลเทีย 5:13-17 ... ดูก่อนพี่น้องทั้งหลาย ที่ทรงเรียกท่านก็เพื่อให้มีเสรีภาพ แต่อย่าเอาเสรีภาพเป็นช่องทางเนื้อหนัง แต่จงรับใช้กันและกันด้วยความรักเถิด เพราะธรรมบัญญัติทั้งสิ้นนั้นสรุปได้เป็นคำเดียว คือว่าจงรักเพื่อนบ้านเหมือนรักตนเอง"
-                },
-                "2026-05-12": {
-                    title: "ขายอาคารพาณิชย์ 3.5 ชั้น",
-                    category: "ข่าวสารและประกาศ",
-                    author: "เจ้าหน้าที่คริสตจักร",
-                    date: "2026-05-12",
-                    series: "ประกาศคริสตจักร",
-                    image: "hero_02.png",
-                    content: "รายละเอียดและประกาศเกี่ยวกับการจัดการพื้นที่ขายอาคารพาณิชย์ขนาด 3.5 ชั้น ของทางคริสตจักร กรุณาติดต่อสอบถามข้อมูลเพิ่มเติมที่เคาน์เตอร์ประชาสัมพันธ์โดยตรง"
-                },
-                "2025-12-31": {
-                    title: "สังคมที่น่าอยู่จริงๆ",
-                    category: "คำพยานชีวิต",
-                    author: "คุณวิลาสินี เศรษฐกุล",
-                    date: "2025-12-31",
-                    series: "คำพยาน",
-                    image: "hero_02.png",
-                    content: "คำพยานชีวิต ของผู้เชื่อ หัวข้อ สังคมที่น่าอยู่จริงๆ ... ลองเปิดอ่านคำพยานจากชีวิตจริงได้ที่นี่"
-                }
-            };
-            return fallbackList[id] || null;
-        }
-
-        window.addEventListener('DOMContentLoaded', runArticleSystem);
-    </script>
+    }
+    loadArticle();
+</script>
 </body>
 </html>
