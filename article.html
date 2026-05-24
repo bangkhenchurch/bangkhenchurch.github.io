@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รายละเอียด - Bangkhen Baptist Church</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>รายละเอียดบทความ - Bangkhen Baptist Church</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --primary-blue: #2196F3;
-            --text-color: #ffffff;
-            --text-muted: #b0b0b0;
-            --accent-red: #ff4444;
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --accent-blue: #2196F3;
+            --text-main: #ffffff;
+            --text-sub: #b0b0b0;
+            --error-red: #ff4d4d;
         }
 
         * {
@@ -23,208 +23,252 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 15px;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
-        .container {
+        .wrapper {
             width: 100%;
             max-width: 600px;
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
         }
 
-        .btn-back {
+        .btn-back-link {
             display: inline-flex;
             align-items: center;
-            color: var(--primary-blue);
+            color: #4da3ff;
             text-decoration: none;
             font-size: 14px;
+            margin-bottom: 16px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-back-link:active {
+            opacity: 0.6;
+        }
+
+        .main-card {
+            background-color: var(--card-dark);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             margin-bottom: 20px;
         }
 
-        .error-box {
-            text-align: center;
-            padding: 30px 10px;
-        }
-
-        .error-icon {
-            color: var(--accent-red);
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-
-        .article-title {
+        /* ส่วนหัวข้อและ Meta ข้อมูล */
+        .article-headline {
             font-size: 24px;
             font-weight: 700;
             line-height: 1.4;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
-        .meta-box {
-            background-color: rgba(255,255,255,0.05);
-            border-left: 4px solid var(--primary-blue);
-            border-radius: 4px;
-            padding: 12px;
+        .meta-container {
+            background-color: rgba(255, 255, 255, 0.04);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 6px;
+            padding: 14px;
             margin-bottom: 20px;
+        }
+
+        .meta-row {
             font-size: 14px;
-        }
-
-        .meta-item {
             margin-bottom: 8px;
+            color: var(--text-sub);
             display: flex;
-            align-items: center;
-            color: var(--text-muted);
+            align-items: flex-start;
+            line-height: 1.5;
         }
 
-        .meta-item strong {
-            color: var(--text-color);
-            margin-right: 5px;
-        }
-
-        .meta-item:last-child {
+        .meta-row:last-child {
             margin-bottom: 0;
         }
 
-        .article-image {
+        .meta-row strong {
+            color: var(--text-main);
+            white-space: nowrap;
+            margin-right: 6px;
+        }
+
+        /* รูปภาพหน้าปก */
+        .responsive-banner {
             width: 100%;
             border-radius: 12px;
             margin-bottom: 20px;
+            display: none;
             object-fit: cover;
+            max-height: 350px;
         }
 
-        .article-content {
+        /* ส่วนเนื้อหาหลัก */
+        .body-text-content {
             font-size: 16px;
             line-height: 1.8;
             color: #e0e0e0;
-            white-space: pre-wrap; /* เพื่อให้เว้นบรรทัดตามข้อมูลที่พิมพ์มา */
-            margin-bottom: 20px;
+            white-space: pre-wrap; /* รักษาการย่อหน้าและเว้นบรรทัด */
+            word-break: break-word;
+            margin-bottom: 10px;
         }
 
-        .loading-status {
+        /* สถานะ Error / Loading */
+        .status-box {
             text-align: center;
-            color: var(--text-muted);
-            padding: 40px 0;
+            padding: 40px 10px;
+        }
+
+        .status-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .status-msg {
             font-size: 18px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .btn-footer-back {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #2a2a2a;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-top: 20px;
+            border: 1px solid #3a3a3a;
+        }
+
+        .btn-footer-back:active {
+            background-color: #333333;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <a href="index.html" class="btn-back">← กลับหน้าหลัก</a>
+    <div class="wrapper">
+        <a href="index.html" class="btn-back-link">← กลับหน้าหลัก</a>
 
-        <div id="loading" class="loading-status">
-            กำลังโหลดเนื้อหา...
-        </div>
-
-        <div id="error-view" class="error-box" style="display: none;">
-            <div class="error-icon">❌</div>
-            <h2 id="error-message">ไม่มี ID บทความใน URL</h2>
-        </div>
-
-        <div id="article-view" style="display: none;">
-            <h1 id="title" class="article-title"></h1>
+        <div class="main-card">
             
-            <div class="meta-box">
-                <div class="meta-item">📁 <strong>หมวดหมู่:</strong> <span id="category"></span></div>
-                <div class="meta-item">👤 <strong>ผู้เขียน/ผู้เทศนา:</strong> <span id="author"></span></div>
-                <div class="meta-item">📅 <strong>วันที่:</strong> <span id="date"></span></div>
-                <div class="meta-item">🔖 <strong>ซีรีย์:</strong> <span id="series"></span></div>
+            <div id="loading-block" class="status-box">
+                <div class="status-icon" style="color: var(--accent-blue);">⏳</div>
+                <div class="status-msg">กำลังโหลดเนื้อหา...</div>
             </div>
 
-            <img id="cover-image" class="article-image" src="" alt="ภาพประกอบบทความ" style="display: none;">
+            <div id="error-block" class="status-box" style="display: none;">
+                <div id="err-icon" class="status-icon" style="color: var(--error-red);">❌</div>
+                <div id="err-text" class="status-msg">ไม่พบเนื้อหาบทความที่ระบุ</div>
+            </div>
 
-            <div id="content" class="article-content"></div>
+            <div id="content-block" style="display: none;">
+                <h1 id="view-title" class="article-headline"></h1>
+                
+                <div class="meta-container">
+                    <div class="meta-row">🏷️ <strong>หมวดหมู่:</strong> <span id="view-category"></span></div>
+                    <div class="meta-row">👤 <strong>ผู้เขียน/ผู้เทศนา:</strong> <span id="view-author"></span></div>
+                    <div class="meta-row">📅 <strong>วันที่:</strong> <span id="view-date"></span></div>
+                    <div class="meta-row">🔖 <strong>ซีรีย์:</strong> <span id="view-series"></span></div>
+                </div>
+
+                <img id="view-image" class="responsive-banner" src="" alt="ภาพประกอบ">
+
+                <div id="view-content" class="body-text-content"></div>
+
+                <a href="index.html" class="btn-footer-back">↩ ย้อนกลับไปหน้ามารวม</a>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // 1. ฟังก์ชันดึงค่า Parameter จาก URL
-        function getArticleIdFromURL() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('id'); // ดึงค่าจาก ?id=xxxx
+        // ฟังก์ชันดึงค่า ID จาก URL Parameter (?id=...)
+        function fetchParamId() {
+            const pathParams = new URLSearchParams(window.location.search);
+            return pathParams.get('id');
         }
 
-        // 2. ฟังก์ชันหลักในการทำงานเมื่อโหลดหน้าเว็บ
-        async function loadArticle() {
-            const articleId = getArticleIdFromURL();
-            const loadingEl = document.getElementById('loading');
-            const errorViewEl = document.getElementById('error-view');
-            const errorMessageEl = document.getElementById('error-message');
-            const articleViewEl = document.getElementById('article-view');
+        // ฟังก์ชันทำงานหลักเมื่อโหลดหน้าเว็บ
+        async function initArticleLoader() {
+            const articleId = fetchParamId();
+            
+            const loadingEl = document.getElementById('loading-block');
+            const errorEl = document.getElementById('error-block');
+            const errTextEl = document.getElementById('err-text');
+            const contentEl = document.getElementById('content-block');
 
-            // ตรวจสอบว่ามี ID ใน URL หรือไม่
+            // เคสที่ 1: ตรวจสอบแล้วไม่มี id ส่งมาใน URL เลย
             if (!articleId) {
                 loadingEl.style.display = 'none';
-                errorMessageEl.innerText = 'ไม่มี ID บทความใน URL';
-                errorViewEl.style.style.display = 'block';
+                errTextEl.innerText = 'ไม่มี ID บทความใน URL';
+                errorEl.style.display = 'block';
                 return;
             }
 
             try {
-                /* [คำแนะนำการเชื่อมต่อข้อมูล]
-                  หากคุณใช้ไฟล์ JSON ในคลัง (Repository) ให้เปลี่ยน URL ด้านล่างเป็นไฟล์ของคุณ เช่น:
-                  const response = await fetch('blogs.json');
-                  const data = await response.json();
-                  const article = data.find(item => item.id === articleId);
-                */
-                
-                // ตัวอย่างจำลองข้อมูลจริงเพื่อเช็คการแสดงผล (ให้แทนที่ด้วยโค้ดดึงข้อมูลจาก Firebase หรือ JSON ของคุณ)
-                const article = await fetchArticleFromSource(articleId); 
+                // เรียกฟังก์ชันดึงข้อมูลจาก Source หลัก (JSON หรือ Firebase)
+                const dataResult = await getArticleDetails(articleId);
 
-                if (!article) {
+                // เคสที่ 2: มี ID ส่งมาแต่หาข้อมูลในคลังข้อมูลไม่เจอ
+                if (!dataResult) {
                     loadingEl.style.display = 'none';
-                    errorMessageEl.innerText = 'ไม่พบเนื้อหาบทความที่ระบุ';
-                    errorViewEl.style.display = 'block';
+                    errTextEl.innerText = 'ไม่พบเนื้อหาบทความที่ระบุ';
+                    errorEl.style.display = 'block';
                     return;
                 }
 
-                // นำข้อมูลไปใส่ใน HTML elements
-                document.getElementById('title').innerText = article.title || 'ไม่มีชื่อหัวข้อ';
-                document.getElementById('category').innerText = article.category || 'ทั่วไป';
-                document.getElementById('author').innerText = article.author || 'ไม่ระบุผู้เขียน';
-                document.getElementById('date').innerText = article.date || '-';
-                document.getElementById('series').innerText = article.series || '-';
+                // เคสที่ 3: พบข้อมูล ทำการกระจายข้อมูลลง UI Elements
+                document.getElementById('view-title').innerText = dataResult.title || 'ไม่มีชื่อหัวข้อ';
+                document.getElementById('view-category').innerText = dataResult.category || 'ทั่วไป';
+                document.getElementById('view-author').innerText = dataResult.author || dataResult.speaker || 'ไม่ระบุชื่อ';
+                document.getElementById('view-date').innerText = dataResult.date || '-';
+                document.getElementById('view-series').innerText = dataResult.series || '-';
+
+                // ตรวจสอบและดึงฟิลด์เนื้อหาหลักแบบดักทุกรูปแบบ (ป้องกันคำว่า content, detail, body, text หลุดหลง)
+                const rawContent = dataResult.content || dataResult.detail || dataResult.description || dataResult.text;
+                const contentArea = document.getElementById('view-content');
                 
-                // ตรวจสอบฟิลด์เนื้อหาหลัก (เช็คชื่อฟิลด์ให้ตรงกับ Database เช่น content หรือ detail)
-                const mainContent = article.content || article.detail || article.description;
-                if (mainContent) {
-                    document.getElementById('content').innerHTML = mainContent;
+                if (rawContent && rawContent.trim() !== "") {
+                    contentArea.innerHTML = rawContent;
                 } else {
-                    document.getElementById('content').innerText = 'ไม่มีรายละเอียดเนื้อหา';
+                    contentArea.innerText = 'ไม่มีรายละเอียดเนื้อหา';
                 }
 
-                // จัดการรูปภาพหน้าปก
-                const imgEl = document.getElementById('cover-image');
-                if (article.image || article.imageUrl) {
-                    imgEl.src = article.image || article.imageUrl;
-                    imgEl.style.display = 'block';
+                // ตรวจสอบและดึงรูปภาพประกอบบทความ
+                const imgTarget = document.getElementById('view-image');
+                const imgUrl = dataResult.image || dataResult.imageUrl || dataResult.img;
+                if (imgUrl) {
+                    imgTarget.src = imgUrl;
+                    imgTarget.style.display = 'block';
+                } else {
+                    imgTarget.style.display = 'none';
                 }
 
-                // ซ่อนสถานะโหลด แล้วแสดงเนื้อหาบทความ
+                // สลับการเปิดปิดบล็อคให้แสดงเนื้อหาจริง
                 loadingEl.style.display = 'none';
-                articleViewEl.style.display = 'block';
+                contentEl.style.style.display = 'block';
 
-            } catch (error) {
-                console.error("Error loading article:", error);
+            } catch (err) {
+                console.error("Fetch implementation logic error:", err);
                 loadingEl.style.display = 'none';
-                errorMessageEl.innerText = 'เกิดข้อผิดพลาดในการโหลดข้อมูล';
-                errorViewEl.style.display = 'block';
+                errTextEl.innerText = 'เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล';
+                errorEl.style.display = 'block';
             }
         }
 
-        // ฟังก์ชันจำลองโครงสร้างข้อมูลเพื่อทดสอบการทำงาน
-        async function fetchArticleFromSource(id) {
-            // ในขั้นตอนใช้งานจริง ให้แก้ไขฟังก์ชันนี้เพื่อไปเชื่อมต่อ fetch() ดึงจากระบบข้อมูลหลักของคุณ
-            const mockData = {
+        /**
+         * ฟังก์ชันศูนย์กลางในการดึงดาต้าเบส 
+         * (หมายเหตุ: ปรับแต่งด้านในฟังก์ชันนี้ตามระบบจัดเก็บข้อมูลจริงของคุณได้เลยครับ)
+         */
+        async function getArticleDetails(id) {
+            // โครงสร้าง Mock Data ตัวอย่างในการทดสอบจับคู่ ID 
+            const localDatabase = {
                 "2026-05-21": {
                     title: "รับใช้กันด้วยความรัก",
                     category: "บทความทั่วไป",
@@ -233,13 +277,31 @@
                     series: "รับใช้ผู้อื่น",
                     image: "hero_01.png",
                     content: "กาลเทีย 5:13-17 ... ดูก่อนพี่น้องทั้งหลาย ที่ทรงเรียกท่านก็เพื่อให้มีเสรีภาพ แต่อย่าเอาเสรีภาพเป็นช่องทางเนื้อหนัง แต่จงรับใช้กันและกันด้วยความรักเถิด เพราะธรรมบัญญัติทั้งสิ้นนั้นสรุปได้เป็นคำเดียว คือว่าจงรักเพื่อนบ้านเหมือนรักตนเอง"
+                },
+                "2025-12-31": {
+                    title: "สังคมที่น่าอยู่จริงๆ",
+                    category: "คำพยานชีวิต",
+                    author: "คุณวิลาสินี เศรษฐกุล",
+                    date: "2025-12-31",
+                    series: "คำพยาน",
+                    image: "hero_02.png",
+                    content: "คำพยานชีวิต ของผู้เชื่อ หัวข้อ สังคมที่น่าอยู่จริงๆ หากท่านเป็นคนหนึ่งที่กำลังเจอกับสังคมที่น่าเบื่อ หรือต้องการสังคมที่มีความรักกันและช่วยกันยามทุกข์ยาก ลองเปิดอ่านคำพยานจากชีวิตจริงของสตรีผู้ได้พบสังคมที่น่าอยู่นี้แล้ว ผู้แต่ง ซาร่า วิลาสินี เศรษฐกุล"
                 }
             };
-            return mockData[id] || null;
+
+            /* 💡 วิธีเชื่อมต่อกับข้อมูลจริงของคุณ:
+               หากคุณเก็บข้อมูลในไฟล์รวมชื่อ blogs.json ให้ปลดล็อกคอมเมนต์ 3 บรรทัดนี้:
+               
+               const response = await fetch('blogs.json');
+               const arrayData = await response.json();
+               return arrayData.find(item => item.id === id || item.date === id);
+            */
+
+            return localDatabase[id] || null;
         }
 
-        // สั่งให้ฟังก์ชันทำงานทันทีที่หน้าเว็บโหลดเสร็จ
-        window.onload = loadArticle;
+        // เริ่มต้นการประมวลผลทันทีที่ DOM โหลดเสร็จสิ้น
+        window.addEventListener('DOMContentLoaded', initArticleLoader);
     </script>
 </body>
 </html>
