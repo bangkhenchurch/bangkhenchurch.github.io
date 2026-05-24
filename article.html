@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายละเอียดบทความ - Bangkhen Baptist Church</title>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --bg-dark: #121212;
@@ -44,11 +48,6 @@
             text-decoration: none;
             font-size: 14px;
             margin-bottom: 16px;
-            transition: opacity 0.2s;
-        }
-
-        .btn-back-link:active {
-            opacity: 0.6;
         }
 
         .main-card {
@@ -59,7 +58,6 @@
             margin-bottom: 20px;
         }
 
-        /* ส่วนหัวข้อและ Meta ข้อมูล */
         .article-headline {
             font-size: 24px;
             font-weight: 700;
@@ -81,11 +79,6 @@
             color: var(--text-sub);
             display: flex;
             align-items: flex-start;
-            line-height: 1.5;
-        }
-
-        .meta-row:last-child {
-            margin-bottom: 0;
         }
 
         .meta-row strong {
@@ -94,7 +87,6 @@
             margin-right: 6px;
         }
 
-        /* รูปภาพหน้าปก */
         .responsive-banner {
             width: 100%;
             border-radius: 12px;
@@ -104,17 +96,15 @@
             max-height: 350px;
         }
 
-        /* ส่วนเนื้อหาหลัก */
         .body-text-content {
             font-size: 16px;
             line-height: 1.8;
             color: #e0e0e0;
-            white-space: pre-wrap; /* รักษาการย่อหน้าและเว้นบรรทัด */
+            white-space: pre-wrap;
             word-break: break-word;
             margin-bottom: 10px;
         }
 
-        /* สถานะ Error / Loading */
         .status-box {
             text-align: center;
             padding: 40px 10px;
@@ -128,7 +118,20 @@
         .status-msg {
             font-size: 18px;
             font-weight: 500;
-            color: var(--text-main);
+        }
+
+        .debug-box {
+            background-color: #2d1616;
+            border: 1px solid var(--error-red);
+            color: #ffb3b3;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            text-align: left;
+            white-space: pre-wrap;
+            display: none;
         }
 
         .btn-footer-back {
@@ -143,10 +146,6 @@
             font-size: 15px;
             margin-top: 20px;
             border: 1px solid #3a3a3a;
-        }
-
-        .btn-footer-back:active {
-            background-color: #333333;
         }
     </style>
 </head>
@@ -164,7 +163,8 @@
 
             <div id="error-block" class="status-box" style="display: none;">
                 <div id="err-icon" class="status-icon" style="color: var(--error-red);">❌</div>
-                <div id="err-text" class="status-msg">ไม่พบเนื้อหาบทความที่ระบุ</div>
+                <div id="err-text" class="status-msg">เกิดข้อผิดพลาด</div>
+                <div id="debug-info" class="debug-box"></div>
             </div>
 
             <div id="content-block" style="display: none;">
@@ -181,56 +181,83 @@
 
                 <div id="view-content" class="body-text-content"></div>
 
-                <a href="index.html" class="btn-footer-back">↩ ย้อนกลับไปหน้ามารวม</a>
+                <a href="index.html" class="btn-footer-back">↩ ย้อนกลับไปหน้าหลัก</a>
             </div>
 
         </div>
     </div>
 
     <script>
+        // 🛠️ คัดลอกค่า Config ของ Firebase จากโปรเจกต์ของคุณมาใส่ตรงนี้แทนได้เลยครับ
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // เริ่มต้นการใช้งาน Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
         // ฟังก์ชันดึงค่า ID จาก URL Parameter (?id=...)
         function fetchParamId() {
             const pathParams = new URLSearchParams(window.location.search);
             return pathParams.get('id');
         }
 
-        // ฟังก์ชันทำงานหลักเมื่อโหลดหน้าเว็บ
+        // ฟังก์ชันหลักในการดึงข้อมูลและแสดงผล
         async function initArticleLoader() {
             const articleId = fetchParamId();
             
             const loadingEl = document.getElementById('loading-block');
             const errorEl = document.getElementById('error-block');
             const errTextEl = document.getElementById('err-text');
+            const debugInfoEl = document.getElementById('debug-info');
             const contentEl = document.getElementById('content-block');
 
-            // เคสที่ 1: ตรวจสอบแล้วไม่มี id ส่งมาใน URL เลย
-            if (!articleId) {
+            // แสดง Log บอกข้อผิดพลาดลงบนหน้าจอเพื่อตรวจเช็คได้ง่ายบนมือถือ
+            function showErrorMessage(msg, debugLogs = "") {
                 loadingEl.style.display = 'none';
-                errTextEl.innerText = 'ไม่มี ID บทความใน URL';
+                errTextEl.innerText = msg;
+                if (debugLogs) {
+                    debugInfoEl.innerText = debugLogs;
+                    debugInfoEl.style.display = 'block';
+                }
                 errorEl.style.display = 'block';
+            }
+
+            if (!articleId) {
+                showErrorMessage('ไม่มี ID บทความใน URL', 'กรุณาตรวจสอบว่า URL มี ?id=... หรือไม่');
                 return;
             }
 
             try {
-                // เรียกฟังก์ชันดึงข้อมูลจาก Source หลัก (JSON หรือ Firebase)
-                const dataResult = await getArticleDetails(articleId);
+                /* ดึงข้อมูลจากคอลเลกชันใน Firestore (สมมติว่าชื่อคอลเลกชันคือ 'blogs' หรือ 'articles')
+                  หากชื่อคอลเลกชันของคุณเป็นชื่ออื่น ให้เปลี่ยนคำว่า 'blogs' ในบรรทัดด้านล่างนี้ครับ
+                */
+                const docRef = db.collection('blogs').doc(articleId);
+                const docSnap = await docRef.get();
 
-                // เคสที่ 2: มี ID ส่งมาแต่หาข้อมูลในคลังข้อมูลไม่เจอ
-                if (!dataResult) {
-                    loadingEl.style.display = 'none';
-                    errTextEl.innerText = 'ไม่พบเนื้อหาบทความที่ระบุ';
-                    errorEl.style.display = 'block';
+                if (!docSnap.exists) {
+                    showErrorMessage('ไม่พบเนื้อหาบทความที่ระบุ', `ไม่พบเอกสาร ID: "${articleId}" ในคอลเลกชัน 'blogs'`);
                     return;
                 }
 
-                // เคสที่ 3: พบข้อมูล ทำการกระจายข้อมูลลง UI Elements
+                const dataResult = docSnap.data();
+
+                // ใส่ข้อมูลลงในหน้าเว็บ
                 document.getElementById('view-title').innerText = dataResult.title || 'ไม่มีชื่อหัวข้อ';
                 document.getElementById('view-category').innerText = dataResult.category || 'ทั่วไป';
                 document.getElementById('view-author').innerText = dataResult.author || dataResult.speaker || 'ไม่ระบุชื่อ';
                 document.getElementById('view-date').innerText = dataResult.date || '-';
                 document.getElementById('view-series').innerText = dataResult.series || '-';
 
-                // ตรวจสอบและดึงฟิลด์เนื้อหาหลักแบบดักทุกรูปแบบ (ป้องกันคำว่า content, detail, body, text หลุดหลง)
+                // ดึงข้อมูลเนื้อหาหลัก
                 const rawContent = dataResult.content || dataResult.detail || dataResult.description || dataResult.text;
                 const contentArea = document.getElementById('view-content');
                 
@@ -240,7 +267,7 @@
                     contentArea.innerText = 'ไม่มีรายละเอียดเนื้อหา';
                 }
 
-                // ตรวจสอบและดึงรูปภาพประกอบบทความ
+                // ดึงรูปภาพ
                 const imgTarget = document.getElementById('view-image');
                 const imgUrl = dataResult.image || dataResult.imageUrl || dataResult.img;
                 if (imgUrl) {
@@ -250,57 +277,16 @@
                     imgTarget.style.display = 'none';
                 }
 
-                // สลับการเปิดปิดบล็อคให้แสดงเนื้อหาจริง
+                // สลับแสดงบล็อกเนื้อหาจริง
                 loadingEl.style.display = 'none';
-                contentEl.style.style.display = 'block';
+                contentEl.style.display = 'block';
 
             } catch (err) {
-                console.error("Fetch implementation logic error:", err);
-                loadingEl.style.display = 'none';
-                errTextEl.innerText = 'เกิดข้อผิดพลาดในการเชื่อมต่อข้อมูล';
-                errorEl.style.display = 'block';
+                console.error(err);
+                showErrorMessage('เกิดข้อผิดพลาดในการเชื่อมต่อ Firebase', `Error: ${err.message}\nโปรดตรวจสอบ Firebase Config หรืออินเทอร์เน็ต`);
             }
         }
 
-        /**
-         * ฟังก์ชันศูนย์กลางในการดึงดาต้าเบส 
-         * (หมายเหตุ: ปรับแต่งด้านในฟังก์ชันนี้ตามระบบจัดเก็บข้อมูลจริงของคุณได้เลยครับ)
-         */
-        async function getArticleDetails(id) {
-            // โครงสร้าง Mock Data ตัวอย่างในการทดสอบจับคู่ ID 
-            const localDatabase = {
-                "2026-05-21": {
-                    title: "รับใช้กันด้วยความรัก",
-                    category: "บทความทั่วไป",
-                    author: "คุณอรวรรณ บัวราช",
-                    date: "2026-05-21",
-                    series: "รับใช้ผู้อื่น",
-                    image: "hero_01.png",
-                    content: "กาลเทีย 5:13-17 ... ดูก่อนพี่น้องทั้งหลาย ที่ทรงเรียกท่านก็เพื่อให้มีเสรีภาพ แต่อย่าเอาเสรีภาพเป็นช่องทางเนื้อหนัง แต่จงรับใช้กันและกันด้วยความรักเถิด เพราะธรรมบัญญัติทั้งสิ้นนั้นสรุปได้เป็นคำเดียว คือว่าจงรักเพื่อนบ้านเหมือนรักตนเอง"
-                },
-                "2025-12-31": {
-                    title: "สังคมที่น่าอยู่จริงๆ",
-                    category: "คำพยานชีวิต",
-                    author: "คุณวิลาสินี เศรษฐกุล",
-                    date: "2025-12-31",
-                    series: "คำพยาน",
-                    image: "hero_02.png",
-                    content: "คำพยานชีวิต ของผู้เชื่อ หัวข้อ สังคมที่น่าอยู่จริงๆ หากท่านเป็นคนหนึ่งที่กำลังเจอกับสังคมที่น่าเบื่อ หรือต้องการสังคมที่มีความรักกันและช่วยกันยามทุกข์ยาก ลองเปิดอ่านคำพยานจากชีวิตจริงของสตรีผู้ได้พบสังคมที่น่าอยู่นี้แล้ว ผู้แต่ง ซาร่า วิลาสินี เศรษฐกุล"
-                }
-            };
-
-            /* 💡 วิธีเชื่อมต่อกับข้อมูลจริงของคุณ:
-               หากคุณเก็บข้อมูลในไฟล์รวมชื่อ blogs.json ให้ปลดล็อกคอมเมนต์ 3 บรรทัดนี้:
-               
-               const response = await fetch('blogs.json');
-               const arrayData = await response.json();
-               return arrayData.find(item => item.id === id || item.date === id);
-            */
-
-            return localDatabase[id] || null;
-        }
-
-        // เริ่มต้นการประมวลผลทันทีที่ DOM โหลดเสร็จสิ้น
         window.addEventListener('DOMContentLoaded', initArticleLoader);
     </script>
 </body>
