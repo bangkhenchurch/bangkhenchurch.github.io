@@ -2,52 +2,29 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>รายละเอียดบทความ - Bangkhen Baptist Church</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บทความ - Bangkhen Baptist Church</title>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
     <style>
-        body { background-color: #121212; color: #eee; font-family: 'Sarabun', sans-serif; padding: 15px; margin: 0; }
+        body { background-color: #121212; color: #eee; font-family: 'Sarabun', sans-serif; padding: 20px; }
         .container { max-width: 600px; margin: auto; }
-        .card { background: #1e1e1e; border-radius: 15px; padding: 20px; border: 1px solid #333; margin-bottom: 20px; }
-        .banner-img { width: 100%; border-radius: 10px; margin-bottom: 15px; display: none; }
-        .headline { font-size: 22px; color: #4dabff; margin-bottom: 10px; }
-        .content-body { line-height: 1.8; font-size: 16px; white-space: pre-wrap; }
-        .bible-box { background: #1a2a40; border-left: 4px solid #4dabff; padding: 15px; margin: 20px 0; font-style: italic; color: #b3d7ff; }
-        .footer-section { text-align: center; margin-top: 40px; padding: 20px; border-top: 1px solid #333; }
-        .qr-line { width: 120px; margin: 10px 0; border-radius: 10px; }
-        .flag-counter { margin-top: 20px; background: #fffde7; padding: 10px; display: inline-block; border-radius: 5px; }
+        .error-msg { background: #331a1a; color: #ff8a8a; padding: 20px; border-radius: 10px; border: 1px solid #772222; text-align: center; }
+        .loading { text-align: center; color: #888; margin-top: 50px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <a href="index.html" style="color: #4dabff; text-decoration: none;">← กลับหน้าแรก</a>
-    <div id="main-card" class="card">
-        <div id="loading" style="text-align:center; padding: 20px;">⏳ กำลังโหลด...</div>
-        <div id="content-box" style="display:none;">
-            <img id="art-image" class="banner-img" src="">
-            <h1 id="art-title" class="headline"></h1>
-            <div id="art-content" class="content-body"></div>
-            <div id="bible-container"></div>
-        </div>
-        <div id="error-box" style="display:none; color: #ff4d4d; text-align: center;">❌ เกิดข้อผิดพลาดในการโหลดข้อมูล</div>
-    </div>
-
-    <div class="footer-section">
-        <p>© คริสตจักรแบ๊บติสต์บางเขน</p>
-        <img src="https://qr-official.line.me/sid/M/881mreke.png" class="qr-line">
-        <p>LINE ID: @881mreke</p>
-        <div class="flag-counter">
-            <a href="https://info.flagcounter.com/Yg2v"><img src="https://s11.flagcounter.com/count2/Yg2v/bg_FFFDE7/txt_000000/border_FBC02D/columns_3/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" border="0"></a>
-        </div>
+    <a href="index.html" style="color: #4dabff;">← กลับหน้าแรก</a>
+    
+    <div id="status-area">
+        <div class="loading">⏳ กำลังเชื่อมต่อฐานข้อมูล...</div>
     </div>
 </div>
 
 <script>
+    // 1. ตั้งค่า Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
         authDomain: "bbcchurch-6ffc3.firebaseapp.com",
@@ -56,48 +33,41 @@
         appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
     const db = firebase.firestore();
-    db.settings({ experimentalForceLongPolling: true });
+
+    // 2. ดึง ID จาก URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
 
     async function loadArticle() {
-        const id = new URLSearchParams(window.location.search).get('id');
-        if (!id) return;
+        const statusArea = document.getElementById('status-area');
+        
+        if (!articleId) {
+            statusArea.innerHTML = `<div class="error-msg">❌ ไม่พบรหัสบทความใน URL (โปรดตรวจสอบลิงก์)</div>`;
+            return;
+        }
 
         try {
-            // 🛠️ แก้ไขให้เรียกชื่อคอลเลกชัน 'articles' ตามฐานข้อมูลคุณ
-            const doc = await db.collection('articles').doc(id).get();
+            // ดึงข้อมูลจากคอลเลกชันชื่อ 'articles'
+            const doc = await db.collection('articles').doc(articleId).get();
+            
             if (doc.exists) {
                 const data = doc.data();
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('content-box').style.display = 'block';
-                
-                document.getElementById('art-title').innerText = data.title;
-                document.getElementById('art-content').innerText = data.content || data.body || "ไม่มีเนื้อหา";
-                
-                const img = document.getElementById('art-image');
-                if (data.thumbUrl || data.image) {
-                    img.src = data.thumbUrl || data.image;
-                    img.style.display = 'block';
-                }
-
-                // สแกนหาข้อพระคัมภีร์ (ถ้ามีเลขบทเช่น ยอห์น 3:16)
-                if ((data.content || "").includes("ยอห์น 3:16")) {
-                    document.getElementById('bible-container').innerHTML = `
-                        <div class="bible-box">
-                            <strong>ยอห์น 3:16</strong><br>
-                            "เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์"
-                        </div>`;
-                }
+                statusArea.innerHTML = `<h1>${data.title || 'ไม่มีชื่อเรื่อง'}</h1><p>${data.content || 'ไม่มีเนื้อหา'}</p>`;
             } else {
-                throw new Error();
+                statusArea.innerHTML = `<div class="error-msg">❌ ไม่พบข้อมูลบทความนี้ในระบบ</div>`;
             }
-        } catch (e) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error-box').style.display = 'block';
+        } catch (error) {
+            console.error("Firebase Error:", error);
+            statusArea.innerHTML = `<div class="error-msg">❌ เกิดข้อผิดพลาด: ${error.message}</div>`;
         }
     }
+
     loadArticle();
 </script>
+
 </body>
 </html>
