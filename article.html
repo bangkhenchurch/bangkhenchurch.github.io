@@ -1,613 +1,157 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bangkhen Baptist Church</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
+        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; }
+        .navbar img { width: 35px; border-radius: 50%; }
+        
+        /* เมนูหลัก */
+        .horizontal-menu { 
+            background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; 
+            gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; 
+            margin: 20px auto; border-radius: 50px; 
+        }
+        .horizontal-menu a { padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt'; border-radius: 25px; transition: 0.3s; font-size: 15px; }
+        .horizontal-menu a:hover { background: #2c2c2c; color: #fff; }
+        .active-page { background: #4dabff !important; color: white !important; }
 
-<title>อ่านบทความ - BBC Church</title>
+        .container { padding: 20px 5%; width: 100%; max-width: 1200px; margin: auto; }
+        .header-box { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; border-left: 5px solid #4dabff; padding-left: 15px; }
+        .section-title { font-family: 'Prompt'; font-size: 26px; color: #fff; }
+        
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        
+        /* Card Design */
+        .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
+        .card:hover { transform: translateY(-5px); border-color: #4dabff; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+        .card img { width: 100%; height: 180px; object-fit: cover; background: #2a2a2a; }
+        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .card-title { font-family: 'Prompt'; font-size: 18px; margin-bottom: 8px; color: #fff; line-height: 1.4; }
+        .card-info { font-size: 13px; color: #bbb; margin-bottom: 10px; }
+        .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
 
-<link rel="icon" type="image/png" href="logo.png">
-
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
-
-<style>
-
-:root{
-    --primary:#4dabff;
-    --dark-bg:#121212;
-    --card-bg:#1e1e1e;
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html,body{
-    overflow-x:hidden;
-}
-
-body{
-    background:var(--dark-bg);
-    color:#e0e0e0;
-    font-family:'Sarabun',sans-serif;
-    line-height:1.7;
-}
-
-img,
-iframe,
-video{
-    max-width:100%;
-}
-
-.container{
-    max-width:850px;
-    margin:20px auto;
-    padding:0 15px;
-}
-
-.article-card{
-    background:var(--card-bg);
-    padding:25px;
-    border-radius:15px;
-    border:1px solid #333;
-    margin-top:20px;
-    overflow:hidden;
-}
-
-h1{
-    font-family:'Prompt';
-    color:white;
-    font-size:28px;
-    margin-bottom:10px;
-    word-wrap:break-word;
-}
-
-.article-meta{
-    color:#aaa;
-    font-size:14px;
-    margin-bottom:20px;
-    border-bottom:1px solid #333;
-    padding-bottom:15px;
-}
-
-.article-meta b{
-    color:var(--primary);
-}
-
-.media-full-width{
-    width:100%;
-    max-width:100%;
-    height:auto;
-    object-fit:contain;
-    border-radius:10px;
-    margin-bottom:20px;
-    display:block;
-}
-
-.content-text{
-    line-height:1.9;
-    font-size:17px;
-    white-space:pre-wrap;
-    color:#eee;
-    margin:25px 0;
-    word-break:break-word;
-}
-
-.video-container{
-    position:relative;
-    width:100%;
-    padding-bottom:56.25%;
-    height:0;
-    margin:20px 0;
-    border-radius:12px;
-    overflow:hidden;
-    background:#000;
-}
-
-.video-container iframe{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-}
-
-.comment-display-area{
-    margin-top:30px;
-    border-top:1px solid #333;
-    padding-top:20px;
-}
-
-.comment-item{
-    background:#252525;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:15px;
-    border-left:4px solid var(--primary);
-}
-
-.comment-user{
-    font-weight:bold;
-    color:var(--primary);
-    margin-bottom:5px;
-    font-family:'Prompt';
-}
-
-.comment-text{
-    color:#ccc;
-    font-size:15px;
-}
-
-.rating-form{
-    background:#1a1a1a;
-    padding:25px;
-    border-radius:15px;
-    border:1px dashed #444;
-    margin:40px 0;
-}
-
-.u-input{
-    width:100%;
-    padding:12px;
-    background:#000;
-    border:1px solid #333;
-    color:white;
-    border-radius:8px;
-    margin-bottom:10px;
-    resize:vertical;
-}
-
-.btn-submit-rating{
-    width:100%;
-    padding:15px;
-    background:var(--primary);
-    color:white;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-/* สไตล์เพิ่มเติมสำหรับ Contact Section และ Checkbox */
-.contact-section{
-    background:#1a1a1a;
-    color:#ffffff;
-    padding:25px;
-    border-radius:15px;
-    border:1px solid #333;
-    margin-top:20px;
-}
-
-.checkbox-group {
-    margin: 15px 0;
-}
-
-.checkbox-label {
-    display: block;
-    margin-bottom: 8px;
-    cursor: pointer;
-}
-
-.checkbox-label input {
-    margin-right: 8px;
-}
-
-.counter-section{
-    text-align:center;
-    border-top:1px solid #eee;
-    padding:30px 15px;
-    background:#1a1a1a;
-    border-radius:15px;
-    margin:40px 0;
-    color:#ffffff;
-    overflow:hidden;
-}
-
-.counter-section img{
-    max-width:100% !important;
-    height:auto !important;
-}
-
-.qr-code{
-    width:140px;
-    border:4px solid white;
-    border-radius:10px;
-    margin-top:10px;
-    transition:transform .3s;
-}
-
-.qr-code:hover{
-    transform:scale(1.05);
-}
-
-footer{
-    background:#051937;
-    color:white;
-    text-align:center;
-    padding:40px 20px;
-    margin-top:50px;
-}
-
-footer img{
-    width:60px;
-    margin-bottom:10px;
-}
-
-.footer-address{
-    font-size:14px;
-    color:#aaa;
-    margin-top:10px;
-}
-
-@media(max-width:768px){
-
-    .container{
-        padding:0 10px;
-    }
-
-    .article-card{
-        padding:18px;
-    }
-
-    h1{
-        font-size:22px;
-    }
-
-    .content-text{
-        font-size:16px;
-    }
-
-    .contact-section{
-        padding:20px;
-    }
-
-}
-
-</style>
+        @media (max-width: 768px) { .horizontal-menu { border-radius: 15px; margin: 10px; padding: 15px; } .section-title { font-size: 20px; } }
+    </style>
 </head>
-
 <body>
 
+<nav class="navbar">
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
+    <span style="font-family:'Prompt'; font-weight: 600;">Bangkhen Baptist Church</span>
+</nav>
+
+<nav class="horizontal-menu" id="mainMenu">
+    <a href="index.html">🏠 หน้าแรก</a>
+    <a href="sermons.html" id="link-sermons">🎙️ คำเทศนา</a>
+    <a href="blogs.html" id="link-blogs">📖 บทความ</a>
+    <a href="testimony.html" id="link-testimony">🙏 คำพยาน</a>
+    <a href="news.html" id="link-news">📢 ข่าวสาร</a>
+    <a href="contact.html">📞 ติดต่อเรา</a>
+</nav>
+
 <div class="container">
-
-    <div style="margin-top:20px;">
-        <a href="index.html" style="color:var(--primary); text-decoration:none; font-family:'Prompt';">
-            ← กลับหน้าหลัก
-        </a>
+    <div class="header-box">
+        <h2 id="pageTitle" class="section-title">กำลังโหลด...</h2>
     </div>
-
-    <article class="article-card">
-
-        <div id="catDisp"
-             style="color:var(--primary); font-family:'Prompt'; font-weight:bold; margin-bottom:5px;">
-        </div>
-
-        <h1 id="artTitle">กำลังโหลดเนื้อหา...</h1>
-
-        <div id="artRatingHeader"
-             style="color:#f1c40f; font-family:'Prompt'; margin-bottom:15px;">
-             ☆☆☆☆☆ (0)
-        </div>
-
-        <div id="artMeta" class="article-meta"></div>
-
-        <div id="topDisplay"></div>
-
-        <div id="artBody" class="content-text"></div>
-
-        <div id="detailsDisplay"></div>
-
-        <div class="comment-display-area" id="commentList"></div>
-
-    </article>
-
-    <div class="rating-form">
-
-        <h3 style="font-family:'Prompt'; color:white; margin-bottom:10px;">
-            ⭐️ ให้คะแนนและแบ่งปันพระพร
-        </h3>
-
-        <select id="uStars" class="u-input" style="color:#f1c40f;">
-            <option value="5">⭐⭐⭐⭐⭐ (ยอดเยี่ยม)</option>
-            <option value="4">⭐⭐⭐⭐ (ดีมาก)</option>
-            <option value="3">⭐⭐⭐ (ดี)</option>
-            <option value="2">⭐⭐ (พอใช้)</option>
-            <option value="1">⭐ (ควรปรับปรุง)</option>
-        </select>
-
-        <input type="text" id="uName" class="u-input" placeholder="ชื่อของคุณ">
-
-        <textarea id="uMsg"
-                  class="u-input"
-                  rows="3"
-                  placeholder="เขียนความประทับใจของคุณ..."></textarea>
-
-        <button id="submitRatingBtn" class="btn-submit-rating">
-            ส่งความคิดเห็น
-        </button>
-
-    </div>
-
-    <div class="contact-section">
-        <h3 style="font-family:'Prompt'; color:white; margin-bottom:15px;">📬 สนใจติดต่อสอบถาม / ขอคำอธิษฐาน</h3>
-        <form id="contactForm">
-            <input type="text" id="contactName" class="u-input" placeholder="ชื่อของคุณ" required>
-            <input type="tel" id="contactPhone" class="u-input" placeholder="เบอร์โทรศัพท์ของคุณ" required>
-            
-            <div class="checkbox-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" name="opt" value="ต้องการให้ติดต่อกลับ"> ต้องการให้เจ้าหน้าที่ติดต่อกลับ
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="opt" value="ต้องการรับเอกสารทางไปรษณีย์" id="opt2"> ต้องการรับสื่อ/หนังสือทางไปรษณีย์ (ติ๊กเพื่อกรอกที่อยู่)
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="opt" value="ขอคำอธิษฐานเผื่อ"> ขอคำอธิษฐานอธิษฐานเผื่อเรื่องพิเศษ
-                </label>
-            </div>
-
-            <div id="addressBox" style="display:none; margin-bottom:10px;">
-                <textarea id="contactAddress" class="u-input" rows="2" placeholder="กรอกที่อยู่จัดส่งของคุณ..."></textarea>
-            </div>
-
-            <textarea id="contactNote" class="u-input" rows="3" placeholder="ข้อความเพิ่มเติม หรือ เรื่องที่ต้องการให้เราอธิษฐานเผื่อ..."></textarea>
-            
-            <button type="submit" id="sendBtn" class="btn-submit-rating">ส่งข้อมูล</button>
-        </form>
-    </div>
-
+    <div id="contentGrid" class="grid-container"></div>
 </div>
 
-<footer>
-
-    <div class="footer-info">
-
-        <img src="logo.png"
-             onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
-
-        <br>
-
-        <strong style="font-family:'Prompt'; font-size:18px;">
-            คริสตจักรแบ๊บติสต์บางเขน
-        </strong>
-
-        <div style="margin-top:10px; color:#4dabff; font-weight:bold;">
-            🕒 นมัสการ: วันอาทิตย์ 09.00 - 12.00 น.
-        </div>
-
-        <div class="footer-address">
-            2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900
-            <br>
-            📞 โทร: 02-5798764
-        </div>
-
-    </div>
-
-</footer>
-
 <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, query, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-    getFirestore,
-    doc,
-    getDoc,
-    collection,
-    query,
-    where,
-    onSnapshot,
-    addDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
+        authDomain: "bbcchurch-6ffc3.firebaseapp.com",
+        projectId: "bbcchurch-6ffc3",
+        storageBucket: "bbcchurch-6ffc3.appspot.com",
+        appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
+    };
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
-    authDomain: "bbcchurch-6ffc3.firebaseapp.com",
-    projectId: "bbcchurch-6ffc3",
-    storageBucket: "bbcchurch-6ffc3.appspot.com",
-    appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
-};
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+    // แกะชื่อไฟล์แบบปลอดภัย รองรับ GitHub Pages
+    const pathArray = window.location.pathname.split('/');
+    const fileName = pathArray[pathArray.length - 1] || "index.html";
+    
+    let categoryKeyword = "";
+    let displayTitle = "📰 รายการทั้งหมด";
 
-const artId = new URLSearchParams(window.location.search).get('id');
+    if (fileName.includes("blogs")) { 
+        categoryKeyword = "บทความ"; displayTitle = "📖 บทความหนุนใจทั้งหมด"; 
+        if(document.getElementById('link-blogs')) document.getElementById('link-blogs').classList.add('active-page');
+    } else if (fileName.includes("testimony")) { 
+        categoryKeyword = "พยาน"; displayTitle = "🙏 คำพยานชีวิตทั้งหมด"; 
+        if(document.getElementById('link-testimony')) document.getElementById('link-testimony').classList.add('active-page');
+    } else if (fileName.includes("sermons")) { 
+        categoryKeyword = "เทศนา"; displayTitle = "🎙️ คำเทศนาทั้งหมด"; 
+        if(document.getElementById('link-sermons')) document.getElementById('link-sermons').classList.add('active-page');
+    } else if (fileName.includes("news")) { 
+        categoryKeyword = "ข่าวสาร"; displayTitle = "📢 ข่าวสารและประกาศ"; 
+        if(document.getElementById('link-news')) document.getElementById('link-news').classList.add('active-page');
+    }
 
-console.log("ARTICLE ID =", artId);
+    document.getElementById('pageTitle').innerText = displayTitle;
 
-// toggle address
-document.getElementById('opt2').onchange = function () {
-    document.getElementById('addressBox').style.display = this.checked ? 'block' : 'none';
-};
+    // ดึงข้อมูลเรียงตามวันที่จากล่าสุด
+    const q = query(collection(db, "articles"), orderBy("displayDate", "desc"));
 
-// contact form
-document.getElementById('contactForm').onsubmit = async (e) => {
-    e.preventDefault();
+    onSnapshot(q, (snap) => {
+        const container = document.getElementById('contentGrid');
+        container.innerHTML = "";
+        let count = 0;
 
-    const btn = document.getElementById('sendBtn');
-    btn.disabled = true;
-    btn.innerText = "กำลังส่ง...";
+        snap.forEach(doc => {
+            const d = doc.data();
+            const cat = d.category || "";
 
-    const options = Array.from(
-        document.querySelectorAll('input[name="opt"]:checked')
-    ).map(cb => cb.value);
+            if (categoryKeyword === "" || cat.includes(categoryKeyword)) {
+                count++;
+                
+                // รวมโครงสร้างชื่อผู้เขียน ป้องกันข้อมูลตกหล่น
+                const authorDisplay = d.authorName || d.author || d.authorText || "คริสตจักร";
+                const thumb = d.thumbUrl || (d.youtubeUrl ? getYoutubeThumb(d.youtubeUrl) : 'logo.png');
 
-    try {
-        await addDoc(collection(db, "contacts"), {
-            articleId: artId || "general",
-            name: document.getElementById('contactName').value,
-            phone: document.getElementById('contactPhone').value,
-            needs: options,
-            address: document.getElementById('contactAddress').value,
-            note: document.getElementById('contactNote').value,
-            createdAt: serverTimestamp()
+                const card = `
+                <div class="card" onclick="goToArticle('${doc.id}')">
+                    <img src="${thumb}" onerror="this.src='logo.png'">
+                    <div class="card-content">
+                        <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
+                        <div class="card-info">โดย: ${authorDisplay}</div>
+                        <div class="card-meta">
+                            <span>📅 ${d.displayDate || ''}</span>
+                            <span style="color:#4dabff; font-weight:bold;">อ่านต่อ...</span>
+                        </div>
+                    </div>
+                </div>`;
+                container.insertAdjacentHTML('beforeend', card);
+            }
         });
 
-        alert("ส่งข้อมูลแล้ว");
-        document.getElementById('contactForm').reset();
-        document.getElementById('addressBox').style.display = 'none';
-
-    } catch (err) {
-        console.log(err);
-        alert("ส่งไม่สำเร็จ");
-    } finally {
-        btn.disabled = false;
-        btn.innerText = "ส่งข้อมูล";
-    }
-};
-
-// media
-function createMediaHTML(url) {
-    if (!url) return "";
-
-    const yid = (url.match(
-        /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/
-    ) || [])[1];
-
-    if (yid) {
-        return `
-        <div class="video-container">
-            <iframe src="https://www.youtube.com/embed/${yid}" allowfullscreen></iframe>
-        </div>`;
-    }
-
-    return `<img src="${url}" class="media-full-width">`;
-}
-
-// LOAD ARTICLE
-async function loadContent() {
-
-    if (!artId) {
-        document.getElementById('artTitle').innerText = "❌ ไม่มี ID บทความใน URL";
-        return;
-    }
-
-    try {
-        const ref = doc(db, "articles", artId);
-        const snap = await getDoc(ref);
-
-        console.log("EXISTS =", snap.exists());
-
-        if (!snap.exists()) {
-            document.getElementById('artTitle').innerText = "❌ ไม่พบบทความใน Firebase";
-            return;
+        if (count === 0) {
+            container.innerHTML = "<p style='color:#888; padding: 20px;'>ไม่พบข้อมูลในหมวดหมู่ชุดนี้</p>";
         }
-
-        const r = snap.data();
-
-        document.title = r.title || "BBC Church";
-        document.getElementById('artTitle').innerText = r.title || "-";
-
-        let prefix = "ผู้แต่ง: ";
-        if ((r.category || "").includes("เทศนา")) prefix = "ผู้เทศนา: ";
-        else if ((r.category || "").includes("คำพยาน")) prefix = "เจ้าของคำพยาน: ";
-
-        document.getElementById('catDisp').innerText = r.category || "";
-        document.getElementById('artMeta').innerHTML =
-            `${prefix}<b>${r.author || "คริสตจักร"}</b> | ${r.displayDate || "-"}`;
-
-        let topHtml = "";
-        if (r.thumbUrl) topHtml += createMediaHTML(r.thumbUrl);
-        if (r.youtubeUrl) topHtml += createMediaHTML(r.youtubeUrl);
-
-        document.getElementById('topDisplay').innerHTML = topHtml;
-        document.getElementById('artBody').innerText = r.content || "";
-
-        let details = "";
-        [r.arc1, r.arc2, r.arc3, r.contentImg1, r.contentImg2]
-            .forEach(u => {
-                if (u) details += createMediaHTML(u);
-            });
-
-        document.getElementById('detailsDisplay').innerHTML = details;
-
-        loadRatings();
-
-    } catch (err) {
-        console.log(err);
-        document.getElementById('artTitle').innerText = "❌ โหลดบทความล้มเหลว";
-    }
-}
-
-// ratings
-function loadRatings() {
-
-    if (!artId) return;
-
-    const q = query(
-        collection(db, "ratings"),
-        where("articleId", "==", artId),
-        where("approved", "==", true)
-    );
-
-    onSnapshot(q, (snapshot) => {
-
-        let html = "<h3>ความคิดเห็น</h3>";
-
-        let total = 0;
-
-        if (snapshot.empty) {
-            document.getElementById('commentList').innerHTML =
-                html + "<div>ยังไม่มีความคิดเห็น</div>";
-            return;
-        }
-
-        snapshot.forEach(d => {
-            const data = d.data();
-            total += data.rating || 0;
-
-            html += `
-            <div class="comment-item">
-                <div class="comment-user">
-                    ${data.userName} - ${"⭐".repeat(data.rating || 0)}
-                </div>
-                <div class="comment-text">${data.comment}</div>
-            </div>`;
-        });
-
-        const avg = (total / snapshot.size).toFixed(1);
-
-        document.getElementById('commentList').innerHTML = html;
-        document.getElementById('artRatingHeader').innerText =
-            `⭐ ${avg}/5 (${snapshot.size})`;
-
     });
-}
 
-// rating submit
-document.getElementById('submitRatingBtn').onclick = async () => {
+    // บังคับ Link ส่งค่าแบบระบุชื่อไฟล์ตรงๆ ไปหาหน้าอ่านเนื้อหาหลัก
+    window.goToArticle = function(id) {
+        window.location.href = "article.html?id=" + id;
+    };
 
-    const name = document.getElementById('uName').value.trim();
-    const msg = document.getElementById('uMsg').value.trim();
-    const stars = parseInt(document.getElementById('uStars').value);
-
-    if (!name || !msg) return alert("กรอกข้อมูลให้ครบ");
-
-    try {
-        await addDoc(collection(db, "ratings"), {
-            articleId: artId,
-            userName: name,
-            comment: msg,
-            rating: stars,
-            approved: true,
-            createdAt: serverTimestamp()
-        });
-
-        alert("ส่งแล้ว");
-        document.getElementById('uName').value = "";
-        document.getElementById('uMsg').value = "";
-
-    } catch (e) {
-        console.log(e);
-        alert("error");
+    function getYoutubeThumb(url) {
+        if (!url) return 'logo.png';
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length == 11) ? `https://img.youtube.com/vi/${match[2]}/mqdefault.jpg` : 'logo.png';
     }
-};
-
-loadContent();
-
 </script>
-
 </body>
 </html>
