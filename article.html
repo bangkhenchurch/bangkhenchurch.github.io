@@ -9,26 +9,21 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
-        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; }
-        .navbar img { width: 35px; border-radius: 50%; }
         
-        /* เมนูหลัก */
-        .horizontal-menu { 
-            background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; 
-            gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; 
-            margin: 20px auto; border-radius: 50px; 
-        }
+        /* Navigation */
+        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .navbar img { width: 35px; border-radius: 50%; }
+        .horizontal-menu { background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto; border-radius: 50px; }
         .horizontal-menu a { padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt'; border-radius: 25px; transition: 0.3s; font-size: 15px; }
         .horizontal-menu a:hover { background: #2c2c2c; color: #fff; }
         .active-page { background: #4dabff !important; color: white !important; }
 
-        .container { padding: 20px 5%; width: 100%; max-width: 1200px; margin: auto; }
+        .container { padding: 20px 5%; width: 100%; max-width: 900px; margin: auto; min-height: 60vh; }
+        
+        /* --- 1. สไตล์ส่วนแสดง "รายการหมวดหมู่" (Grid List View) --- */
         .header-box { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; border-left: 5px solid #4dabff; padding-left: 15px; }
         .section-title { font-family: 'Prompt'; font-size: 26px; color: #fff; }
-        
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        
-        /* Card Design */
         .card { background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
         .card:hover { transform: translateY(-5px); border-color: #4dabff; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
         .card img { width: 100%; height: 180px; object-fit: cover; background: #2a2a2a; }
@@ -37,7 +32,27 @@
         .card-info { font-size: 13px; color: #bbb; margin-bottom: 10px; }
         .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
 
-        @media (max-width: 768px) { .horizontal-menu { border-radius: 15px; margin: 10px; padding: 15px; } .section-title { font-size: 20px; } }
+        /* --- 2. สไตล์ส่วนแสดง "เนื้อหาด้านใน" (Single Article View) --- */
+        .article-view { display: none; background: #1e1e1e; border: 1px solid #333; border-radius: 16px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .article-header-title { font-family: 'Prompt'; font-size: 28px; color: #fff; margin-bottom: 15px; line-height: 1.4; }
+        .article-sub-meta { font-size: 14px; color: #aaa; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px; }
+        .article-main-img { width: 100%; max-height: 450px; object-fit: cover; border-radius: 10px; margin-bottom: 25px; display: none; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; border-radius: 10px; margin-bottom: 25px; display: none; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .article-body-content { font-size: 16px; color: #e0e0e0; line-height: 1.8; white-space: pre-line; word-break: break-word; }
+
+        /* Feedback Section */
+        .feedback-section { margin-top: 40px; border-top: 1px solid #333; padding-top: 25px; }
+        .rating-box { display: flex; align-items: center; gap: 5px; color: #ffca28; margin-bottom: 15px; font-size: 18px; font-family: 'Prompt'; }
+        .comment-form { background: #161616; padding: 20px; border-radius: 10px; border: 1px dashed #444; }
+        .u-input { width: 100%; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 6px; margin-bottom: 12px; font-family: 'Sarabun'; }
+        .btn-send { padding: 10px 25px; background: #4dabff; color: white; border: none; border-radius: 6px; font-family: 'Prompt'; cursor: pointer; font-weight: bold; }
+        .btn-send:hover { background: #3593e6; }
+
+        footer { background: #0a2c6d; text-align: center; padding: 40px 20px; margin-top: 60px; }
+        footer img { width: 50px; border-radius: 50%; margin-bottom: 10px; }
+
+        @media (max-width: 768px) { .horizontal-menu { border-radius: 15px; margin: 10px; padding: 15px; } .section-title { font-size: 20px; } .article-header-title { font-size: 22px; } .article-view { padding: 15px; } }
     </style>
 </head>
 <body>
@@ -49,23 +64,69 @@
 
 <nav class="horizontal-menu" id="mainMenu">
     <a href="index.html">🏠 หน้าแรก</a>
-    <a href="sermons.html" id="link-sermons">🎙️ คำเทศนา</a>
-    <a href="blogs.html" id="link-blogs">📖 บทความ</a>
-    <a href="testimony.html" id="link-testimony">🙏 คำพยาน</a>
-    <a href="news.html" id="link-news">📢 ข่าวสาร</a>
+    <a href="article.html?view=sermons" id="link-sermons">🎙️ คำเทศนา</a>
+    <a href="article.html?view=blogs" id="link-blogs">📖 บทความ</a>
+    <a href="article.html?view=testimony" id="link-testimony">🙏 คำพยาน</a>
+    <a href="article.html?view=news" id="link-news">📢 ข่าวสาร</a>
     <a href="contact.html">📞 ติดต่อเรา</a>
 </nav>
 
 <div class="container">
-    <div class="header-box">
-        <h2 id="pageTitle" class="section-title">กำลังโหลด...</h2>
+    
+    <div id="listViewSection">
+        <div class="header-box">
+            <h2 id="pageTitle" class="section-title">กำลังโหลดรายการ...</h2>
+        </div>
+        <div id="contentGrid" class="grid-container"></div>
     </div>
-    <div id="contentGrid" class="grid-container"></div>
+
+    <div id="detailViewSection" class="article-view">
+        <h1 id="artTitle" class="article-header-title">กำลังโหลดเนื้อหา...</h1>
+        <div class="article-sub-meta">
+            <span>👤 ผู้เขียน: <span id="artAuthor">...</span></span> | 
+            <span>📅 วันที่: <span id="artDate">...</span></span>
+        </div>
+        
+        <img id="artImg" class="article-main-img" src="" alt="หน้าปก">
+        <div id="artVideoBox" class="video-container">
+            <iframe id="artYoutube" src="" allowfullscreen></iframe>
+        </div>
+
+        <div id="artBody" class="article-body-content"></div>
+
+        <div class="feedback-section">
+            <div class="rating-box">⭐ ให้คะแนนและแบ่งปันพระพร (คริสตจักรแบ๊บติสต์บางเขน)</div>
+            <form id="feedbackForm" class="comment-form">
+                <select id="fbRating" class="u-input" style="color:#ffca28; font-weight: bold;">
+                    <option value="5">⭐⭐⭐⭐⭐ (ยอดเยี่ยม)</option>
+                    <option value="4">⭐⭐⭐⭐ (ดีมาก)</option>
+                    <option value="3">⭐⭐⭐ (ดี)</option>
+                    <option value="2">⭐⭐ (พอใช้)</option>
+                    <option value="1">⭐ (ปรับปรุง)</option>
+                </select>
+                <input type="text" id="fbName" class="u-input" placeholder="ชื่อของคุณ" required>
+                <textarea id="fbComment" class="u-input" rows="3" placeholder="เขียนความประทับใจหรือข้อคิดที่ได้รับจากบทความนี้..." required></textarea>
+                <button type="submit" id="btnSubmitFeedback" class="btn-send">ส่งความคิดเห็น</button>
+            </form>
+        </div>
+    </div>
+
 </div>
+
+<footer>
+    <div>
+        <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'"><br>
+        <strong style="font-family:'Prompt'; font-size:18px;">คริสตจักรแบ๊บติสต์บางเขน</strong>
+        <div style="margin-top: 10px; color: #4dabff; font-weight: bold;">🕒 นมัสการ: วันอาทิตย์ 09.00 - 12.00 น.</div>
+        <div style="font-size: 14px; color: #aaa; margin-top: 10px;">
+            2172/145-147 ซอยพหลโยธิน 36 แขวงลาดยาว เขตจตุจักร กรุงเทพฯ 10900 <br>📞 โทร: 02-5798764
+        </div>
+    </div>
+</footer>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, query, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, doc, query, onSnapshot, orderBy, getDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
@@ -78,74 +139,178 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // แกะชื่อไฟล์แบบปลอดภัย รองรับ GitHub Pages
-    const pathArray = window.location.pathname.split('/');
-    const fileName = pathArray[pathArray.length - 1] || "index.html";
-    
-    let categoryKeyword = "";
-    let displayTitle = "📰 รายการทั้งหมด";
+    // อ่านค่าตัวแปรจาก URL Params (?id=... หรือ ?view=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleId = urlParams.get('id');
+    const viewParam = urlParams.get('view');
 
-    if (fileName.includes("blogs")) { 
-        categoryKeyword = "บทความ"; displayTitle = "📖 บทความหนุนใจทั้งหมด"; 
-        if(document.getElementById('link-blogs')) document.getElementById('link-blogs').classList.add('active-page');
-    } else if (fileName.includes("testimony")) { 
-        categoryKeyword = "พยาน"; displayTitle = "🙏 คำพยานชีวิตทั้งหมด"; 
-        if(document.getElementById('link-testimony')) document.getElementById('link-testimony').classList.add('active-page');
-    } else if (fileName.includes("sermons")) { 
-        categoryKeyword = "เทศนา"; displayTitle = "🎙️ คำเทศนาทั้งหมด"; 
-        if(document.getElementById('link-sermons')) document.getElementById('link-sermons').classList.add('active-page');
-    } else if (fileName.includes("news")) { 
-        categoryKeyword = "ข่าวสาร"; displayTitle = "📢 ข่าวสารและประกาศ"; 
-        if(document.getElementById('link-news')) document.getElementById('link-news').classList.add('active-page');
+    // ตรวจสอบเงื่อนไขการแสดงผลหน้าเว็บ
+    if (articleId) {
+        // CASE A: มี ID -> เปิดโหมดแสดงเนื้อหาบทความด้านใน
+        document.getElementById('listViewSection').style.display = 'none';
+        document.getElementById('detailViewSection').style.display = 'block';
+        loadArticleDetail(articleId);
+    } else {
+        // CASE B: ไม่มี ID -> เปิดโหมดแสดงรายการหมวดหมู่การ์ด
+        document.getElementById('listViewSection').style.display = 'block';
+        document.getElementById('detailViewSection').style.display = 'none';
+        loadCategoryGrid(viewParam);
     }
 
-    document.getElementById('pageTitle').innerText = displayTitle;
+    // ==========================================
+    // ฟังก์ชันกลุ่มที่ 1: โหลดรายการการ์ดแยกหมวดหมู่
+    // ==========================================
+    function loadCategoryGrid(view) {
+        let categoryKeyword = "";
+        let displayTitle = "📰 รายการทั้งหมด";
 
-    // ดึงข้อมูลเรียงตามวันที่จากล่าสุด
-    const q = query(collection(db, "articles"), orderBy("displayDate", "desc"));
+        if (view === "blogs") { 
+            categoryKeyword = "บทความ"; displayTitle = "📖 บทความหนุนใจทั้งหมด"; 
+            if(document.getElementById('link-blogs')) document.getElementById('link-blogs').classList.add('active-page');
+        } else if (view === "testimony") { 
+            categoryKeyword = "พยาน"; displayTitle = "🙏 คำพยานชีวิตทั้งหมด"; 
+            if(document.getElementById('link-testimony')) document.getElementById('link-testimony').classList.add('active-page');
+        } else if (view === "sermons") { 
+            categoryKeyword = "เทศนา"; displayTitle = "🎙️ คำเทศนาทั้งหมด"; 
+            if(document.getElementById('link-sermons')) document.getElementById('link-sermons').classList.add('active-page');
+        } else if (view === "news") { 
+            categoryKeyword = "ข่าวสาร"; displayTitle = "📢 ข่าวสารและประกาศ"; 
+            if(document.getElementById('link-news')) document.getElementById('link-news').classList.add('active-page');
+        }
 
-    onSnapshot(q, (snap) => {
-        const container = document.getElementById('contentGrid');
-        container.innerHTML = "";
-        let count = 0;
+        document.getElementById('pageTitle').innerText = displayTitle;
 
-        snap.forEach(doc => {
-            const d = doc.data();
-            const cat = d.category || "";
+        const q = query(collection(db, "articles"), orderBy("displayDate", "desc"));
+        onSnapshot(q, (snap) => {
+            const container = document.getElementById('contentGrid');
+            container.innerHTML = "";
+            let count = 0;
 
-            if (categoryKeyword === "" || cat.includes(categoryKeyword)) {
-                count++;
-                
-                // รวมโครงสร้างชื่อผู้เขียน ป้องกันข้อมูลตกหล่น
-                const authorDisplay = d.authorName || d.author || d.authorText || "คริสตจักร";
-                const thumb = d.thumbUrl || (d.youtubeUrl ? getYoutubeThumb(d.youtubeUrl) : 'logo.png');
+            snap.forEach(doc => {
+                const d = doc.data();
+                const cat = d.category || "";
 
-                const card = `
-                <div class="card" onclick="goToArticle('${doc.id}')">
-                    <img src="${thumb}" onerror="this.src='logo.png'">
-                    <div class="card-content">
-                        <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
-                        <div class="card-info">โดย: ${authorDisplay}</div>
-                        <div class="card-meta">
-                            <span>📅 ${d.displayDate || ''}</span>
-                            <span style="color:#4dabff; font-weight:bold;">อ่านต่อ...</span>
+                if (categoryKeyword === "" || cat.includes(categoryKeyword)) {
+                    count++;
+                    const authorDisplay = d.authorName || d.author || d.authorText || "คริสตจักร";
+                    const thumb = d.thumbUrl || (d.youtubeUrl ? getYoutubeThumb(d.youtubeUrl) : 'logo.png');
+
+                    const card = `
+                    <div class="card" onclick="openArticle('${doc.id}')">
+                        <img src="${thumb}" onerror="this.src='logo.png'">
+                        <div class="card-content">
+                            <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
+                            <div class="card-info">โดย: ${authorDisplay}</div>
+                            <div class="card-meta">
+                                <span>📅 ${d.displayDate || ''}</span>
+                                <span style="color:#4dabff; font-weight:bold;">อ่านต่อ...</span>
+                            </div>
                         </div>
-                    </div>
-                </div>`;
-                container.insertAdjacentHTML('beforeend', card);
+                    </div>`;
+                    container.insertAdjacentHTML('beforeend', card);
+                }
+            });
+
+            if (count === 0) {
+                container.innerHTML = "<p style='color:#888; padding:20px;'>ไม่พบข้อมูลในหมวดหมู่ชุดนี้</p>";
             }
         });
+    }
 
-        if (count === 0) {
-            container.innerHTML = "<p style='color:#888; padding: 20px;'>ไม่พบข้อมูลในหมวดหมู่ชุดนี้</p>";
-        }
-    });
-
-    // บังคับ Link ส่งค่าแบบระบุชื่อไฟล์ตรงๆ ไปหาหน้าอ่านเนื้อหาหลัก
-    window.goToArticle = function(id) {
-        window.location.href = "article.html?id=" + id;
+    // ฟังก์ชันคลิกการ์ดแล้วโหลดหน้าตัวเองใหม่พร้อมส่ง ?id=...
+    window.openArticle = function(id) {
+        window.location.href = `article.html?id=${id}`;
     };
 
+    // ==========================================
+    // ฟังก์ชันกลุ่มที่ 2: ดึงเนื้อหารายละเอียดบทความมาแสดง
+    // ==========================================
+    async function loadArticleDetail(id) {
+        try {
+            const docRef = doc(db, "articles", id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                
+                // ใส่ข้อมูลลงใน HTML Element
+                document.title = (data.title || "บทความ") + " - Bangkhen Baptist Church";
+                document.getElementById('artTitle').innerText = data.title || "ไม่มีหัวข้อ";
+                document.getElementById('artAuthor').innerText = data.authorName || data.author || data.authorText || "คริสตจักร";
+                document.getElementById('artDate').innerText = data.displayDate || "";
+                document.getElementById('artBody').innerText = data.content || data.body || "ไม่มีเนื้อหา";
+
+                // ตรวจสอบคีย์คำว่า เทศนา/บทความ/พยาน/ข่าวสาร เพื่อไฮไลต์ปุ่มเมนูให้ถูกต้องตอนอ่าน
+                const cat = data.category || "";
+                if (cat.includes("บทความ") && document.getElementById('link-blogs')) document.getElementById('link-blogs').classList.add('active-page');
+                if (cat.includes("พยาน") && document.getElementById('link-testimony')) document.getElementById('link-testimony').classList.add('active-page');
+                if (cat.includes("เทศนา") && document.getElementById('link-sermons')) document.getElementById('link-sermons').classList.add('active-page');
+                if (cat.includes("ข่าวสาร") && document.getElementById('link-news')) document.getElementById('link-news').classList.add('active-page');
+
+                // จัดการส่วนภาพปก / ยูทูปวิดีโอ
+                if (data.youtubeUrl) {
+                    const embedUrl = getYoutubeEmbed(data.youtubeUrl);
+                    if (embedUrl) {
+                        document.getElementById('artYoutube').src = embedUrl;
+                        document.getElementById('artVideoBox').style.display = 'block';
+                    }
+                } else if (data.thumbUrl) {
+                    const imgElement = document.getElementById('artImg');
+                    imgElement.src = data.thumbUrl;
+                    imgElement.style.display = 'block';
+                }
+
+            } else {
+                document.getElementById('artTitle').innerText = "❌ ไม่พบเนื้อหาบทความนี้ในระบบ";
+            }
+        } catch (error) {
+            console.error("Error fetching article:", error);
+            document.getElementById('artTitle').innerText = "❌ เกิดข้อผิดพลาดในการโหลดข้อมูล";
+        }
+    }
+
+    // ระบบบันทึกฟอร์มความคิดเห็นลง Firebase
+    document.getElementById('feedbackForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmitFeedback');
+        btn.disabled = true;
+        btn.innerText = "กำลังส่ง...";
+
+        const score = document.getElementById('fbRating').value;
+        const name = document.getElementById('fbName').value.trim();
+        const comment = document.getElementById('fbComment').value.trim();
+
+        try {
+            await addDoc(collection(db, "contacts"), {
+                articleId: articleId,
+                name: name,
+                phone: "ส่งคำพยาน/คำติชม",
+                needs: [ `คะแนนดาว: ${score}` ],
+                address: "",
+                note: comment,
+                createdAt: serverTimestamp()
+            });
+
+            alert("ส่งความประทับใจเรียบร้อยแล้ว ขอพระเจ้าอวยพระพรครับ!");
+            document.getElementById('feedbackForm').reset();
+        } catch (err) {
+            console.error(err);
+            alert("ไม่สามารถส่งข้อมูลได้ในขณะนี้");
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "ส่งความคิดเห็น";
+        }
+    };
+
+    // ฟังก์ชันแปลงลิงก์ YouTube เป็น Embed Link ปลอดภัย
+    function getYoutubeEmbed(url) {
+        if (!url) return null;
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length == 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+    }
+
+    // ฟังก์ชันดึงภาพ Thumb ปกยูทูป
     function getYoutubeThumb(url) {
         if (!url) return 'logo.png';
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -153,5 +318,3 @@
         return (match && match[2].length == 11) ? `https://img.youtube.com/vi/${match[2]}/mqdefault.jpg` : 'logo.png';
     }
 </script>
-</body>
-</html>
