@@ -31,13 +31,13 @@
         .category-count { background: var(--accent); font-size: 12px; padding: 2px 8px; border-radius: 20px; }
 
         .article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px; }
-        .article-card { background: #2a2a2a; border-radius: 12px; overflow: hidden; border: 1px solid #3d3d3d; display: flex; flex-direction: column; }
+        .article-card { background: #2a2a2a; border-radius: 12px; overflow: hidden; border: 1px solid #3d3d3d; display: flex; flex-direction: column; height: 100%; }
         .article-thumb { width: 100%; height: 130px; background: #111; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .article-thumb img { width: 100%; height: 100%; object-fit: cover; }
         .article-info { padding: 12px; flex-grow: 1; }
         .article-info h4 { margin: 0 0 6px 0; color: #fff; font-size: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .article-info-meta { font-size: 12px; color: #aaa; margin-top: 4px; display: flex; justify-content: space-between; }
-        .article-btns { display: flex; gap: 6px; padding: 10px; background: rgba(0,0,0,0.2); }
+        .article-btns { display: flex; gap: 6px; padding: 10px; background: rgba(0,0,0,0.2); margin-top: auto; }
         .btn-edit { flex: 1; background: #444; color: white; border: none; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 13px; }
         .btn-del { background: #c0392b; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 
@@ -52,9 +52,6 @@
         .btn-action { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; margin-right: 5px; }
         .btn-approve { background: #27ae60; color: white; }
         .btn-reject { background: #c0392b; color: white; }
-
-        .article-stats { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #444; font-size: 12px; color: #aaa; }
-        .stat-stars { color: #f1c40f; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -120,7 +117,7 @@
 
             <div class="full-width">
                 <label>เนื้อหาหลัก</label>
-                <textarea id="mainContent" rows="6"></textarea>
+                <textarea id="mainContent" rows="6" placeholder="กรอกเนื้อหาบทความที่นี่..."></textarea>
             </div>
             <div class="full-width">
                 <label>หมายเหตุ / เนื้อหาเพิ่มเติม</label>
@@ -300,12 +297,12 @@ onSnapshot(collection(db, "authors"), (snap)=>{
     });
 });
 
-// เพิ่มรายชื่อใหม่ (เลือกประเภท ผู้เขียน หรือ ผู้เทศนา)
+// เพิ่มรายชื่อใหม่และระบุประเภท
 document.getElementById("btnAddAuthor").addEventListener("click", async () => {
     const name = prompt("กรุณากรอกชื่อผู้แต่ง / ผู้เทศนาคนใหม่:");
     if(!name || name.trim() === "") return;
     
-    const typeChoice = prompt("กรุณาระบุประเภทบทบาทของผู้ใช้รายนี้:\nพิมพ์เลข 1 : สำหรับ 'ผู้เขียน'\nพิมพ์เลข 2 : สำหรับ 'ผู้เทศนา'");
+    const typeChoice = prompt("กรุณาระบุประเภทบทบาทคนนี้:\nพิมพ์ 1 : สำหรับ 'ผู้เขียน'\nพิมพ์ 2 : สำหรับ 'ผู้เทศนา'");
     let authorType = "ผู้เขียน";
     if(typeChoice === "2") {
         authorType = "ผู้เทศนา";
@@ -317,9 +314,9 @@ document.getElementById("btnAddAuthor").addEventListener("click", async () => {
             type: authorType,
             createdAt: serverTimestamp() 
         });
-        alert(`✅ เพิ่มรายชื่อ "${name.trim()}" เป็น [${authorType}] สำเร็จ`);
+        alert(`✅ เพิ่มคุณ "${name.trim()}" เป็น [${authorType}] สำเร็จ`);
     } catch (err) {
-        alert("❌ ไม่สามารถเพิ่มผู้แต่งได้: " + err.message);
+        alert("❌ ไม่สามารถเพิ่มได้: " + err.message);
     }
 });
 
@@ -335,12 +332,12 @@ document.getElementById("btnDelAuthor").addEventListener("click", async () => {
         return;
     }
 
-    if (confirm(`คุณต้องการลบรายชื่อ "${authorName}" ออกจากระบบใช่หรือไม่?`)) {
+    if (confirm(`คุณต้องการลบรายชื่อ "${authorName}" ใช่หรือไม่?`)) {
         try {
             await deleteDoc(doc(db, "authors", authorId));
-            alert(`🗑️ ลบรายชื่อ "${authorName}" เรียบร้อยแล้ว`);
+            alert(`🗑️ ลบเรียบร้อยแล้ว`);
         } catch (err) {
-            alert("❌ ไม่สามารถลบรายชื่อได้: " + err.message);
+            alert("❌ ไม่สามารถลบได้: " + err.message);
         }
     }
 });
@@ -415,12 +412,11 @@ window.renderArticlesByCategories = () => {
 };
 
 // =========================
-// Realtime Comments
+// Comments Management
 // =========================
 onSnapshot(collection(db, "comments"), (snap) => {
     const tbody = document.getElementById("commentTableBody");
     tbody.innerHTML = "";
-    
     let hasComments = false;
     snap.forEach((d) => {
         hasComments = true;
@@ -446,7 +442,6 @@ onSnapshot(collection(db, "comments"), (snap) => {
         `;
         tbody.appendChild(tr);
     });
-
     if(!hasComments) {
         tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">ไม่มีข้อมูลความคิดเห็นที่ส่งเข้ามา</td></tr>`;
     }
@@ -456,7 +451,7 @@ window.approveComment = async (id) => {
     try {
         await updateDoc(doc(db, "comments", id), { status: "approved" });
         alert("อนุมัติความคิดเห็นเรียบร้อยแล้ว");
-    } catch(err) { alert("เกิดข้อผิดพลาด: " + err.message); }
+    } catch(err) { alert(err.message); }
 };
 
 window.deleteComment = async (id) => {
@@ -491,14 +486,14 @@ document.getElementById("postForm").onsubmit = async (e)=>{
             bibleRef: document.getElementById("bibleRef").value,
             category: document.getElementById("category").value,
             authorName: selectAuthor.value,
-            authorType: authorType, // บันทึกประเภทเพื่อส่งให้หน้าแสดงผลใช้งานต่อได้แม่นยำ
+            authorType: authorType, 
             status: "published", 
             thumbUrl,
             arc1,
             arc2,
             yt1: document.getElementById("yt1").value,
             yt2: document.getElementById("yt2").value,
-            mainContent: document.getElementById("mainContent").value,
+            mainContent: document.getElementById("mainContent").value, 
             extraContent: document.getElementById("extraContent").value,
             updatedAt: serverTimestamp()
         };
@@ -510,11 +505,10 @@ document.getElementById("postForm").onsubmit = async (e)=>{
             await addDoc(collection(db, "articles"), data);
         }
 
-        alert("✅ บันทึกข้อมูลสำเร็จและแสดงผลบนเว็บไซต์ทันที");
+        alert("✅ บันทึกข้อมูลและแสดงผลเรียบร้อยแล้ว");
         resetForm();
     }catch(err){
-        console.error(err);
-        alert("❌ " + err.message);
+        alert("❌ เกิดข้อผิดพลาด: " + err.message);
     }finally{
         btn.disabled = false;
         btn.innerText = "🚀 บันทึกข้อมูลและแสดงผลทันที";
@@ -541,7 +535,9 @@ window.editArt = async (id)=>{
     document.getElementById("arc2").value = r.arc2 || "";
     document.getElementById("yt1").value = r.yt1 || "";
     document.getElementById("yt2").value = r.yt2 || "";
-    document.getElementById("mainContent").value = r.mainContent || "";
+    
+    // ดึงค่าเนื้อหาหลัก รองรับทั้งฟิลด์เก่าฟิลด์ใหม่
+    document.getElementById("mainContent").value = r.mainContent || r.content || r.body || r.detail || "";
     document.getElementById("extraContent").value = r.extraContent || "";
 
     forcePreview(r.thumbUrl, "pre1");
