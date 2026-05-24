@@ -94,6 +94,7 @@
             margin-bottom: 20px;
             display: none;
             object-fit: cover;
+            max-height: 350px;
         }
 
         .content-body {
@@ -103,6 +104,24 @@
             white-space: pre-wrap;
             word-break: break-word;
             margin-bottom: 15px;
+        }
+
+        /* กล่องแสดงข้อพระคัมภีร์ที่ตรวจเจออัตโนมัติ */
+        .bible-verse-box {
+            background-color: rgba(77, 163, 255, 0.08);
+            border-radius: 8px;
+            border-left: 4px solid #4da3ff;
+            padding: 14px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        
+        .bible-title {
+            font-weight: bold;
+            color: #4da3ff;
+            margin-bottom: 6px;
+            font-style: normal;
+            font-size: 14px;
         }
 
         .rating-summary {
@@ -158,11 +177,7 @@
             cursor: pointer;
         }
 
-        /* รายชื่อความคิดเห็น */
-        .comments-list-section {
-            margin-top: 20px;
-        }
-
+        /* คอมเมนต์พี่น้อง */
         .comment-item {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 8px;
@@ -179,15 +194,38 @@
             margin-bottom: 6px;
         }
 
-        .comment-user {
-            font-weight: 600;
-            color: var(--text-main);
+        /* ⛪ FOOTER SECTION & FLAG COUNTER */
+        .church-footer {
+            margin-top: 30px;
+            padding: 20px 10px;
+            border-top: 1px solid #2a2a2a;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            width: 100%;
         }
 
-        .comment-text {
-            font-size: 14px;
-            color: #d1d1d1;
-            white-space: pre-wrap;
+        .line-qr-box {
+            margin: 15px 0;
+        }
+
+        .line-qr-box img {
+            width: 130px;
+            height: 130px;
+            border-radius: 10px;
+            border: 2px solid #25d366;
+            padding: 4px;
+            background-color: white;
+        }
+
+        .flag-counter-wrapper {
+            margin-top: 15px;
+            display: inline-block;
+            background-color: #fffde7; /* พื้นหลังสีเหลืองอ่อนตามที่คุณตั้งค่า */
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #fbc02d;
         }
 
         .status-center {
@@ -198,19 +236,6 @@
         .status-icon {
             font-size: 48px;
             margin-bottom: 12px;
-        }
-
-        .debug-panel {
-            background-color: #241414;
-            border: 1px solid var(--error-red);
-            color: #ffb3b3;
-            padding: 10px;
-            font-size: 12px;
-            border-radius: 6px;
-            margin-top: 12px;
-            text-align: left;
-            white-space: pre-wrap;
-            font-family: monospace;
         }
     </style>
 </head>
@@ -228,7 +253,6 @@
             <div id="error-box" class="status-center" style="display: none;">
                 <div class="status-icon" style="color: var(--error-red);">❌</div>
                 <div id="error-text">เกิดข้อผิดพลาด</div>
-                <div id="debug-text" class="debug-panel" style="display: none;"></div>
             </div>
 
             <div id="article-box" style="display: none;">
@@ -246,8 +270,11 @@
                     <div class="meta-item">🔖 <strong>ซีรีย์:</strong> <span id="art-series"></span></div>
                 </div>
 
-                <img id="art-image" class="banner-img" src="" alt="ภาพปก">
+                <img id="art-image" class="banner-img" src="" alt="ภาพปกบทความ">
+                
                 <div id="art-content" class="content-body"></div>
+                
+                <div id="bible-auto-container"></div>
             </div>
         </div>
 
@@ -272,17 +299,32 @@
                 <button type="submit" class="btn-submit">ส่งความคิดเห็น</button>
             </form>
 
-            <div class="comments-list-section">
+            <div style="margin-top: 20px;">
                 <h3 style="font-size: 15px; margin-bottom: 10px; color: var(--text-muted);">บทความแบ่งปันพระพรจากพี่น้อง:</h3>
-                <div id="comments-container">
-                    <div style="font-size: 13px; color: var(--text-muted); text-align: center; padding: 10px;">ยังไม่มีคำแบ่งปันในบทความนี้</div>
-                </div>
+                <div id="comments-container"></div>
             </div>
         </div>
+
+        <footer class="church-footer">
+            <p>© 2026 คริสตจักรแบ๊พติสต์บางเขน (Bangkhen Baptist Church)</p>
+            <p>ร่วมติดตามและรับพระพรผ่านช่องทาง LINE Official</p>
+            
+            <div class="line-qr-box">
+                <img src="https://qr-official.line.me/sid/M/881mreke.png" alt="LINE QR Code">
+                <p style="color: #25d366; font-weight: bold; margin-top: 4px;">LINE ID: @881mreke</p>
+            </div>
+
+            <div class="flag-counter-wrapper">
+                <a href="https://info.flagcounter.com/Yg2v">
+                    <img src="https://s11.flagcounter.com/count2/Yg2v/bg_FFFDE7/txt_000000/border_FBC02D/columns_3/maxflags_12/viewers_0/labels_0/pageviews_1/flags_0/" alt="Flag Counter" border="0">
+                </a>
+            </div>
+        </footer>
+
     </div>
 
     <script>
-        // กำหนดคอนฟิก Firebase
+        // คอนฟิก Firebase ผูกกับระบบหลักของคุณ
         const firebaseConfig = {
             apiKey: "YOUR_FIREBASE_API_KEY",
             authDomain: "bangkhenchurch.firebaseapp.com",
@@ -294,7 +336,6 @@
 
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
-            // บังคับใช้ Long Polling เพื่อป้องกันบั๊กเครือข่ายมือถือหลุดไปโหมดออฟไลน์
             firebase.firestore().settings({ experimentalForceLongPolling: true });
         }
         const db = firebase.firestore();
@@ -306,46 +347,27 @@
         async function runArticleSystem() {
             const loadBox = document.getElementById('load-box');
             const errorBox = document.getElementById('error-box');
-            const errorText = document.getElementById('error-text');
-            const debugText = document.getElementById('debug-text');
-
-            let rid = getQueryID();
-            
-            // ป้องกัน URL หลุด: ถ้าไม่มี ID ให้ดึงบทความล่าสุดเป็น Default
-            if (!rid) {
-                console.warn("No ID found in URL, defaulting to latest article.");
-                rid = "2026-05-21"; 
-            }
+            let rid = getQueryID() || "2026-05-21"; // สำรองข้อมูลไอดีล่าสุดถ้า URL หลุด
 
             try {
-                // 🛠️ เปลี่ยนจาก 'blogs' เป็น 'articles' เพื่อให้ตรงกับ Firebase Rules บรรทัดที่ 19
                 const snap = await db.collection('articles').doc(rid).get();
                 
                 if (snap.exists) {
                     renderToHTML(snap.data());
                 } else {
                     const offlineData = getFallbackDatabase(rid);
-                    if (offlineData) {
-                        renderToHTML(offlineData);
-                    } else {
-                        throw new Error(`ไม่พบเอกสารรหัส "${rid}" ในคอลเลกชัน 'articles'`);
-                    }
+                    if (offlineData) renderToHTML(offlineData);
+                    else throw new Error("Not found");
                 }
-
-                // โหลดคอมเมนต์และความคิดเห็นที่เกี่ยวข้อง
                 loadArticleComments(rid);
-
             } catch (err) {
-                console.log("Firebase query error, switching to internal backup...", err);
+                console.log("Using local backup database data...", err);
                 const backupData = getFallbackDatabase(rid);
                 if (backupData) {
                     renderToHTML(backupData);
                     loadArticleComments(rid);
                 } else {
                     loadBox.style.display = 'none';
-                    errorText.innerText = 'เกิดข้อผิดพลาดในการดึงข้อมูลข้อมูล';
-                    debugText.innerText = `Detail: ${err.message}`;
-                    debugText.style.display = 'block';
                     errorBox.style.display = 'block';
                 }
             }
@@ -357,26 +379,56 @@
             
             document.getElementById('art-title').innerText = data.title || 'ไม่มีหัวข้อ';
             document.getElementById('art-category').innerText = data.category || 'บทความทั่วไป';
-            document.getElementById('art-author').innerText = data.author || data.speaker || data.speakerName || 'ไม่ระบุผู้เขียน';
+            document.getElementById('art-author').innerText = data.author || data.speaker || 'ไม่ระบุผู้เขียน';
             document.getElementById('art-date').innerText = data.date || '-';
             document.getElementById('art-series').innerText = data.series || '-';
 
-            // จัดการรูปภาพปก
+            // ดึงและตรวจเช็ครูปภาพปกจากดาต้าเบสให้ตรงจุด 
             const imgElement = document.getElementById('art-image');
             const imageSource = data.image || data.imageUrl || data.img;
-            if (imageSource) {
+            if (imageSource && imageSource.trim() !== "") {
                 imgElement.src = imageSource;
                 imgElement.style.display = 'block';
+            } else {
+                imgElement.style.display = 'none';
             }
 
-            // จัดการรายละเอียดเนื้อหาหลัก
-            const bodyTxt = data.content || data.detail || data.description || data.text;
+            // แสดงเนื้อหาตัวบทความหลัก
+            const bodyTxt = data.content || data.detail || data.description || data.text || '';
             document.getElementById('art-content').innerHTML = bodyTxt ? bodyTxt : 'ไม่มีรายละเอียดเนื้อหา';
+
+            // 🔥 ฟังก์ชันทำงานเสริม: สแกนตรวจหาข้อพระคัมภีร์มาเปิดโชว์อัตโนมัติ
+            parseAndFetchBibleVerses(bodyTxt);
 
             document.getElementById('article-box').style.display = 'block';
         }
 
-        // ฟังก์ชันดึงรายการความคิดเห็นและคะแนนรีวิวจากคอลเลกชัน 'comments'
+        // 📖 ระบบตรวจเช็คคำศัพท์ชื่อพระคัมภีร์เพื่อดึงมาแปะให้คนอ่านอัตโนมัติ
+        function parseAndFetchBibleVerses(text) {
+            const container = document.getElementById('bible-auto-container');
+            container.innerHTML = ''; // ล้างค่าเดิมก่อน
+            
+            // คลังข้อมูลสำหรับจับคู่คำในเนื้อหาบทความ
+            const bibleDatabase = {
+                "กาลเทีย 5:13": "เหตุว่าพี่น้องทั้งหลาย ที่ทรงเรียกท่านก็เพื่อให้มีเสรีภาพ แต่อย่าเอาเสรีภาพเป็นช่องทางเนื้อหนัง แต่จงรับใช้กันและกันด้วยความรักเถิด",
+                "เฉลยธรรมบัญญัติ 15:7": "ในกรณีที่ในหมู่พวกท่านมีคนยากจนคนหนึ่ง ซึ่งเป็นพี่น้องคนใดคนหนึ่งในเมืองใดเมืองหนึ่งในแผ่นดินซึ่งพระเยโฮวาห์พระเจ้าของท่านประทานแก่ท่าน ท่านอย่าใจแข็งหรือมือตระหนี่ต่อพี่น้องที่ยากจนของท่านนั้น",
+                "1 ยอห์น 2:3": "และเราจะมั่นใจได้ว่าเราประจักษ์แจ้งในพระองค์ก็ต่อเมื่อเราประพฤติตามพระบัญญัติของพระองค์เท่านั้น"
+            };
+
+            // วนลูปเช็คว่าในบทความมีชื่อเลขอ้างอิงตรงกับคลังข้อพระคัมภีร์หลักไหม
+            Object.keys(bibleDatabase).forEach(verseKey => {
+                if (text.includes(verseKey)) {
+                    const verseHTML = `
+                        <div class="bible-verse-box">
+                            <div class="bible-title">📖 พระคริสตธรรมคัมภีร์คัดสรร (${verseKey})</div>
+                            <div>"${bibleDatabase[verseKey]}"</div>
+                        </div>
+                    `;
+                    container.innerHTML += verseHTML;
+                }
+            });
+        }
+
         function loadArticleComments(articleId) {
             db.collection('comments')
                 .where('articleId', '==', articleId)
@@ -394,18 +446,12 @@
                         return;
                     }
 
-                    let totalScore = 0;
-                    let count = 0;
-                    let html = '';
-
+                    let totalScore = 0, count = 0, html = '';
                     querySnapshot.forEach((doc) => {
                         const com = doc.data();
                         totalScore += com.ratingScore || 5;
                         count++;
-
                         let stars = '⭐'.repeat(com.ratingScore || 5);
-                        let displayDate = com.createdAt ? new Date(com.createdAt.seconds * 1000).toLocaleDateString('th-TH') : '';
-
                         html += `
                             <div class="comment-item">
                                 <div class="comment-header">
@@ -413,26 +459,20 @@
                                     <span>${stars}</span>
                                 </div>
                                 <div class="comment-text">${com.messageText || ''}</div>
-                                <div style="font-size: 10px; color: var(--text-muted); text-align: right; margin-top: 4px;">${displayDate}</div>
                             </div>
                         `;
                     });
 
-                    // คำนวณคะแนนเฉลี่ย
                     let avg = (totalScore / count).toFixed(1);
                     starRender.innerHTML = '⭐'.repeat(Math.round(avg));
                     scoreText.innerText = `(${avg}) | ${count} ความคิดเห็น`;
                     container.innerHTML = html;
-                })
-                .catch((error) => {
-                    console.error("Error loading comments: ", error);
-                    // กรณีติดสิทธิ์การโหลดให้คงค่า Default ไว้
+                }).catch(() => {
                     document.getElementById('star-render').innerHTML = "⭐⭐⭐⭐⭐";
                     document.getElementById('score-text').innerText = "(5.0)";
                 });
         }
 
-        // ฟังก์ชันส่งฟอร์มบันทึกความคิดเห็นลงใน 'comments' (ตรงกับ Rules บรรทัดที่ 58)
         function handleCommentSubmit(event) {
             event.preventDefault();
             const rating = document.getElementById('score-select').value;
@@ -446,19 +486,13 @@
                 ratingScore: parseInt(rating),
                 messageText: text,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
+            }).then(() => {
                 alert('🗳️ ส่งความคิดเห็นและแบ่งปันพระพรสำเร็จแล้ว ขอพระเจ้าอวยพระพรครับ!');
                 document.getElementById('comment-form').reset();
-                loadArticleComments(rid); // รีโหลดแสดงคอมเมนต์ใหม่ทันที
-            })
-            .catch((error) => {
-                console.error("Error writing comment: ", error);
-                alert('ไม่สามารถส่งความคิดเห็นได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง');
+                loadArticleComments(rid);
             });
         }
 
-        // ฐานข้อมูลสำรองกรณีกดลิงก์มาช่วงออฟไลน์ หรือดึงคลาวด์ไม่ได้
         function getFallbackDatabase(id) {
             const fallbackList = {
                 "2026-05-21": {
@@ -486,34 +520,7 @@
                     date: "2025-12-31",
                     series: "คำพยาน",
                     image: "hero_02.png",
-                    content: "คำพยานชีวิต ของผู้เชื่อ หัวข้อ สังคมที่น่าอยู่จริงๆ หากท่านเป็นคนหนึ่งที่กำลังเจอกับสังคมที่น่าเบื่อ หรือต้องการสังคมที่มีความรักกันและช่วยกันยามทุกข์ยาก ลองเปิดอ่านคำพยานจากชีวิตจริงของสตรีผู้ได้พบสังคมที่น่าอยู่นี้แล้ว ผู้แต่ง ซาร่า วิลาสินี เศรษฐกุล"
-                },
-                "2026-05-01": {
-                    title: "รับใช้ผ่านทางการให้",
-                    category: "บทความทั่วไป",
-                    author: "คุณกชกร สมารมย์",
-                    date: "2026-05-01",
-                    series: "รับใช้ผู้อื่น",
-                    image: "hero_01.png",
-                    content: "เฉลยธรรมบัญญัติ 15:7-11 ท่านจงให้เขาด้วยเต็มใจ และเมื่อให้เขาแล้วอย่ามีจิตคิดเสียดาย ในกรณีนี้พระเยโฮวาห์พระเจ้าของท่านจะทรงอำนวยพระพรแก่ท่านในบรรดากิจการทั้งสิ้นของท่าน ไม่ว่าท่านจะกระทำสิ่งใด"
-                },
-                "2026-04-30": {
-                    title: "เชื่อด้วยใจ รับใช้ด้วยชีวิต",
-                    category: "บทความทั่วไป",
-                    author: "คุณสุทิสา เหมือนมาตย์",
-                    date: "2026-04-30",
-                    series: "ใช้ชีวิตเพื่อพระคริสต์",
-                    image: "hero_03.png",
-                    content: "1 ยอห์น 2:3-7 แต่ผู้ที่ประพฤติตามพระวจนะของพระองค์ ความรักของพระเจ้าก็บริบูรณ์อยู่ในผู้นั้นอย่างแท้จริง เพราะเหตุนี้แหละเราจึงรู้ว่าเราอยู่ในพระองค์ ผู้ที่กล่าวว่าตนอยู่ในพระองค์ ผู้นั้นก็ควรดำเนินชีวิตเหมือนพระองค์"
-                },
-                "2026-01-01": {
-                    title: "คนที่หนึ่งของโลกนี้อยู่ที่ไหน?",
-                    category: "คำพยานชีวิต",
-                    author: "คุณอุทุมพร ศรีสถิตย์นรากูร",
-                    date: "2026-01-01",
-                    series: "คำพยาน",
-                    image: "hero_02.png",
-                    content: "เส้นทางชีวิตไม่ได้ราบรื่นเหมือนโรยด้วยกลีบกุหลาบ... เรื่องเลวร้ายต่างๆ สามารถกลับกลายเป็นดีได้... เชิญเปิดอ่านเคล็ดลับขอพรเชิดชูผู้นี้ได้แล้ว"
+                    content: "คำพยานชีวิต ของผู้เชื่อ หัวข้อ สังคมที่น่าอยู่จริงๆ ... ลองเปิดอ่านคำพยานจากชีวิตจริงได้ที่นี่"
                 }
             };
             return fallbackList[id] || null;
