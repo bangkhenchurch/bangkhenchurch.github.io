@@ -42,11 +42,11 @@
                 <div><label>หัวข้อเรื่อง</label><input type="text" id="title" required></div>
                 <div><label>ข้อพระธรรม</label><input type="text" id="bibleRef"></div>
                 <div><label>ผู้แต่ง</label>
-                    <select id="authorSelect">
-                        <option value="ศิษยาภิบาล">ศิษยาภิบาล</option>
-                        <option value="ทีมงาน BBC">ทีมงาน BBC</option>
-                        <option value="รับเชิญ">รับเชิญ</option>
-                    </select>
+                    <div style="display:flex; gap:5px;">
+                        <select id="authorSelect"></select>
+                        <button type="button" class="btn-mini" onclick="addAuthor()">+</button>
+                        <button type="button" class="btn-mini del" onclick="removeAuthor()">🗑️</button>
+                    </div>
                 </div>
                 <div><label>รูปปกนำ</label><input type="file" id="fileThumb" accept="image/*"></div>
                 <div><label>รูปเนื้อหา 1</label><input type="file" id="filePic1" accept="image/*"></div>
@@ -69,6 +69,7 @@
     import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
+    // Firebase Config
     const db = getFirestore(initializeApp({
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
         projectId: "bbcchurch-6ffc3",
@@ -77,6 +78,37 @@
     }));
     const storage = getStorage();
 
+    // --- ระบบจัดการผู้แต่ง (Authors) ---
+    const updateAuthorDropdown = () => {
+        const authors = JSON.parse(localStorage.getItem('authors') || '["ศิษยาภิบาล", "ทีมงาน BBC"]');
+        const select = document.getElementById('authorSelect');
+        select.innerHTML = authors.map(a => `<option value="${a}">${a}</option>`).join('');
+    };
+
+    window.addAuthor = () => {
+        const name = prompt("เพิ่มชื่อผู้แต่ง:");
+        if (name) {
+            const authors = JSON.parse(localStorage.getItem('authors') || '["ศิษยาภิบาล", "ทีมงาน BBC"]');
+            authors.push(name);
+            localStorage.setItem('authors', JSON.stringify(authors));
+            updateAuthorDropdown();
+        }
+    };
+
+    window.removeAuthor = () => {
+        const select = document.getElementById('authorSelect');
+        if (confirm(`ยืนยันการลบชื่อ "${select.value}"?`)) {
+            let authors = JSON.parse(localStorage.getItem('authors') || '["ศิษยาภิบาล", "ทีมงาน BBC"]');
+            authors = authors.filter(a => a !== select.value);
+            localStorage.setItem('authors', JSON.stringify(authors));
+            updateAuthorDropdown();
+        }
+    };
+
+    // Initialize Authors
+    updateAuthorDropdown();
+
+    // --- ส่วนการบันทึก ---
     async function uploadFile(file) {
         if (!file) return null;
         const res = await uploadBytesResumable(ref(storage, 'arts/'+Date.now()), file);
@@ -99,12 +131,12 @@
             pic1: await uploadFile(document.getElementById("filePic1").files[0]),
             pic2: await uploadFile(document.getElementById("filePic2").files[0])
         };
-        const id = document.getElementById("editId").value;
-        if (id) await updateDoc(doc(db, "articles", id), data);
-        else await addDoc(collection(db, "articles"), data);
+        await addDoc(collection(db, "articles"), data);
+        alert("บันทึกสำเร็จ!");
         window.location.reload();
     };
 
+    // --- แสดงรายการ ---
     onSnapshot(collection(db, "articles"), (snap) => {
         const container = document.getElementById("articleContainer");
         container.innerHTML = "";
@@ -113,7 +145,7 @@
             container.innerHTML += `
                 <div class="article-card">
                     <img src="${i.thumbUrl || 'https://placehold.co/600x400'}" class="card-img">
-                    <div class="card-title" style="font-weight:bold; font-size:18px;">${i.title}</div>
+                    <div style="font-weight:bold; font-size:18px;">${i.title}</div>
                     <div style="font-size:12px; margin-bottom:10px;">📅 ${i.displayDate} | 📖 ${i.bibleRef || '-'}</div>
                     <button onclick="deleteArt('${d.id}')" class="btn-mini del">ลบ</button>
                 </div>`;
