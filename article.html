@@ -93,8 +93,9 @@
                     document.getElementById('displayThumb').innerHTML = `<img src="${d.thumbUrl}" class="thumb-img">`;
                 }
 
-                // ปรับปรุงการแสดงผลเนื้อหา (White-space pre-wrap ช่วยให้ขึ้นบรรทัดใหม่ได้เอง)
-                document.getElementById('displayBody').innerText = d.mainContent || "ไม่มีรายละเอียดเนื้อหา";
+                // ปรับปรุง: ใช้ textContent แทน และตรวจสอบค่า null/undefined เพื่อให้แสดงผลข้อความได้แน่นอน
+                const bodyText = d.mainContent || "";
+                document.getElementById('displayBody').textContent = bodyText;
 
                 let vdoHtml = "";
                 [d.yt1, d.yt2].forEach(link => {
@@ -102,8 +103,11 @@
                     if (vid) vdoHtml += `<div class="video-box"><iframe src="https://www.youtube.com/embed/${vid}" allowfullscreen></iframe></div>`;
                 });
                 document.getElementById('videoContent').innerHTML = vdoHtml;
+            } else {
+                document.getElementById('displayTitle').innerText = "ไม่พบข้อมูลบทความนี้";
             }
         } catch (err) {
+            console.error("Error loading document: ", err);
             document.getElementById('displayTitle').innerText = "โหลดข้อมูลผิดพลาด";
         }
     }
