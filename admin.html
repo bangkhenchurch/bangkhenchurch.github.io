@@ -30,7 +30,9 @@
             <input type="hidden" id="editId">
             <div class="form-section">
                 <div><label>วันที่</label><input type="date" id="customDate" required></div>
+                <div><label>ซีรีย์</label><input type="text" id="series"></div>
                 <div><label>หมวดหมู่</label><select id="category"><option>🎙️ คำเทศนา</option><option>🌟 คำพยาน</option><option>📖 บทความ</option><option>📢 ข่าวสาร</option></select></div>
+                <div><label>ข้อพระธรรม</label><input type="text" id="bibleRef"></div>
                 <div class="full-width"><label>หัวข้อเรื่อง</label><input type="text" id="title" required></div>
                 <div><label>ผู้แต่ง</label>
                     <div style="display:flex; gap:5px;">
@@ -57,7 +59,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
     const db = getFirestore(initializeApp({
@@ -68,19 +70,19 @@
     }));
     const storage = getStorage();
 
-    // Helper: Upload
     async function uploadFile(file) {
         if (!file) return null;
         const res = await uploadBytesResumable(ref(storage, 'arts/'+Date.now()), file);
         return await getDownloadURL(res.ref);
     }
 
-    // บันทึกข้อมูล
     document.getElementById("articleForm").onsubmit = async (e) => {
         e.preventDefault();
         const data = {
             displayDate: document.getElementById("customDate").value,
+            series: document.getElementById("series").value,
             category: document.getElementById("category").value,
+            bibleRef: document.getElementById("bibleRef").value,
             title: document.getElementById("title").value,
             authorName: document.getElementById("authorSelect").value,
             yt1: document.getElementById("yt1").value,
@@ -96,7 +98,6 @@
         window.location.reload();
     };
 
-    // แสดงรายการ
     onSnapshot(collection(db, "articles"), (snap) => {
         const container = document.getElementById("articleContainer");
         container.innerHTML = "";
@@ -106,8 +107,7 @@
                 <div class="article-card">
                     <img src="${i.thumbUrl || 'https://placehold.co/600x400'}" class="card-img">
                     <div class="card-title">${i.title}</div>
-                    <div style="font-size:12px; margin-bottom:10px;">📅 ${i.displayDate}</div>
-                    <button onclick="editArt('${d.id}')" class="btn-mini">แก้ไข</button>
+                    <div style="font-size:12px; margin-bottom:10px;">📅 ${i.displayDate} | 📖 ${i.bibleRef || '-'}</div>
                     <button onclick="deleteArt('${d.id}')" class="btn-mini del">ลบ</button>
                 </div>`;
         });
