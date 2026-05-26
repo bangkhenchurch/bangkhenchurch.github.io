@@ -16,6 +16,7 @@
         .btn-mini { background: var(--primary); border: none; color: white; padding: 5px 15px; border-radius: 8px; cursor: pointer; }
         .btn-mini.del { background: var(--danger); }
         .btn-save { width: 100%; padding: 15px; background: var(--success); border: none; color: white; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        
         /* Card Layout */
         .article-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         .article-card { background: #1a1a1a; padding: 15px; border-radius: 12px; border: 1px solid #333; }
@@ -33,7 +34,6 @@
                 <div><label>วันที่</label><input type="date" id="customDate" required></div>
                 <div><label>หมวดหมู่</label><select id="category"><option>🎙️ คำเทศนา</option><option>🌟 คำพยาน</option><option>📖 บทความ</option><option>📢 ข่าวสาร</option></select></div>
                 <div class="full-width"><label>หัวข้อเรื่อง</label><input type="text" id="title" required></div>
-                <div><label>ซีรีย์</label><input type="text" id="series"></div>
                 <div><label>ผู้แต่ง</label>
                     <div style="display:flex; gap:5px;">
                         <select id="authorSelect"></select>
@@ -41,7 +41,8 @@
                         <button type="button" class="btn-mini del" id="delAuthorBtn">🗑️</button>
                     </div>
                 </div>
-                <div><label>ข้อพระธรรม</label><input type="text" id="bibleRef"></div>
+                <div><label>รูปปก</label><input type="file" id="fileThumb" accept="image/*"></div>
+                <input type="hidden" id="valThumb">
                 <div><label>YouTube 1</label><input type="text" id="yt1"></div>
                 <div><label>YouTube 2</label><input type="text" id="yt2"></div>
             </div>
@@ -57,7 +58,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
     const db = getFirestore(initializeApp({
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
@@ -65,60 +67,60 @@
         storageBucket: "bbcchurch-6ffc3.firebasestorage.app",
         appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
     }));
+    const storage = getStorage();
 
-    // จัดการผู้แต่ง
+    // ระบบผู้แต่ง
     onSnapshot(collection(db, "authors"), (snap) => {
         const select = document.getElementById("authorSelect");
         select.innerHTML = '<option value="">-- เลือกผู้แต่ง --</option>';
         snap.forEach(d => select.innerHTML += `<option value="${d.data().name}" data-id="${d.id}">${d.data().name}</option>`);
     });
 
-    document.getElementById("addAuthorBtn").onclick = async () => {
-        const name = prompt("ชื่อผู้แต่งใหม่:");
-        if (name) await addDoc(collection(db, "authors"), { name });
-    };
-
-    document.getElementById("delAuthorBtn").onclick = async () => {
+    document.getElementById("addAuthorBtn").onclick = async () => { const n = prompt("ชื่อผู้แต่ง:"); if(n) await addDoc(collection(db, "authors"), { name: n }); };
+    document.getElementById("delAuthorBtn").onclick = async () => { 
         const sel = document.getElementById("authorSelect");
         const id = sel.options[sel.selectedIndex]?.dataset.id;
-        if (id && confirm("ลบผู้แต่งนี้?")) await deleteDoc(doc(db, "authors", id));
+        if(id) await deleteDoc(doc(db, "authors", id));
     };
 
     // บันทึกข้อมูล
     document.getElementById("articleForm").onsubmit = async (e) => {
         e.preventDefault();
+        const file = document.getElementById("fileThumb").files[0];
+        let thumbUrl = document.getElementById("valThumb").value;
+        if (file) {
+            const res = await uploadBytesResumable(ref(storage, 'arts/'+Date.now()), file);
+            thumbUrl = await getDownloadURL(res.ref);
+        }
         const data = {
             displayDate: document.getElementById("customDate").value,
             category: document.getElementById("category").value,
             title: document.getElementById("title").value,
-            series: document.getElementById("series").value,
             authorName: document.getElementById("authorSelect").value,
-            bibleRef: document.getElementById("bibleRef").value,
             yt1: document.getElementById("yt1").value,
             yt2: document.getElementById("yt2").value,
+            thumbUrl: thumbUrl,
             mainContent: document.getElementById("mainContent").value
         };
         const id = document.getElementById("editId").value;
         if (id) await updateDoc(doc(db, "articles", id), data);
-        else await addDoc(collection(db, "articles"), { ...data, createdAt: serverTimestamp() });
+        else await addDoc(collection(db, "articles"), data);
         window.location.reload();
     };
 
-    // แสดงผล
+    // แสดงรายการ
     onSnapshot(collection(db, "articles"), (snap) => {
         const container = document.getElementById("articleContainer");
         container.innerHTML = "";
         snap.forEach(d => {
-            const item = d.data();
+            const i = d.data();
             container.innerHTML += `
                 <div class="article-card">
-                    <div style="color:var(--primary); font-size:12px;">${item.category}</div>
-                    <div class="card-title">${item.title}</div>
-                    <div class="card-meta">📅 ${item.displayDate} | 👤 ${item.authorName}</div>
-                    <div style="margin-top:10px;">
-                        <button onclick="editArt('${d.id}')" class="btn-mini">แก้ไข</button>
-                        <button onclick="deleteArt('${d.id}')" class="btn-mini del">ลบ</button>
-                    </div>
+                    <img src="${i.thumbUrl || 'https://placehold.co/600x400'}" class="card-img">
+                    <div class="card-title">${i.title}</div>
+                    <div style="font-size:12px; margin-bottom:10px;">📅 ${i.displayDate} | 👤 ${i.authorName}</div>
+                    <button onclick="editArt('${d.id}')" class="btn-mini">แก้ไข</button>
+                    <button onclick="deleteArt('${d.id}')" class="btn-mini del">ลบ</button>
                 </div>`;
         });
     });
@@ -130,12 +132,10 @@
         document.getElementById("customDate").value = d.displayDate;
         document.getElementById("yt1").value = d.yt1 || "";
         document.getElementById("yt2").value = d.yt2 || "";
-        document.getElementById("bibleRef").value = d.bibleRef || "";
-        document.getElementById("mainContent").value = d.mainContent || "";
+        document.getElementById("valThumb").value = d.thumbUrl || "";
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-
-    window.deleteArt = async (id) => { if (confirm("ยืนยันการลบ?")) await deleteDoc(doc(db, "articles", id)); };
+    window.deleteArt = (id) => deleteDoc(doc(db, "articles", id));
 </script>
 </body>
 </html>
