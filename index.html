@@ -64,7 +64,7 @@
             .section-title { font-size: 20px; }
         }
 
-        /* ปรับแต่งกรอบเมนูให้ยาวและอยู่กึ่งกลาง */
+        /* เมนูด้านล่างสไลด์ */
         .horizontal-menu { 
             background: #1e1e1e; 
             padding: 10px 5%; 
@@ -80,7 +80,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
         }
 
-        /* ปรับแต่งปุ่มเมนู */
         .horizontal-menu a { 
             padding: 10px 20px; 
             color: #ccc; 
@@ -100,7 +99,7 @@
             transform: translateY(-2px); 
         }
 
-        /* ปุ่มพิเศษ สนับสนุนเรา สีทอง */
+        /* ปุ่มสนับสนุนเรา (ปุ่มโฆษณาที่ลิงก์จะเปลี่ยนตามหลังบ้าน) */
         .horizontal-menu a.ads-btn {
             color: #ffcc00;
             border: 1px dashed #ffcc00;
@@ -182,12 +181,12 @@
 <script src="footer.js"></script>
 
 <script>
-    // ตัวแปรส่วนกลางสำหรับเก็บลิงก์โฆษณาที่ดึงมาจาก Firebase
-    let dynamicAdsUrl = "https://atth.me/00d9uk0029y3"; // ตั้งค่าเริ่มต้นเป็น Kept ไว้ก่อนเพื่อความปลอดภัย
+    // ตัวแปรเก็บลิงก์โฆษณาปัจจุบัน (ถ้าดึงจาก Firebase ไม่สำเร็จ จะใช้ลิงก์ Kept ของพี่เป็นค่าเริ่มต้น)
+    let globalAffiliateUrl = "https://atth.me/00d9uk0029y3"; 
 
     function goToAdsPage(event) {
         event.preventDefault(); 
-        window.open(dynamicAdsUrl, '_blank');
+        window.open(globalAffiliateUrl, '_blank');
     }
 </script>
 
@@ -207,14 +206,13 @@
     const db = getFirestore(app);
 
     // =================================================================
-    // ระบบดึงลิงก์โฆษณาแบบ Realtime จากคอลเลกชันระบบ
-    // พี่สามารถไปสร้างคอลเลกชันชื่อ "system_settings" และสร้างเอกสารรหัส "ads" 
-    // โดยเก็บฟิลด์ชื่อ "url" ไว้ได้เลยครับ
+    // ระบบดึงลิงก์กลางควบคุมระยะไกล (Realtime Sync จาก Firebase)
+    // คอยตรวจจับว่าพี่เปลี่ยนลิงก์ใน Firebase หรือไม่ ถ้าเปลี่ยนจะอัปเดตทันที
     // =================================================================
     onSnapshot(doc(db, "system_settings", "ads"), (docSnap) => {
         if (docSnap.exists() && docSnap.data().url) {
-            dynamicAdsUrl = docSnap.data().url;
-            console.log("อัปเดตลิงก์โฆษณาปัจจุบันแล้วเป็น: ", dynamicAdsUrl);
+            globalAffiliateUrl = docSnap.data().url;
+            console.log("ลิงก์สนับสนุนหลักอัปเดตเป็น: ", globalAffiliateUrl);
         }
     });
 
