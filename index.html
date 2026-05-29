@@ -101,7 +101,7 @@
             transform: translateY(-2px); 
         }
 
-        /* ปุ่มพิเศษสำหรับสุ่มโฆษณา (แต่งสีทองเด่นๆ ตามเดิม) */
+        /* ปุ่มพิเศษ สนับสนุนเรา สีทอง */
         .horizontal-menu a.ads-btn {
             color: #ffcc00;
             border: 1px dashed #ffcc00;
@@ -165,7 +165,7 @@
     <a href="testimony.html">🙏 คำพยาน</a>
     <a href="news.html">📢 ข่าวสาร</a>
     <a href="contact.html">📞 ติดต่อเรา</a>
-    <a href="#" class="ads-btn" onclick="openRandomAds(event)">🎁 สนับสนุนเรา</a>
+    <a href="#" class="ads-btn" onclick="goToSupportPage(event)">🎁 สนับสนุนเรา</a>
 </nav>
 
 <div class="container">
@@ -191,22 +191,13 @@
     }
 
     // =======================================================
-    // ฟังก์ชันสำหรับกดปุ่มแล้วเปิดลิงก์แคมเปญของพี่ทันที (แท็บใหม่)
+    // ฟังก์ชันสำหรับลิงก์ไปหน้าแคมเปญของ ACCESSTRADE โดยตรง
     // =======================================================
-    function openRandomAds(event) {
+    function goToSupportPage(event) {
         event.preventDefault(); 
-        
-        // พี่ก๊อปปี้ลิงก์เต็มๆ จากระบบส่งมาในแชทให้ผมเปลี่ยนให้ได้ตลอดเวลาเลยนะครับ
-        // เบื้องต้นผมใส่รหัสแคมเปญ Kept ของพี่ไว้ให้ก่อนเพื่อทดสอบครับ
-        const adsLinks = [
-            "https://click.accesstrade.in.th/adv.php?rk=0044ol0013ep"
-        ];
-        
-        if (adsLinks.length > 0) {
-            const randomIndex = Math.floor(Math.random() * adsLinks.length);
-            const targetLink = adsLinks[randomIndex];
-            window.open(targetLink, '_blank');
-        }
+        // เปลี่ยนมาใช้โครงสร้างลิงก์สำหรับหน้าแนะนำรวมที่ผูกกับบัญชีเว็บของพี่โดยตรง ไม่ติด 404 ครับ
+        const targetUrl = "https://pub.accesstrade.in.th/recommend/index.html";
+        window.open(targetUrl, '_blank');
     }
 </script>
 
