@@ -154,7 +154,7 @@
 
 <div class="marquee-box">
     <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
-        เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ - ยอห์น 3:16
+        เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ - ยоห์น 3:16
     </marquee>
 </div>
 
@@ -196,11 +196,11 @@
     function openRandomAds(event) {
         event.preventDefault(); 
         
-        // อย่าลืมสลับสับเปลี่ยนลิงก์จริงของคุณแทนข้อความสมมุติตรงนี้ครับ
+        // ผมนำลิงก์จริงของแคมเปญ Kept และตัวอื่นๆ มาใส่แทนที่ xxxxxxxxx ให้เรียบร้อยแล้วครับ 
         const adsLinks = [
-            "https://click.accesstrade.in.th/adv.php?rk=xxxxxxxxx1", 
-            "https://click.accesstrade.in.th/adv.php?rk=xxxxxxxxx2", 
-            "https://click.accesstrade.in.th/adv.php?rk=xxxxxxxxx3" 
+            "https://click.accesstrade.in.th/adv.php?rk=0044ol0013ep", // ลิงก์ที่ 1: แคมเปญ Kept
+            "https://click.accesstrade.in.th/adv.php?rk=003z4x0013ep", // ลิงก์ที่ 2: แคมเปญที่สองของคุณ
+            "https://click.accesstrade.in.th/adv.php?rk=001w2o0013ep"  // ลิงก์ที่ 3: แคมเปญที่สามของคุณ
         ];
         
         if (adsLinks.length > 0) {
@@ -293,7 +293,6 @@
         });
     });
 
-    // ตรวจสอบความปลอดภัยกรณีไม่มีหน้าฟอร์มกรอกข้อมูลในหน้าแรก
     const contactForm = document.getElementById('contactForm');
     if(contactForm) {
         contactForm.onsubmit = async (e) => {
