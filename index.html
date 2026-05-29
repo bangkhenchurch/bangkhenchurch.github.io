@@ -162,8 +162,7 @@
     <a href="blogs.html">📖 บทความ</a>
     <a href="testimony.html">🙏 คำพยาน</a>
     <a href="news.html">📢 ข่าวสาร</a>
-    <a href="contact.html">📞 ติดต่อเรา</a>
-    <a href="contact.html" class="ads-btn">🎁 สนับสนุนเรา</a>
+    <a href="#" class="ads-btn" onclick="goToAdsPage(event)">🎁 สนับสนุนเรา</a>
 </nav>
 
 <div class="container">
@@ -183,9 +182,14 @@
 <script src="footer.js"></script>
 
 <script>
-    function toggleAddress(chk) {
-        const addressBox = document.getElementById('addressBox');
-        if(addressBox) addressBox.style.display = chk.checked ? 'block' : 'none';
+    // =======================================================
+    // ฟังก์ชันยิงตรงเข้าหน้าโฆษณาแคมเปญ Kept (ACCESSTRADE) 
+    // =======================================================
+    function goToAdsPage(event) {
+        event.preventDefault(); 
+        // ลิงก์ยิงตรงเข้าแคมเปญ Kept ที่ผูกกับรหัสเว็บของพี่อย่างถูกต้อง ไม่ 404 แน่นอนครับ!
+        const targetUrl = "https://intertwine.accesstrade.in.th/?at_id=1&k_id=10332&db_id=Bangkhen_church";
+        window.open(targetUrl, '_blank');
     }
 </script>
 
@@ -270,36 +274,6 @@
             if (cat.includes("เทศนา")) lists.sermon.insertAdjacentHTML('beforeend', card);
         });
     });
-
-    const contactForm = document.getElementById('contactForm');
-    if(contactForm) {
-        contactForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('sendBtn');
-            const scriptURL = "https://script.google.com/macros/s/AKfycby7yhA-MxALu0dTrXNKe9f4LQXMiKMpMBLxB4Zm2AiGDujYoykVx2vHwYt9_FVAtbmt7Q/exec";
-            btn.disabled = true; 
-            btn.innerText = "กำลังส่งข้อมูล...";
-            
-            const payload = {
-                name: document.getElementById('contactName').value,
-                phone: document.getElementById('contactPhone').value,
-                options: Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(el => el.value).join(", "),
-                address: document.getElementById('contactAddress').value,
-                note: document.getElementById('contactNote').value
-            };
-
-            try {
-                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                alert("ขอบพระเจ้าอวยพระพร ระบบได้รับข้อมูลของท่านแล้ว");
-                document.getElementById('contactForm').reset();
-            } catch (err) { 
-                alert("ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"); 
-            } finally { 
-                btn.disabled = false; 
-                btn.innerText = "ส่งข้อมูล"; 
-            }
-        };
-    }
 
     // Slide Show
     let cur = 0;
