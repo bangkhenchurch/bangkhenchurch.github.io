@@ -64,58 +64,67 @@
             .section-title { font-size: 20px; }
         }
 
-       /* ปรับแต่งกรอบเมนูให้ยาวและอยู่กึ่งกลาง */
-.horizontal-menu { 
-    background: #1e1e1e; /* สีพื้นหลังเข้ม */
-    padding: 10px 5%; 
-    display: flex; 
-    justify-content: center; /* จัดให้อยู่กึ่งกลางแนวนอน */
-    align-items: center;
-    gap: 10px; 
-    flex-wrap: wrap; /* ถ้าจอมือถือเล็กจะตัดขึ้นแถวใหม่ */
-    
-    /* การใส่กรอบยาวให้สวยงาม */
-    border: 1px solid #333; /* เส้นขอบบางๆ */
-    max-width: 1200px; /* จำกัดความกว้างไม่ให้แผ่จนเกินไปบนจอใหญ่ */
-    margin: 20px auto; /* จัดกึ่งกลางหน้าจอ และเว้นระยะบน-ล่าง */
-    border-radius: 50px; /* ทำมุมโค้งมนแบบแคปซูล (เปลี่ยนเป็น 10px ถ้าชอบเหลี่ยม) */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* ใส่เงาให้นูนดูมีมิติ */
-}
+        /* ปรับแต่งกรอบเมนูให้ยาวและอยู่กึ่งกลาง */
+        .horizontal-menu { 
+            background: #1e1e1e; /* สีพื้นหลังเข้ม */
+            padding: 10px 5%; 
+            display: flex; 
+            justify-content: center; /* จัดให้อยู่กึ่งกลางแนวนอน */
+            align-items: center;
+            gap: 10px; 
+            flex-wrap: wrap; /* ถ้าจอมือถือเล็กจะตัดขึ้นแถวใหม่ */
+            
+            /* การใส่กรอบยาวให้สวยงาม */
+            border: 1px solid #333; /* เส้นขอบบางๆ */
+            max-width: 1200px; /* จำกัดความกว้างไม่ให้แผ่จนเกินไปบนจอใหญ่ */
+            margin: 20px auto; /* จัดกึ่งกลางหน้าจอ และเว้นระยะบน-ล่าง */
+            border-radius: 50px; /* ทำมุมโค้งมนแบบแคปซูล (เปลี่ยนเป็น 10px ถ้าชอบเหลี่ยม) */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* ใส่เงาให้นูนดูมีมิติ */
+        }
 
-/* ปรับแต่งปุ่มเมนู */
-.horizontal-menu a { 
-    padding: 10px 20px; 
-    color: #ccc; 
-    text-decoration: none; 
-    font-family: 'Prompt', sans-serif; 
-    font-size: 15px;
-    border-radius: 25px; /* ความโค้งของไฮไลท์เวลาเอาเมาส์ไปชี้ */
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+        /* ปรับแต่งปุ่มเมนู */
+        .horizontal-menu a { 
+            padding: 10px 20px; 
+            color: #ccc; 
+            text-decoration: none; 
+            font-family: 'Prompt', sans-serif; 
+            font-size: 15px;
+            border-radius: 25px; /* ความโค้งของไฮไลท์เวลาเอาเมาส์ไปชี้ */
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-/* เอฟเฟกต์เวลาเอาเมาส์ไปชี้ (Hover) */
-.horizontal-menu a:hover { 
-    color: #fff; 
-    background: #2c2c2c; /* เปลี่ยนพื้นหลังปุ่มเมื่อชี้ */
-    transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อย */
-}
+        /* เอฟเฟกต์เวลาเอาเมาส์ไปชี้ (Hover) */
+        .horizontal-menu a:hover { 
+            color: #fff; 
+            background: #2c2c2c; /* เปลี่ยนพื้นหลังปุ่มเมื่อชี้ */
+            transform: translateY(-2px); /* ยกปุ่มขึ้นเล็กน้อย */
+        }
 
-/* หน้าจอเล็ก (มือถือ) */
-@media (max-width: 768px) {
-    .horizontal-menu {
-        margin: 10px; /* ลดระยะขอบบนมือถือ */
-        border-radius: 15px; /* ลดความโค้งบนมือถือให้ดูดีขึ้น */
-        padding: 15px;
-    }
-    .horizontal-menu a {
-        font-size: 14px;
-        padding: 8px 12px;
-    }
-}
+        /* ปุ่มพิเศษสำหรับสุ่มโฆษณา (แต่งสีให้เด่นขึ้นนิดหน่อย) */
+        .horizontal-menu a.ads-btn {
+            color: #ffcc00;
+            border: 1px dashed #ffcc00;
+        }
+        .horizontal-menu a.ads-btn:hover {
+            background: #ffcc00;
+            color: #121212;
+        }
 
+        /* หน้าจอเล็ก (มือถือ) */
+        @media (max-width: 768px) {
+            .horizontal-menu {
+                margin: 10px; /* ลดระยะขอบบนมือถือ */
+                border-radius: 15px; /* ลดความโค้งบนมือถือให้ดูดีขึ้น */
+                padding: 15px;
+            }
+            .horizontal-menu a {
+                font-size: 14px;
+                padding: 8px 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -147,16 +156,18 @@
 
 <div class="marquee-box">
     <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
-        เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานประบุตรของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ ยอหืน 3 : 16 
+        เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานประบุตรของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ ยอหัน 3 : 16 
     </marquee>
 </div>
+
 <nav class="horizontal-menu">
     <a href="index.html">🏠 หน้าแรก</a>
     <a href="sermons.html">🎙️ คำเทศนา</a>
     <a href="blogs.html">📖 บทความ</a>
     <a href="testimony.html">🙏 คำพยาน</a>
     <a href="news.html">📢 ข่าวสาร</a>
-    <a href="contact.html">� ติดต่อเรา</a>
+    <a href="contact.html">📞 ติดต่อเรา</a>
+    <a href="#" class="ads-btn" onclick="openRandomAds(event)">🎁 สนับสนุนเรา</a>
 </nav>
 
 <div class="container">
@@ -175,11 +186,33 @@
 
 <script src="footer.js"></script>
 
-
 <script>
     function toggleAddress(chk) {
         const addressBox = document.getElementById('addressBox');
         if(addressBox) addressBox.style.display = chk.checked ? 'block' : 'none';
+    }
+
+    // =======================================================
+    // ฟังก์ชันสำหรับสุ่มลิงก์โฆษณาจาก ACCESSTRADE
+    // =======================================================
+    function openRandomAds(event) {
+        event.preventDefault(); // ป้องกันไม่ให้หน้าเว็บกระตุกเลื่อนขึ้น
+        
+        // นำลิงก์จากหน้า ACCESSTRADE มาใส่ในกล่องสี่เหลี่ยมด้านล่างนี้ (ใส่กี่ลิงก์ก็ได้ คั่นด้วยเครื่องหมายจุลภาค ,)
+        const adsLinks = [
+            "https://click.accesstrade.in.th/adv.php?rk=xxxxxxxxx1", // เปลี่ยนเป็นลิ้งแคมเปญ Kept
+            "https://click.accesstrade.in.th/adv.php?rk=xxxxxxxxx2", // เปลี่ยนเป็นลิ้งแคมเปญตัวที่ 2
+            "https://click.accesstrade.in.th/adv.php?rk=xxxxxxxxx3"  // เปลี่ยนเป็นลิ้งแคมเปญตัวที่ 3
+        ];
+        
+        if (adsLinks.length > 0) {
+            // สุ่มตำแหน่งข้อมูลใน Array
+            const randomIndex = Math.floor(Math.random() * adsLinks.length);
+            const targetLink = adsLinks[randomIndex];
+            
+            // สั่งเปิดลิงก์ที่สุ่มได้ในแท็บใหม่ (ผู้ใช้จะได้ไม่หลุดออกจากหน้าเว็บโบสถ์)
+            window.open(targetLink, '_blank');
+        }
     }
 </script>
 
@@ -270,32 +303,35 @@
     });
 
     // ส่งฟอร์มติดต่อ
-    document.getElementById('contactForm').onsubmit = async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('sendBtn');
-        const scriptURL = "https://script.google.com/macros/s/AKfycby7yhA-MxALu0dTrXNKe9f4LQXMiKMpMBLxB4Zm2AiGDujYoykVx2vHwYt9_FVAtbmt7Q/exec";
-        btn.disabled = true; 
-        btn.innerText = "กำลังส่งข้อมูล...";
-        
-        const payload = {
-            name: document.getElementById('contactName').value,
-            phone: document.getElementById('contactPhone').value,
-            options: Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(el => el.value).join(", "),
-            address: document.getElementById('contactAddress').value,
-            note: document.getElementById('contactNote').value
-        };
+    const contactForm = document.getElementById('contactForm');
+    if(contactForm) {
+        contactForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('sendBtn');
+            const scriptURL = "https://script.google.com/macros/s/AKfycby7yhA-MxALu0dTrXNKe9f4LQXMiKMpMBLxB4Zm2AiGDujYoykVx2vHwYt9_FVAtbmt7Q/exec";
+            btn.disabled = true; 
+            btn.innerText = "กำลังส่งข้อมูล...";
+            
+            const payload = {
+                name: document.getElementById('contactName').value,
+                phone: document.getElementById('contactPhone').value,
+                options: Array.from(document.querySelectorAll('input[name="opt"]:checked')).map(el => el.value).join(", "),
+                address: document.getElementById('contactAddress').value,
+                note: document.getElementById('contactNote').value
+            };
 
-        try {
-            await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-            alert("ขอบพระเจ้าอวยพระพร ระบบได้รับข้อมูลของท่านแล้ว");
-            document.getElementById('contactForm').reset();
-        } catch (err) { 
-            alert("ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"); 
-        } finally { 
-            btn.disabled = false; 
-            btn.innerText = "ส่งข้อมูล"; 
-        }
-    };
+            try {
+                await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+                alert("ขอบพระเจ้าอวยพระพร ระบบได้รับข้อมูลของท่านแล้ว");
+                document.getElementById('contactForm').reset();
+            } catch (err) { 
+                alert("ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"); 
+            } finally { 
+                btn.disabled = false; 
+                btn.innerText = "ส่งข้อมูล"; 
+            }
+        };
+    }
 
     // Slide Show
     let cur = 0;
