@@ -64,50 +64,95 @@
             color: #fff; background: #2c2c2c; transform: translateY(-2px); 
         }
 
-        /* โซน LINE QR Code */
-        .line-section {
-            text-align: center;
-            padding: 35px 20px;
+        /* 👑 โซนบริการคู่ขนาน: LINE QR Code และ ข้อมูลการถวายเงิน */
+        .action-center-section {
             background: #1a1a1a;
             border-top: 1px solid #333;
+            padding: 40px 5%;
             width: 100%;
         }
-        .line-qr-box {
-            max-width: 180px;
-            margin: 15px auto;
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            max-width: 900px;
+            margin: auto;
+        }
+        .action-box {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 25px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .action-title {
+            font-family: 'Prompt';
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .action-desc {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        .action-image-box {
+            max-width: 160px;
+            width: 100%;
             background: #fff;
             padding: 10px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            margin-bottom: 15px;
             transition: 0.2s;
-            cursor: pointer;
         }
-        .line-qr-box:hover {
-            transform: scale(1.03);
-        }
-        .line-qr-box img {
+        .action-image-box img {
             width: 100%;
             height: auto;
             display: block;
         }
+        
+        /* สไตล์ข้อมูลบัญชีธนาคารภายในกล่อง */
+        .bank-details {
+            font-size: 13px;
+            color: #ddd;
+            text-align: center;
+            line-height: 1.6;
+            background: #181818;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            width: 100%;
+            margin-top: auto;
+        }
+        .bank-highlight {
+            color: #ffcc00;
+            font-weight: bold;
+            font-size: 16px;
+            font-family: 'Prompt';
+            letter-spacing: 0.5px;
+        }
+
+        /* ปุ่ม LINE */
         .btn-line-link {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             background: #25d366;
             color: #fff;
-            padding: 8px 20px;
+            padding: 10px 24px;
             font-family: 'Prompt';
             font-size: 14px;
             font-weight: bold;
             text-decoration: none;
-            border-radius: 20px;
-            margin-top: 5px;
+            border-radius: 25px;
             transition: 0.2s;
+            margin-top: auto;
         }
-        .btn-line-link:hover {
-            background: #20ba5a;
-        }
+        .btn-line-link:hover { background: #20ba5a; }
 
         /* ส่วนสนับสนุนพ่วง Footer วิ่งเข้า ads.html */
         .footer-support-section {
@@ -142,7 +187,7 @@
         .counter-section { text-align: center; padding: 20px; background: #121212; border-top: 1px solid #252525; width: 100%; }
         .counter-section img { max-width: 100%; height: auto; }
         
-        /* Footer ดีไซน์ระบุที่อยู่ชัดเจน */
+        /* Footer */
         footer { background: #0a2c6d; color: white; text-align: center; padding: 50px 20px; width: 100%; }
         footer img { width: 60px; border-radius: 50%; margin-bottom: 15px; }
         .footer-address {
@@ -160,6 +205,7 @@
             .section-title { font-size: 20px; }
             .horizontal-menu { margin: 10px; border-radius: 15px; padding: 15px; }
             .horizontal-menu a { font-size: 14px; padding: 8px 12px; }
+            .action-grid { grid-template-columns: 1fr; gap: 20px; }
         }
     </style>
 </head>
@@ -220,15 +266,35 @@
     <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
 </div>
 
-<div class="line-section">
-    <p style="font-family: 'Prompt'; font-size: 16px; font-weight: bold; color: #25d366;">🟢 ติดต่อเราผ่านช่องทาง LINE</p>
-    <p style="font-size: 13px; color: #aaa; margin-top: 3px;">สแกนคิวอาร์โค้ดด้านล่าง หรือกดปุ่มเพื่อเพิ่มเพื่อนคริสตจักร</p>
-    
-    <div class="line-qr-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')">
-        <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'">
+<div class="action-center-section">
+    <div class="action-grid">
+        
+        <div class="action-box" style="border-top: 4px solid #25d366;">
+            <div class="action-title" style="color: #25d366;">🟢 ช่องทาง LINE Official</div>
+            <div class="action-desc">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
+            <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer;">
+                <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'">
+            </div>
+            <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link">💬 กดเพิ่มเพื่อนใน LINE</a>
+        </div>
+
+        <div class="action-box" style="border-top: 4px solid #4dabff;">
+            <div class="action-title" style="color: #4dabff;">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
+            <div class="action-desc">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
+            <div class="action-image-box">
+                <img src="bbk_church.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4221/4221711.png'">
+            </div>
+            <div class="bank-details">
+                ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>
+                โดยการถวายเงินผ่านธนาคารได้ที่<br>
+                <strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>
+                ประเภทบัญชี: บัญชีออมทรัพย์<br>
+                เลขที่บัญชี: <span class="bank-highlight">161-5-36894-9</span><br>
+                ชื่อบัญชี: <strong>คริสตจักรแบ๊พติสต์บางเขน</strong>
+            </div>
+        </div>
+
     </div>
-    
-    <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link">💬 กดเพิ่มเพื่อนใน LINE</a>
 </div>
 
 <div class="footer-support-section">
