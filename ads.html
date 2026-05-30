@@ -44,12 +44,21 @@
             margin-top: 5px;
         }
         
+        .section-title {
+            font-family: 'Prompt';
+            font-size: 15px;
+            color: #aaa;
+            margin: 20px 0 10px 5px;
+            border-left: 4px solid var(--primary);
+            padding-left: 10px;
+        }
+
         /* รายการโฆษณา */
         .ads-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
         .ads-item {
             display: flex;
@@ -67,11 +76,11 @@
             background: #252525;
         }
         .ads-icon {
-            font-size: 28px;
+            font-size: 26px;
             margin-right: 15px;
             background: #2a2a2a;
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -82,7 +91,7 @@
         }
         .ads-title {
             font-family: 'Prompt';
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--accent-yellow);
         }
@@ -93,7 +102,7 @@
         }
         .ads-arrow {
             color: #666;
-            font-size: 18px;
+            font-size: 16px;
             padding-left: 10px;
         }
 
@@ -102,6 +111,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+            margin-top: 25px;
         }
         .btn-nav {
             display: block;
@@ -123,9 +133,33 @@
 <div class="ads-container">
     <div class="header-box">
         <h1>🎁 ช่องทางสนับสนุนคริสตจักร</h1>
-        <p>ท่านสามารถร่วมสนับสนุนได้ง่ายๆ เพียงคลิกเข้าชมบริการ</p>
+        <p>ท่านสามารถร่วมสนับสนุนได้ง่ายๆ เพียงคลิกเลือกชมบริการ</p>
     </div>
 
+    <div class="section-title">📖 หนังสือ & เพลงคริสเตียน (Shopee / Lazada)</div>
+    <div class="ads-list">
+        
+        <a href="ใส่ลิงก์ Affiliate Shopee หรือ Lazada ของพี่ตรงนี้" target="_blank" class="ads-item">
+            <div class="ads-icon">📖</div>
+            <div class="ads-info">
+                <div class="ads-title">พระคัมภีร์ & หนังสือคริสเตียน</div>
+                <div class="ads-desc">คู่มือเฝ้าเดี่ยว หนังสือหนุนใจ และวรรณกรรมคริสเตียนราคาพิเศษ</div>
+            </div>
+            <div class="ads-arrow">➔</div>
+        </a>
+
+        <a href="ใส่ลิงก์ Affiliate Shopee หรือ Lazada ของพี่ตรงนี้" target="_blank" class="ads-item">
+            <div class="ads-icon">🎵</div>
+            <div class="ads-info">
+                <div class="ads-title">สื่อการเรียนรู้ & เพลงนมัสการ</div>
+                <div class="ads-desc">รวมบทเพลงสรรเสริญ แฟลชไดรฟ์เพลง และสื่อคริสเตียนสำหรับครอบครัว</div>
+            </div>
+            <div class="ads-arrow">➔</div>
+        </a>
+
+    </div>
+
+    <div class="section-title">💼 บริการจากพาร์ทเนอร์ทั่วไป</div>
     <div class="ads-list">
         <a href="https://atth.me/go/9xmqrAB8" target="_blank" class="ads-item">
             <div class="ads-icon">🛒</div>
@@ -158,7 +192,7 @@
             <div class="ads-icon">✈️</div>
             <div class="ads-info">
                 <div class="ads-title">MSIG Travel Insurance</div>
-                <div class="ads-desc">ประกันภัยการเดินทางต่างประเทศ เดินทางอุ่นใจ ท่องเที่ยวราบรื่น</div>
+                <div class="ads-desc">ประกันภัยการเดินทางต่างประเทศ เดินทางอุ่นใจ</div>
             </div>
             <div class="ads-arrow">➔</div>
         </a>
@@ -167,18 +201,11 @@
             <div class="ads-icon">🐷</div>
             <div class="ads-info">
                 <div class="ads-title">Kept by Krungsri</div>
-                <div class="ads-desc">แอปพลิเคชันออมเงินออนไลน์ ดอกเบี้ยสูง จัดการเงินระบบอัตโนมัติ</div>
+                <div class="ads-desc">แอปพลิเคชันออมเงินออนไลน์ ดอกเบี้ยสูง ระบบอัตโนมัติ</div>
             </div>
             <div class="ads-arrow">➔</div>
         </a>
     </div>
-
-    <a href="https://atth.me/go/GO6MJLXr" target="_blank" class="ads-item">
-            <div class="ads-icon">✨</div> <div class="ads-info">
-                <div class="ads-title">Happy Cash Balance Transfer</div> <div class="ads-desc">คำอธิบายบริการสั้นๆ สวยงาม</div> </div>
-            <div class="ads-arrow">➔</div>
-    </a>
-</div>
 
     <div class="btn-group">
         <a href="index.html" class="btn-nav btn-home">🏠 ไปหน้าแรก</a>
