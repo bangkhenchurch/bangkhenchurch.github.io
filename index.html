@@ -9,6 +9,12 @@
     <style>
         /* พื้นฐาน */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* เพิ่ม scroll-behavior: smooth เพื่อให้หน้าจอสกรอลล์เลื่อนนุ่มนวลเวลาคลิกสารบัญ */
+        html { 
+            scroll-behavior: smooth; 
+            scroll-padding-top: 100px; /* เว้นระยะด้านบนไม่ให้หัวข้อโดน Navbar บังตอนเลื่อนลงไป */
+        }
         html, body { overflow-x: hidden; width: 100%; }
         body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
 
@@ -53,7 +59,7 @@
             padding: 20px 2%;
         }
 
-        /* 📌 สไตล์ Sidebar Left ด้านซ้าย */
+        /* 📌 สไตล์ Sidebar Left ด้านซ้ายสำหรับทำสารบัญ */
         .sidebar-left {
             background: #1e1e1e;
             border: 1px solid #333;
@@ -61,7 +67,7 @@
             padding: 20px;
             height: fit-content;
             position: sticky;
-            top: 85px;
+            top: 85px; /* เกาะขอบจอวิ่งตามลงมาเวลาสกรอลล์เนื้อหา */
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             z-index: 10;
         }
@@ -92,7 +98,7 @@
             transition: all 0.2s ease;
             display: block;
             cursor: pointer;
-            pointer-events: auto; /* ป้องกันการโดนบล็อคคลิกจากชั้น Element อื่น */
+            pointer-events: auto;
         }
         .sidebar-menu a:hover {
             background: #4dabff;
@@ -107,7 +113,7 @@
 
         /* Layout เดิมภายใน Container */
         .container { width: 100%; overflow: hidden; padding: 0; }
-        .section-title { font-family: 'Prompt'; font-size: 24px; margin: 30px 0 20px 0; color: #4dabff; border-left: 5px solid #4dabff; padding-left: 15px; }
+        .section-title { font-family: 'Prompt'; font-size: 24px; margin: 40px 0 20px 0; color: #4dabff; border-left: 5px solid #4dabff; padding-left: 15px; }
         
         .grid-container { 
             display: grid; 
@@ -224,15 +230,13 @@
 <div class="main-layout">
 
     <aside class="sidebar-left">
-        <h3 class="sidebar-title">🧭 เมนูนำทาง</h3>
+        <h3 class="sidebar-title">📖 สารบัญหน้าแรก</h3>
         <div class="sidebar-menu">
-            <a href="index.html">🏠 หน้าแรก</a>
-            <a href="sermons.html">🎙️ คำเทศนา</a>
-            <a href="blogs.html">📖 บทความ</a>
-            <a href="testimony.html">🙏 คำพยาน</a>
-            <a href="news.html">📢 ข่าวสาร</a>
-            <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
-            <a href="contact.html">📞 ติดต่อเรา</a>
+            <a href="#news">📢 ข่าวสารและประกาศ</a>
+            <a href="#testimony">🙏 คำพยานชีวิต</a>
+            <a href="#article">📖 บทความหนุนใจ</a>
+            <a href="#sermon">🎙️ คำเทศนาประจำสัปดาห์</a>
+            <a href="ads.html" style="color: #ffcc00;">📖 พื้นที่โฆษณา</a>
         </div>
     </aside>
 
@@ -245,16 +249,16 @@
         </div>
 
         <div class="container">
-            <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
+            <h2 id="news" class="section-title">📢 ข่าวสารและประกาศ</h2>
             <div id="list-news" class="grid-container">กำลังโหลด...</div>
             
-            <h2 class="section-title">🙏 คำพยานชีวิต</h2>
+            <h2 id="testimony" class="section-title">🙏 คำพยานชีวิต</h2>
             <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
             
-            <h2 class="section-title">📖 บทความหนุนใจ</h2>
+            <h2 id="article" class="section-title">📖 บทความหนุนใจ</h2>
             <div id="list-article" class="grid-container">กำลังโหลด...</div>
             
-            <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
+            <h2 id="sermon" class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
             <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
         </div>
 
