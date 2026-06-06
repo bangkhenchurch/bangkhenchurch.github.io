@@ -46,7 +46,7 @@
         /* 🏛️ Layout Master Grid (โครงสร้างแบ่งฝั่ง Sidebar Left + Content) */
         .main-layout {
             display: grid;
-            grid-template-columns: 280px 1fr; /* แถบซ้ายมือ 280px แถบขวาเป็นพื้นที่ดึงข้อมูล */
+            grid-template-columns: 280px 1fr;
             gap: 30px;
             max-width: 1300px;
             margin: auto;
@@ -61,8 +61,9 @@
             padding: 20px;
             height: fit-content;
             position: sticky;
-            top: 85px; /* ตรึงให้อยู่กับที่เวลาเลื่อนหน้าจอลง */
+            top: 85px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10;
         }
         .sidebar-title {
             font-family: 'Prompt';
@@ -89,6 +90,9 @@
             font-family: 'Prompt';
             font-size: 14px;
             transition: all 0.2s ease;
+            display: block;
+            cursor: pointer;
+            pointer-events: auto; /* ป้องกันการโดนบล็อคคลิกจากชั้น Element อื่น */
         }
         .sidebar-menu a:hover {
             background: #4dabff;
@@ -135,7 +139,7 @@
         .img-banner-link:hover { transform: scale(1.01); box-shadow: 0 6px 20px rgba(77, 171, 255, 0.2); }
         .img-banner-link img { width: 100%; height: auto; display: block; object-fit: contain; }
 
-        /* โซนบริการคูขนาน LINE & บัญชีถวายเงิน */
+        /* โซนบริการควบคู่ LINE & บัญชีถวายเงิน */
         .action-center-section { background: #1a1a1a; border-top: 1px solid #333; padding: 40px 5%; width: 100%; }
         .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 900px; margin: auto; }
         .action-box { background: #222; border: 1px solid #333; border-radius: 16px; padding: 25px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
@@ -154,7 +158,6 @@
 
         /* Responsive */
         @media (max-width: 992px) {
-            /* ยุบ Grid สองคอลัมน์ลงมาแถวเดี่ยวเมื่ออยู่บนจอมือถือ */
             .main-layout {
                 grid-template-columns: 1fr;
                 padding: 10px 15px;
@@ -163,6 +166,7 @@
                 position: relative;
                 top: 0;
                 margin-bottom: 15px;
+                z-index: 10;
             }
             .sidebar-menu {
                 flex-direction: row;
@@ -173,6 +177,7 @@
             .sidebar-menu a {
                 padding: 8px 15px;
                 font-size: 13px;
+                display: inline-block;
             }
         }
 
