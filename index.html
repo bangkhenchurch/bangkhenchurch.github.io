@@ -54,7 +54,7 @@
             color: #fff; background: #2c2c2c; transform: translateY(-2px); 
         }
 
-        /* 👑 Layout แยกฝั่งซ้าย-ขวา ตามภาพร่างในกระดาษของคุณเป๊ะๆ */
+        /* Layout แยกฝั่งซ้าย-ขวา */
         .main-layout {
             display: grid;
             grid-template-columns: 300px 1fr; /* ฝั่งซ้ายเมนูค้นหา 300px ฝั่งขวาเนื้อหาหลัก */
@@ -108,7 +108,7 @@
         }
         .section-title { font-family: 'Prompt'; font-size: 24px; margin: 0 0 20px 0; color: #fff; border-left: 5px solid #4dabff; padding-left: 15px; }
         
-        /* จัดเรียง 2 คอลัมน์ตาม Blueprint ในกระดาษ */
+        /* จัดเรียงกล่องการ์ด */
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
@@ -291,7 +291,7 @@
             <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
                 src="https://www.youtube.com/embed/Vytt_r-k7Ck?autoplay=1&mute=1&rel=0&si=s0Rh5bN011KbyWYd" 
                 title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-            </table>
+            </iframe>
         </div>
     </div>
 </div>
@@ -382,6 +382,7 @@
     </main>
 
 </div>
+
 <div class="action-center-section">
     <div class="action-grid">
         
@@ -419,6 +420,14 @@
     </a>
 </div>
 
+<footer>
+    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
+    <p>© 2026 Bangkhen Baptist Church. All Rights Reserved.</p>
+    <div class="footer-address">
+        คริสตจักรแบ๊พติสต์บางเขน พหลโยธิน แขวงอนุสาวรีย์ เขตบางเขน กรุงเทพมหานคร
+    </div>
+</footer>
+
 <script src="footer.js"></script>
 
 <script type="module">
@@ -436,7 +445,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // เก็บข้อมูลดิบจาก Firebase ไว้ประมวลผล Filter/Sort บนฝั่ง Client
     let allData = [];
 
     function getYoutubeThumb(url) {
@@ -449,7 +457,6 @@
         return null;
     }
 
-    // เรียกข้อมูลโดยอิงลำดับ displayDate เริ่มต้นไว้ก่อน
     const q = query(collection(db, "articles"), orderBy("displayDate", "desc"));
 
     onSnapshot(q, (snap) => {
@@ -462,31 +469,25 @@
             const dataWithId = { id: doc.id, ...doc.data() };
             allData.push(dataWithId);
             
-            // เก็บรายชื่อผู้แต่งเพื่อไปทำเมนู Dropdown
             const author = dataWithId.authorName || dataWithId.author || "คริสตจักร";
             authorSet.add(author);
 
-            // เก็บรายชื่อหมวดหมู่เพื่อไปทำเมนู Dropdown
             if (dataWithId.category) {
                 categorySet.add(dataWithId.category.trim());
             }
 
-            // เก็บรายชื่อซีรีย์เพื่อไปทำเมนู Dropdown
             if (dataWithId.series) {
                 seriesSet.add(dataWithId.series.trim());
             }
         });
 
-        // อัปเดตรายชื่อในช่องคัดกรองต่างๆ บนหน้าจอ
         updateDropdown('filterAuthor', authorSet, "ทั้งหมด ทุกผู้เขียน");
         updateDropdown('filterCategory', categorySet, "ทั้งหมด ทุกหมวดหมู่");
         updateDropdown('filterSeries', seriesSet, "ทั้งหมด ทุกซีรีย์");
         
-        // ประมวลผลและ Render หน้าเว็บ
         processAndRender();
     });
 
-    // ฟังก์ชันส่วนกลางสำหรับสร้าง Dropdown แบบไม่ซ้ำกัน
     function updateDropdown(elementId, dataSet, defaultText) {
         const select = document.getElementById(elementId);
         const currentValue = select.value;
@@ -497,29 +498,24 @@
         select.value = currentValue;
     }
 
-    // 🧠 ระบบฟิลเตอร์ และ การจัดเรียงอักษร ก-ฮ / วันที่ ตามความต้องการบนพิมพ์เขียว
     function processAndRender() {
         let filtered = [...allData];
 
-        // 1. ค้นหาผ่าน Searchbar
         const searchKeyword = document.getElementById('searchBar').value.trim().toLowerCase();
         if (searchKeyword !== "") {
             filtered = filtered.filter(item => (item.title && item.title.toLowerCase().includes(searchKeyword)));
         }
 
-        // 2. คัดกรองตามหมวดหมู่
         const categoryFilter = document.getElementById('filterCategory').value;
         if (categoryFilter !== "all") {
             filtered = filtered.filter(item => item.category && item.category.trim() === categoryFilter);
         }
 
-        // 3. คัดกรองตามซีรีย์
         const seriesFilter = document.getElementById('filterSeries').value;
         if (seriesFilter !== "all") {
             filtered = filtered.filter(item => item.series && item.series.trim() === seriesFilter);
         }
 
-        // 4. คัดกรองตามผู้เขียน
         const authorFilter = document.getElementById('filterAuthor').value;
         if (authorFilter !== "all") {
             filtered = filtered.filter(item => {
@@ -528,14 +524,12 @@
             });
         }
 
-        // 5. จัดเรียงตามลำดับอักษร ก-ฮ / A-Z หรือ ฮ-ก / Z-A
         const alphabetSort = document.getElementById('sortAlphabet').value;
         if (alphabetSort === "az") {
             filtered.sort((a, b) => (a.title || "").localeCompare(b.title || "", 'th'));
         } else if (alphabetSort === "za") {
             filtered.sort((a, b) => (b.title || "").localeCompare(a.title || "", 'th'));
         } else {
-            // 6. ถ้าไม่ได้เลือกเรียงลำดับอักษร ให้เปิดใช้ตัวจัดเรียงตาม วัน, เดือน, ปี (Date Sort) แทน
             const dateSort = document.getElementById('sortDate').value;
             if (dateSort === "desc") {
                 filtered.sort((a, b) => (b.displayDate || "").localeCompare(a.displayDate || ""));
@@ -544,7 +538,6 @@
             }
         }
 
-        // ล้างข้อมูลเก่าบนหน้าจอออกก่อนเริ่มกระจายข้อมูลใหม่
         const lists = {
             news: document.getElementById('list-news'),
             testimony: document.getElementById('list-testimony'),
@@ -555,7 +548,6 @@
 
         let counts = { news: 0, testimony: 0, article: 0, sermon: 0 };
 
-        // กระจายกล่องการ์ดเนื้อหาลงสู่ Grid ฝั่งขวา
         filtered.forEach(d => {
             const ytThumb = getYoutubeThumb(d.youtubeUrl);
             const finalThumb = d.thumbUrl || ytThumb || 'logo.png'; 
@@ -594,7 +586,6 @@
             if (cat.includes("เทศนา")) { lists.sermon.insertAdjacentHTML('beforeend', card); counts.sermon++; }
         });
 
-        // แสดงข้อความแจ้งเตือนกรณีที่ค้นหาหรือกรองหมวดหมู่นั้นแล้วไม่พบข้อมูลเลย
         Object.keys(lists).forEach(key => {
             if (counts[key] === 0) {
                 lists[key].innerHTML = "<p style='color:#666; font-size:14px; padding:10px;'>ไม่พบข้อมูลในหมวดหมู่นี้ตามเงื่อนไขที่เลือก</p>";
@@ -602,7 +593,6 @@
         });
     }
 
-    // ผูก Event Listener เข้ากับปุ่มและฟอร์มฝั่งซ้ายทั้งหมด เพื่อตรวจจับการค้นหาและฟิลเตอร์
     document.getElementById('searchBar').addEventListener('input', processAndRender);
     document.getElementById('filterCategory').addEventListener('change', processAndRender);
     document.getElementById('filterSeries').addEventListener('change', processAndRender);
@@ -610,7 +600,6 @@
     document.getElementById('sortDate').addEventListener('change', processAndRender);
     
     document.getElementById('sortAlphabet').addEventListener('change', () => {
-        // หากหันไปใช้การเรียงแบบตัวอักษร ให้ปิด/รีเซ็ตการเลือกของช่องวันที่ เพื่อลดความสับสนระบบจัดเรียง
         if(document.getElementById('sortAlphabet').value !== "none") {
             document.getElementById('sortDate').disabled = true;
         } else {
@@ -619,8 +608,6 @@
         processAndRender();
     });
 
-
-    // Slide Show ซิงค์เชื่อมโยงภาพส่วนหัวเว็บ
     let cur = 0;
     setInterval(() => {
         const slides = document.querySelectorAll('.slide');
