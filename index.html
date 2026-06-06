@@ -291,7 +291,7 @@
             <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
                 src="https://www.youtube.com/embed/Vytt_r-k7Ck?autoplay=1&mute=1&rel=0&si=s0Rh5bN011KbyWYd" 
                 title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-            </table>
+            </iframe>
         </div>
     </div>
 </div>
@@ -329,27 +329,6 @@
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">📁 คัดกรองตามหมวดหมู่</label>
-            <select id="filterCategory" class="filter-select">
-                <option value="all">ทั้งหมด ทุกหมวดหมู่</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label class="filter-label">🎞️ คัดกรองตามซีรีย์</label>
-            <select id="filterSeries" class="filter-select">
-                <option value="all">ทั้งหมด ทุกซีรีย์</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
-            <label class="filter-label">👤 คัดกรองตามผู้เขียน/ผู้แต่ง</label>
-            <select id="filterAuthor" class="filter-select">
-                <option value="all">ทั้งหมด ทุกผู้เขียน</option>
-            </select>
-        </div>
-
-        <div class="filter-group">
             <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
             <select id="sortAlphabet" class="filter-select">
                 <option value="none">-- เลือกการจัดเรียง --</option>
@@ -364,6 +343,13 @@
                 <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
                 <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
             </select>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label">👤 คัดกรองตามผู้เขียน/ผู้แต่ง</label>
+            <select id="filterAuthor" class="filter-select">
+                <option value="all">ทั้งหมด ทุกผู้เขียน</option>
+                </select>
         </div>
     </aside>
 
@@ -455,8 +441,6 @@
     onSnapshot(q, (snap) => {
         allData = [];
         const authorSet = new Set();
-        const categorySet = new Set();
-        const seriesSet = new Set();
 
         snap.forEach(doc => {
             const dataWithId = { id: doc.id, ...doc.data() };
@@ -465,34 +449,22 @@
             // เก็บรายชื่อผู้แต่งเพื่อไปทำเมนู Dropdown
             const author = dataWithId.authorName || dataWithId.author || "คริสตจักร";
             authorSet.add(author);
-
-            // เก็บรายชื่อหมวดหมู่เพื่อไปทำเมนู Dropdown
-            if (dataWithId.category) {
-                categorySet.add(dataWithId.category.trim());
-            }
-
-            // เก็บรายชื่อซีรีย์เพื่อไปทำเมนู Dropdown
-            if (dataWithId.series) {
-                seriesSet.add(dataWithId.series.trim());
-            }
         });
 
-        // อัปเดตรายชื่อในช่องคัดกรองต่างๆ บนหน้าจอ
-        updateDropdown('filterAuthor', authorSet, "ทั้งหมด ทุกผู้เขียน");
-        updateDropdown('filterCategory', categorySet, "ทั้งหมด ทุกหมวดหมู่");
-        updateDropdown('filterSeries', seriesSet, "ทั้งหมด ทุกซีรีย์");
+        // อัปเดตรายชื่อในช่องคัดกรองผู้แต่ง
+        updateAuthorDropdown(authorSet);
         
         // ประมวลผลและ Render หน้าเว็บ
         processAndRender();
     });
 
-    // ฟังก์ชันส่วนกลางสำหรับสร้าง Dropdown แบบไม่ซ้ำกัน
-    function updateDropdown(elementId, dataSet, defaultText) {
-        const select = document.getElementById(elementId);
+    // ฟังก์ชันสร้าง Dropdown รายชื่อผู้แต่งแบบไม่ซ้ำ
+    function updateAuthorDropdown(authorSet) {
+        const select = document.getElementById('filterAuthor');
         const currentValue = select.value;
-        select.innerHTML = `<option value="all">${defaultText}</option>`;
-        dataSet.forEach(item => {
-            select.insertAdjacentHTML('beforeend', `<option value="${item}">${item}</option>`);
+        select.innerHTML = `<option value="all">ทั้งหมด ทุกผู้เขียน</option>`;
+        authorSet.forEach(author => {
+            select.insertAdjacentHTML('beforeend', `<option value="${author}">${author}</option>`);
         });
         select.value = currentValue;
     }
@@ -507,19 +479,7 @@
             filtered = filtered.filter(item => (item.title && item.title.toLowerCase().includes(searchKeyword)));
         }
 
-        // 2. คัดกรองตามหมวดหมู่
-        const categoryFilter = document.getElementById('filterCategory').value;
-        if (categoryFilter !== "all") {
-            filtered = filtered.filter(item => item.category && item.category.trim() === categoryFilter);
-        }
-
-        // 3. คัดกรองตามซีรีย์
-        const seriesFilter = document.getElementById('filterSeries').value;
-        if (seriesFilter !== "all") {
-            filtered = filtered.filter(item => item.series && item.series.trim() === seriesFilter);
-        }
-
-        // 4. คัดกรองตามผู้เขียน
+        // 2. คัดกรองตามผู้เขียน
         const authorFilter = document.getElementById('filterAuthor').value;
         if (authorFilter !== "all") {
             filtered = filtered.filter(item => {
@@ -528,14 +488,14 @@
             });
         }
 
-        // 5. จัดเรียงตามลำดับอักษร ก-ฮ / A-Z หรือ ฮ-ก / Z-A
+        // 3. จัดเรียงตามลำดับอักษร ก-ฮ / A-Z หรือ ฮ-ก / Z-A
         const alphabetSort = document.getElementById('sortAlphabet').value;
         if (alphabetSort === "az") {
             filtered.sort((a, b) => (a.title || "").localeCompare(b.title || "", 'th'));
         } else if (alphabetSort === "za") {
             filtered.sort((a, b) => (b.title || "").localeCompare(a.title || "", 'th'));
         } else {
-            // 6. ถ้าไม่ได้เลือกเรียงลำดับอักษร ให้เปิดใช้ตัวจัดเรียงตาม วัน, เดือน, ปี (Date Sort) แทน
+            // 4. ถ้าไม่ได้เลือกเรียงลำดับอักษร ให้เปิดใช้ตัวจัดเรียงตาม วัน, เดือน, ปี (Date Sort) แทน
             const dateSort = document.getElementById('sortDate').value;
             if (dateSort === "desc") {
                 filtered.sort((a, b) => (b.displayDate || "").localeCompare(a.displayDate || ""));
@@ -602,13 +562,8 @@
         });
     }
 
-    // ผูก Event Listener เข้ากับปุ่มและฟอร์มฝั่งซ้ายทั้งหมด เพื่อตรวจจับการค้นหาและฟิลเตอร์
+    // ผูก Event Listener เข้ากับปุ่มและฟอร์มฝั่งซ้ายทั้งหมด เพื่อตรวจจับการกดค้นหา/เลือกฟิลเตอร์
     document.getElementById('searchBar').addEventListener('input', processAndRender);
-    document.getElementById('filterCategory').addEventListener('change', processAndRender);
-    document.getElementById('filterSeries').addEventListener('change', processAndRender);
-    document.getElementById('filterAuthor').addEventListener('change', processAndRender);
-    document.getElementById('sortDate').addEventListener('change', processAndRender);
-    
     document.getElementById('sortAlphabet').addEventListener('change', () => {
         // หากหันไปใช้การเรียงแบบตัวอักษร ให้ปิด/รีเซ็ตการเลือกของช่องวันที่ เพื่อลดความสับสนระบบจัดเรียง
         if(document.getElementById('sortAlphabet').value !== "none") {
@@ -618,6 +573,8 @@
         }
         processAndRender();
     });
+    document.getElementById('sortDate').addEventListener('change', processAndRender);
+    document.getElementById('filterAuthor').addEventListener('change', processAndRender);
 
 
     // Slide Show ซิงค์เชื่อมโยงภาพส่วนหัวเว็บ
