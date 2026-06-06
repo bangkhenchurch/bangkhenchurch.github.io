@@ -16,7 +16,7 @@
         .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
         .navbar img { width: 35px; border-radius: 50%; }
 
-        /* 🖼️ Hero Slideshow ปรับแต่งให้สัดส่วนพอดีหน้าจอออโต้อย่างสมบูรณ์แบบ */
+        /* Hero Slideshow */
         .hero-container { 
             width: 100%; 
             background: #000; 
@@ -25,11 +25,10 @@
         }
         .slide { 
             width: 100%; 
-            /* ใช้ aspect-ratio คำนวณความสูงตามสัดส่วนภาพแบนเนอร์จริง (กว้าง 16 ต่อ สูง 5 หรือปรับตามชอบ) */
             aspect-ratio: 16 / 5; 
             display: none; 
             animation: fade 1.5s; 
-            background-size: contain; /* บังคับให้ภาพแบนเนอร์ย่อขยายแสดงผลได้ครบถ้วนพอดีกล่อง ไม่โดนตัดขอบ */
+            background-size: contain; 
             background-position: center;
             background-repeat: no-repeat;
             opacity: 0.9;
@@ -38,28 +37,83 @@
             display: block; 
         }
         
-        /* จุดตั้งค่าลิงก์รูปภาพ Hero แต่ละใบ */
-        .slide-1 { 
-            background-image: url('hero_01.png'), url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=1200'); 
-        }
-        .slide-2 { 
-            background-image: url('hero_02.png'), url('https://images.unsplash.com/photo-1544427928-c49cdca8a93d?q=80&w=1200'); 
-        }
-        .slide-3 { 
-            background-image: url('hero_03.png'), url('https://images.unsplash.com/photo-1544427928-c49cdca8a93d?q=80&w=1200'); 
-        }
+        .slide-1 { background-image: url('hero_01.png'), url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=1200'); }
+        .slide-2 { background-image: url('hero_02.png'), url('https://images.unsplash.com/photo-1544427928-c49cdca8a93d?q=80&w=1200'); }
+        .slide-3 { background-image: url('hero_03.png'), url('https://images.unsplash.com/photo-1544427928-c49cdca8a93d?q=80&w=1200'); }
 
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        /* Layout & Grid */
-        .container { padding: 20px 5%; width: 100%; max-width: 1200px; margin: auto; overflow: hidden; }
-        .section-title { font-family: 'Prompt'; font-size: 24px; margin: 40px 0 20px 0; color: #4dabff; border-left: 5px solid #4dabff; padding-left: 15px; }
+        /* เมนูด้านล่างสไลด์ */
+        .horizontal-menu { 
+            background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto 10px auto; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+        }
+        .horizontal-menu a { 
+            padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; 
+        }
+        .horizontal-menu a:hover { 
+            color: #fff; background: #2c2c2c; transform: translateY(-2px); 
+        }
+
+        /* 👑 Layout แยกฝั่งซ้าย-ขวา ตามภาพร่างในกระดาษของคุณเป๊ะๆ */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr; /* ฝั่งซ้ายเมนูค้นหา 300px ฝั่งขวาเนื้อหาหลัก */
+            gap: 30px;
+            padding: 20px 5%;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* ฝั่งซ้าย: กล่องสารบัญ/จัดเรียงเนื้อหา (Sidebar Filter) */
+        .sidebar-filter {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        .filter-label {
+            font-family: 'Prompt';
+            font-size: 15px;
+            color: #4dabff;
+            margin-bottom: 8px;
+            display: block;
+            font-weight: 600;
+        }
+        .filter-select, .search-input {
+            width: 100%;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .filter-select:focus, .search-input:focus {
+            border-color: #4dabff;
+        }
+
+        /* ฝั่งขวา: พื้นที่แสดงกล่องเนื้อหาหลัก */
+        .content-area {
+            overflow: hidden;
+        }
+        .section-title { font-family: 'Prompt'; font-size: 24px; margin: 0 0 20px 0; color: #fff; border-left: 5px solid #4dabff; padding-left: 15px; }
         
+        /* จัดเรียง 2 คอลัมน์ตาม Blueprint ในกระดาษ */
         .grid-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
             gap: 25px; 
-            margin-bottom: 20px;
+            margin-bottom: 40px;
         }
 
         /* Card Design */
@@ -74,25 +128,13 @@
         .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
         .card-title { font-family: 'Prompt'; font-size: 18px; margin-bottom: 8px; color: #fff; line-height: 1.4; }
         
-        /* สไตล์ส่วนข้อมูลเพิ่มเติมใน Card */
         .card-info { font-size: 13px; color: #bbb; margin-bottom: 10px; flex-grow: 1; }
         .card-info div { margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; }
         .info-label { color: #4dabff; font-weight: bold; min-width: fit-content; }
 
         .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
         
-        /* เมนูด้านล่างสไลด์ */
-        .horizontal-menu { 
-            background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto 10px auto; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-        }
-        .horizontal-menu a { 
-            padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; 
-        }
-        .horizontal-menu a:hover { 
-            color: #fff; background: #2c2c2c; transform: translateY(-2px); 
-        }
-
-        /* 👑 จัดวางพื้นที่รูปภาพแบนเนอร์โฆษณา */
+        /* แบนเนอร์โฆษณา */
         .banner-placement-container {
             width: 100%;
             max-width: 1200px;
@@ -104,7 +146,7 @@
         .img-banner-link {
             display: block;
             width: 100%;
-            max-width: 728px; /* จำกัดขนาดสัดส่วนกว้างสูงสุดของป้ายโฆษณามาตรฐาน */
+            max-width: 728px; 
             overflow: hidden;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
@@ -121,7 +163,7 @@
             object-fit: contain;
         }
 
-        /* โซนบริการคู่ขนาน: LINE QR Code และ ข้อมูลการถวายเงิน */
+        /* LINE QR Code และ ข้อมูลการถวายเงิน */
         .action-center-section {
             background: #1a1a1a;
             border-top: 1px solid #333;
@@ -145,17 +187,8 @@
             flex-direction: column;
             align-items: center;
         }
-        .action-title {
-            font-family: 'Prompt';
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        .action-desc {
-            font-size: 13px;
-            color: #aaa;
-            margin-bottom: 15px;
-        }
+        .action-title { font-family: 'Prompt'; font-size: 16px; font-weight: bold; margin-bottom: 5px; }
+        .action-desc { font-size: 13px; color: #aaa; margin-bottom: 15px; }
         .action-image-box {
             max-width: 160px;
             width: 100%;
@@ -166,13 +199,8 @@
             margin-bottom: 15px;
             transition: 0.2s;
         }
-        .action-image-box img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        .action-image-box img { width: 100%; height: auto; display: block; }
         
-        /* สไตล์ข้อมูลบัญชีธนาคารภายในกล่อง */
         .bank-details {
             font-size: 13px;
             color: #ddd;
@@ -185,15 +213,8 @@
             width: 100%;
             margin-top: auto;
         }
-        .bank-highlight {
-            color: #ffcc00;
-            font-weight: bold;
-            font-size: 16px;
-            font-family: 'Prompt';
-            letter-spacing: 0.5px;
-        }
+        .bank-highlight { color: #ffcc00; font-weight: bold; font-size: 16px; font-family: 'Prompt'; letter-spacing: 0.5px; }
 
-        /* ปุ่ม LINE */
         .btn-line-link {
             display: inline-flex;
             align-items: center;
@@ -211,7 +232,6 @@
         }
         .btn-line-link:hover { background: #20ba5a; }
 
-        /* พื้นที่ควบคุมโซนด้านล่างก่อนถึง Footer */
         .footer-support-section {
             background: #121212;
             border-top: 1px solid #252525;
@@ -221,10 +241,6 @@
             align-items: center;
             width: 100%;
         }
-
-        /* ตัวนับสถิติ */
-        .counter-section { text-align: center; padding: 20px; background: #121212; border-top: 1px solid #252525; width: 100%; }
-        .counter-section img { max-width: 100%; height: auto; }
         
         /* Footer */
         footer { background: #0a2c6d; color: white; text-align: center; padding: 50px 20px; width: 100%; }
@@ -239,10 +255,13 @@
             padding-top: 15px;
         }
 
-        /* รองรับ Mobile Responsive ให้สัดส่วนความสูงปรับอัตโนมัติตามอัตราส่วนหน้าจอ */
+        /* Responsive */
+        @media (max-width: 992px) {
+            .main-layout { grid-template-columns: 1fr; } /* ยุบรวมเหลือคอลัมน์เดียวบนแท็บเล็ตและมือถือ */
+            .sidebar-filter { position: static; margin-bottom: 20px; }
+        }
         @media (max-width: 768px) {
-            .slide { aspect-ratio: 16 / 6.5; } /* ปรับสัดส่วนบนจอมือถือเล็กน้อยเพื่อให้มองเห็นข้อความชัดเจนขึ้น */
-            .section-title { font-size: 20px; }
+            .slide { aspect-ratio: 16 / 6.5; } 
             .horizontal-menu { margin: 10px; border-radius: 15px; padding: 15px; }
             .horizontal-menu a { font-size: 14px; padding: 8px 12px; }
             .action-grid { grid-template-columns: 1fr; gap: 20px; }
@@ -299,20 +318,56 @@
     </a>
 </div>
 
-<div class="container">
-    <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
-    <div id="list-news" class="grid-container">กำลังโหลด...</div>
+<div class="main-layout">
     
-    <h2 class="section-title">🙏 คำพยานชีวิต</h2>
-    <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
-    
-    <h2 class="section-title">📖 บทความหนใจ</h2>
-    <div id="list-article" class="grid-container">กำลังโหลด...</div>
-    
-    <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
-    <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
-</div>
+    <aside class="sidebar-filter">
+        <div style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
+        
+        <div class="filter-group">
+            <label class="filter-label">🔍 ค้นหาตามชื่อเรื่อง</label>
+            <input type="text" id="searchBar" class="search-input" placeholder="พิมพ์ชื่อเนื้อหาที่ต้องการ...">
+        </div>
 
+        <div class="filter-group">
+            <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
+            <select id="sortAlphabet" class="filter-select">
+                <option value="none">-- เลือกการจัดเรียง --</option>
+                <option value="az">เรียงจาก ก - ฮ / A - Z</option>
+                <option value="za">เรียงจาก ฮ - ก / Z - A</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label">📅 เรียงตาม วัน, เดือน, ปี</label>
+            <select id="sortDate" class="filter-select">
+                <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
+                <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label">👤 คัดกรองตามผู้เขียน/ผู้แต่ง</label>
+            <select id="filterAuthor" class="filter-select">
+                <option value="all">ทั้งหมด ทุกผู้เขียน</option>
+                </select>
+        </div>
+    </aside>
+
+    <main class="content-area">
+        <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
+        <div id="list-news" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">🙏 คำพยานชีวิต</h2>
+        <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">📖 บทความหนุนใจ</h2>
+        <div id="list-article" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
+        <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
+    </main>
+
+</div>
 <div class="action-center-section">
     <div class="action-grid">
         
@@ -350,9 +405,6 @@
     </a>
 </div>
 
-<div class="counter-section">
-</div>
-
 <script src="footer.js"></script>
 
 <script type="module">
@@ -370,6 +422,9 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // เก็บข้อมูลดิบจาก Firebase ไว้ประมวลผล Filter/Sort บนฝั่ง Client
+    let allData = [];
+
     function getYoutubeThumb(url) {
         if (!url) return null;
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -380,25 +435,88 @@
         return null;
     }
 
+    // เรียกข้อมูลโดยอิงลำดับ displayDate เริ่มต้นไว้ก่อน
     const q = query(collection(db, "articles"), orderBy("displayDate", "desc"));
 
     onSnapshot(q, (snap) => {
+        allData = [];
+        const authorSet = new Set();
+
+        snap.forEach(doc => {
+            const dataWithId = { id: doc.id, ...doc.data() };
+            allData.push(dataWithId);
+            
+            // เก็บรายชื่อผู้แต่งเพื่อไปทำเมนู Dropdown
+            const author = dataWithId.authorName || dataWithId.author || "คริสตจักร";
+            authorSet.add(author);
+        });
+
+        // อัปเดตรายชื่อในช่องคัดกรองผู้แต่ง
+        updateAuthorDropdown(authorSet);
+        
+        // ประมวลผลและ Render หน้าเว็บ
+        processAndRender();
+    });
+
+    // ฟังก์ชันสร้าง Dropdown รายชื่อผู้แต่งแบบไม่ซ้ำ
+    function updateAuthorDropdown(authorSet) {
+        const select = document.getElementById('filterAuthor');
+        const currentValue = select.value;
+        select.innerHTML = `<option value="all">ทั้งหมด ทุกผู้เขียน</option>`;
+        authorSet.forEach(author => {
+            select.insertAdjacentHTML('beforeend', `<option value="${author}">${author}</option>`);
+        });
+        select.value = currentValue;
+    }
+
+    // 🧠 ระบบฟิลเตอร์ และ การจัดเรียงอักษร ก-ฮ / วันที่ ตามความต้องการบนพิมพ์เขียว
+    function processAndRender() {
+        let filtered = [...allData];
+
+        // 1. ค้นหาผ่าน Searchbar
+        const searchKeyword = document.getElementById('searchBar').value.trim().toLowerCase();
+        if (searchKeyword !== "") {
+            filtered = filtered.filter(item => (item.title && item.title.toLowerCase().includes(searchKeyword)));
+        }
+
+        // 2. คัดกรองตามผู้เขียน
+        const authorFilter = document.getElementById('filterAuthor').value;
+        if (authorFilter !== "all") {
+            filtered = filtered.filter(item => {
+                const author = item.authorName || item.author || "คริสตจักร";
+                return author === authorFilter;
+            });
+        }
+
+        // 3. จัดเรียงตามลำดับอักษร ก-ฮ / A-Z หรือ ฮ-ก / Z-A
+        const alphabetSort = document.getElementById('sortAlphabet').value;
+        if (alphabetSort === "az") {
+            filtered.sort((a, b) => (a.title || "").localeCompare(b.title || "", 'th'));
+        } else if (alphabetSort === "za") {
+            filtered.sort((a, b) => (b.title || "").localeCompare(a.title || "", 'th'));
+        } else {
+            // 4. ถ้าไม่ได้เลือกเรียงลำดับอักษร ให้เปิดใช้ตัวจัดเรียงตาม วัน, เดือน, ปี (Date Sort) แทน
+            const dateSort = document.getElementById('sortDate').value;
+            if (dateSort === "desc") {
+                filtered.sort((a, b) => (b.displayDate || "").localeCompare(a.displayDate || ""));
+            } else if (dateSort === "asc") {
+                filtered.sort((a, b) => (a.displayDate || "").localeCompare(b.displayDate || ""));
+            }
+        }
+
+        // ล้างข้อมูลเก่าบนหน้าจอออกก่อนเริ่มกระจายข้อมูลใหม่
         const lists = {
             news: document.getElementById('list-news'),
             testimony: document.getElementById('list-testimony'),
             article: document.getElementById('list-article'),
             sermon: document.getElementById('list-sermon')
         };
-        
         Object.values(lists).forEach(l => { if(l) l.innerHTML = ""; });
 
-        if (snap.empty) {
-            Object.values(lists).forEach(l => { if(l) l.innerHTML = "<p style='color:#666;'>รอการอัปเดตเนื้อหาเร็วๆ นี้</p>"; });
-            return;
-        }
+        let counts = { news: 0, testimony: 0, article: 0, sermon: 0 };
 
-        snap.forEach(doc => {
-            const d = doc.data();
+        // กระจายกล่องการ์ดเนื้อหาลงสู่ Grid ฝั่งขวา
+        filtered.forEach(d => {
             const ytThumb = getYoutubeThumb(d.youtubeUrl);
             const finalThumb = d.thumbUrl || ytThumb || 'logo.png'; 
 
@@ -414,7 +532,7 @@
             const bibleHtml = d.bibleRef ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef}</div>` : '';
 
             const card = `
-            <div class="card" onclick="location.href='article.html?id=${doc.id}'">
+            <div class="card" onclick="location.href='article.html?id=${d.id}'">
                 <img src="${finalThumb}" alt="${d.title}" onerror="this.src='logo.png'">
                 <div class="card-content">
                     <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
@@ -430,14 +548,36 @@
                 </div>
             </div>`;
             
-            if (cat.includes("ข่าวสาร")) lists.news.insertAdjacentHTML('beforeend', card);
-            if (cat.includes("พยาน")) lists.testimony.insertAdjacentHTML('beforeend', card);
-            if (cat.includes("บทความ")) lists.article.insertAdjacentHTML('beforeend', card);
-            if (cat.includes("เทศนา")) lists.sermon.insertAdjacentHTML('beforeend', card);
+            if (cat.includes("ข่าวสาร")) { lists.news.insertAdjacentHTML('beforeend', card); counts.news++; }
+            if (cat.includes("พยาน")) { lists.testimony.insertAdjacentHTML('beforeend', card); counts.testimony++; }
+            if (cat.includes("บทความ")) { lists.article.insertAdjacentHTML('beforeend', card); counts.article++; }
+            if (cat.includes("เทศนา")) { lists.sermon.insertAdjacentHTML('beforeend', card); counts.sermon++; }
         });
-    });
 
-    // Slide Show ซิงค์เชื่อมโยงภาพแบบไม่มี <img> ตกค้าง
+        // แสดงข้อความแจ้งเตือนกรณีที่ค้นหาหรือกรองหมวดหมู่นั้นแล้วไม่พบข้อมูลเลย
+        Object.keys(lists).forEach(key => {
+            if (counts[key] === 0) {
+                lists[key].innerHTML = "<p style='color:#666; font-size:14px; padding:10px;'>ไม่พบข้อมูลในหมวดหมู่นี้ตามเงื่อนไขที่เลือก</p>";
+            }
+        });
+    }
+
+    // ผูก Event Listener เข้ากับปุ่มและฟอร์มฝั่งซ้ายทั้งหมด เพื่อตรวจจับการกดค้นหา/เลือกฟิลเตอร์
+    document.getElementById('searchBar').addEventListener('input', processAndRender);
+    document.getElementById('sortAlphabet').addEventListener('change', () => {
+        // หากหันไปใช้การเรียงแบบตัวอักษร ให้ปิด/รีเซ็ตการเลือกของช่องวันที่ เพื่อลดความสับสนระบบจัดเรียง
+        if(document.getElementById('sortAlphabet').value !== "none") {
+            document.getElementById('sortDate').disabled = true;
+        } else {
+            document.getElementById('sortDate').disabled = false;
+        }
+        processAndRender();
+    });
+    document.getElementById('sortDate').addEventListener('change', processAndRender);
+    document.getElementById('filterAuthor').addEventListener('change', processAndRender);
+
+
+    // Slide Show ซิงค์เชื่อมโยงภาพส่วนหัวเว็บ
     let cur = 0;
     setInterval(() => {
         const slides = document.querySelectorAll('.slide');
