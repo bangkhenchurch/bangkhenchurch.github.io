@@ -43,25 +43,9 @@
 
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        /* 🛠️ ปรับแต่งส่วนเมนูให้เลื่อนตามหน้าจอ (Sticky Menu) แบบไม่ให้ติดขอบเหลี่ยมเกินไป */
+        /* เมนูแนวนอน */
         .horizontal-menu { 
-            background: #1e1e1e; 
-            padding: 10px 5%; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 10px; 
-            flex-wrap: wrap; 
-            border: 1px solid #333; 
-            max-width: 1200px; 
-            margin: 20px auto 10px auto; 
-            border-radius: 50px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-            
-            /* เพิ่ม 3 บรรทัดนี้เพื่อให้เมนูวิ่งตามหน้าจอ */
-            position: sticky;
-            top: 67px; /* อยู่ใต้ถัดจากแถบ Navbar พอดี (ปรับเปลี่ยนได้ตามความสูงของ Navbar จริง) */
-            z-index: 999; /* อยู่ต่ำกว่าแถบหลักเล็กน้อย เพื่อไม่ให้เงาหรือขอบวิ่งทับกันมั่ว */
+            background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto 10px auto; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
         }
         .horizontal-menu a { 
             padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; 
@@ -73,7 +57,7 @@
         /* Layout แยกฝั่งซ้าย-ขวา */
         .main-layout {
             display: grid;
-            grid-template-columns: 300px 1fr; 
+            grid-template-columns: 300px 1fr; /* ฝั่งซ้ายเมนูค้นหา 300px ฝั่งขวาเนื้อหาหลัก */
             gap: 30px;
             padding: 20px 5%;
             width: 100%;
@@ -89,7 +73,7 @@
             padding: 20px;
             height: fit-content;
             position: sticky;
-            top: 140px; /* ขยับลงมาเพิ่มเพื่อให้พ้นทางเมื่อเลื่อนลงมาเจอกับเมนูยึดขอบจอ */
+            top: 90px;
         }
         .filter-group {
             margin-bottom: 20px;
@@ -273,22 +257,13 @@
 
         /* Responsive */
         @media (max-width: 992px) {
-            .main-layout { grid-template-columns: 1fr; } 
+            .main-layout { grid-template-columns: 1fr; } /* ยุบรวมเหลือคอลัมน์เดียวบนแท็บเล็ตและมือถือ */
             .sidebar-filter { position: static; margin-bottom: 20px; }
         }
         @media (max-width: 768px) {
             .slide { aspect-ratio: 16 / 6.5; } 
-            
-            /* เมื่อเป็นจอมือถือ แนะนำให้เปลี่ยนเมนูเป็นสี่เหลี่ยมแนบขอบจอ จะดูเป็นสัดส่วนมากกว่าโค้งครับ */
-            .horizontal-menu { 
-                margin: 0; 
-                border-radius: 0; 
-                padding: 10px; 
-                border-left: none;
-                border-right: none;
-                top: 67px; /* รักษาระยะเกาะขอบบนของมือถือ */
-            }
-            .horizontal-menu a { font-size: 13px; padding: 6px 10px; }
+            .horizontal-menu { margin: 10px; border-radius: 15px; padding: 15px; }
+            .horizontal-menu a { font-size: 14px; padding: 8px 12px; }
             .action-grid { grid-template-columns: 1fr; gap: 20px; }
             .banner-placement-container { padding: 0 15px; margin: 10px auto; }
         }
@@ -307,7 +282,7 @@
     <div class="slide slide-3"></div>
 </div>
 
-<div class="featured-video-container" style="background: #121212; padding: 40px 20px;">
+<div class="featured-video-container" style="background: #121212; padding: 40px 20px 10px 20px;">
     <div style="max-width: 900px; margin: auto;">
         <h2 style="font-family: 'Prompt'; color: white; border-left: 5px solid #4dabff; padding-left: 15px; margin-bottom: 20px;">
             📽️ รับชมวีดีโอ สร้างโลก 
@@ -321,12 +296,6 @@
     </div>
 </div>
 
-<div class="marquee-box">
-    <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
-        Because God so loved the world that he gave his only begotten Son, that whoever believes in him should not perish but have eternal life. - John 3:16
-    </marquee>
-</div>
-
 <nav class="horizontal-menu">
     <a href="index.html">🏠 หน้าแรก</a>
     <a href="sermons.html">🎙️ คำเทศนา</a>
@@ -336,6 +305,12 @@
     <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
     <a href="contact.html">📞 ติดต่อเรา</a>
 </nav>
+
+<div class="marquee-box">
+    <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
+        Because God so loved the world that he gave his only begotten Son, that whoever believes in him should not perish but have eternal life. - John 3:16
+    </marquee>
+</div>
 
 <div class="banner-placement-container">
     <a href="ads.html" class="img-banner-link">
