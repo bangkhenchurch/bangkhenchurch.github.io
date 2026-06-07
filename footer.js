@@ -18,6 +18,43 @@
             <button id="submitRatingBtn" style="width: 100%; padding: 15px; background: #4dabff; color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'Prompt'; font-weight: 600;">ส่งความคิดเห็น</button>
         </div>
 
+        <div class="action-center-section">
+    <div class="action-grid">
+        
+        <div class="action-box" style="border-top: 4px solid #25d366;">
+            <div class="action-title" style="color: #25d366;">🟢 ช่องทาง LINE Official</div>
+            <div class="action-desc">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
+            <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer;">
+                <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'">
+            </div>
+            <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link">💬 กดเพิ่มเพื่อนใน LINE</a>
+        </div>
+
+        <div class="action-box" style="border-top: 4px solid #4dabff;">
+            <div class="action-title" style="color: #4dabff;">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
+            <div class="action-desc">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
+            <div class="action-image-box">
+                <img src="bbk_church.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4221/4221711.png'">
+            </div>
+            <div class="bank-details">
+                ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>
+                โดยการถวายเงินผ่านธนาคารได้ที่<br>
+                <strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>
+                ประเภทบัญชี: บัญชีออมทรัพย์<br>
+                เลขที่บัญชี: <span class="bank-highlight">161-5-36894-9</span><br>
+                ชื่อบัญชี: <strong>คริสตจักรแบ๊พติสต์บางเขน</strong>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="footer-support-section">
+    <a href="ads.html" class="img-banner-link">
+        <img src="banner02.png" alt="หนังสือ & สื่อเพลงคริสเตียน">
+    </a>
+</div>
+
         <div style="text-align: center; margin-bottom: 50px; padding: 40px 20px; background: #1e1e1e; border: 1px solid #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 600px; margin: 40px auto;">
             <h2 style="font-family: 'Prompt'; color: #4dabff; margin-bottom: 10px;">💬 ติดต่อคริสตจักร</h2>
             <p style="font-family: 'Sarabun'; color: #eeeeee; font-size: 18px; margin-bottom: 25px; line-height: 1.6;">
