@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bangkhen Baptist Church</title>
+    
+    <title>Bangkhen Baptist Church | คริสตจักรแบ๊พติสต์บางเขน</title>
+    <meta name="description" content="Bangkhen Baptist Church - ศูนย์รวมใจในการนมัสการพระเจ้า เรียนรู้พระคัมภีร์ และแบ่งปันความรักของพระคริสต์สู่สังคม ฟังคำเทศนาประจำสัปดาห์ อ่านบทความหนุนใจ และข่าวสารพันธกิจ">
+    <meta name="keywords" content="Bangkhen Baptist Church, คริสตจักรแบ๊พติสต์บางเขน, โบสถ์บางเขน, ฟังคำเทศนา, บทความคริสเตียน, คำพยานชีวิต">
+    <meta name="robots" content="index, follow">
+    
+    <link rel="canonical" href="https://bangkhenchurch.github.io/">
+    
+    <link rel="alternate" hreflang="th" href="https://bangkhenchurch.github.io/">
+    <link rel="alternate" hreflang="x-default" href="https://bangkhenchurch.github.io/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bangkhenchurch.github.io/">
+    <meta property="og:title" content="Bangkhen Baptist Church | คริสตจักรแบ๊พติสต์บางเขน">
+    <meta property="og:description" content="ร่วมเป็นส่วนหนึ่งกับพันธกิจของคริสตจักรแบ๊พติสต์บางเขน รับฟังคำเทศนา และบทความหนุนใจคริสเตียน">
+    <meta property="og:image" content="https://bangkhenchurch.github.io/logo.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://bangkhenchurch.github.io/">
+    <meta name="twitter:title" content="Bangkhen Baptist Church | คริสตจักรแบ๊พติสต์บางเขน">
+    <meta name="twitter:description" content="ร่วมเป็นส่วนหนึ่งกับพันธกิจของคริสตจักรแบ๊พติสต์บางเขน รับฟังคำเทศนา และบทความหนุนใจคริสเตียน">
+    <meta name="twitter:image" content="https://bangkhenchurch.github.io/logo.png">
+
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -495,13 +517,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // แก้ไขระบบสคริปต์ฟอร์มติดตามข่าวสาร (Subscription) แบบสมบูรณ์
     const subscribeForm = document.getElementById('subscribeForm');
     const btnSubscribe = document.getElementById('btnSubscribe');
 
     if (subscribeForm) {
         subscribeForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // ป้องกันหน้าเว็บรีเฟรชโหลดใหม่วนซ้ำ
+            e.preventDefault();
 
             const nameInput = document.getElementById('subName').value.trim();
             const emailInput = document.getElementById('subEmail').value.trim();
@@ -511,19 +532,16 @@
                 return;
             }
 
-            // ตรวจสอบโครงสร้างอีเมลเบื้องต้น
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(emailInput)) {
                 alert('รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้งครับ');
                 return;
             }
 
-            // บล็อกปุ่มระหว่างบันทึกข้อมูล ป้องกันการกดเบิ้ล
             btnSubscribe.disabled = true;
             btnSubscribe.innerText = '⏳ กำลังบันทึก...';
 
             try {
-                // บันทึกข้อมูลลงใน collection "subscribers" ของคริสตจักร
                 await addDoc(collection(db, "subscribers"), {
                     subscriberName: nameInput || "ผู้สนใจทั่วไป",
                     subscriberEmail: emailInput,
@@ -531,14 +549,11 @@
                 });
 
                 alert('🎉 ลงทะเบียนติดตามเรียบร้อยแล้ว ขอบคุณสำหรับความสนใจในพันธกิจของคริสตจักรครับ ขอพระเจ้าอวยพรครับ');
-                
-                // ล้างค่าข้อมูลหลังส่งสำเร็จ
                 subscribeForm.reset();
             } catch (error) {
                 console.error("Error subscribing: ", error);
                 alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้งในภายหลังครับ');
             } finally {
-                // ปลดบล็อกปุ่มกลับมาสถานะปกติ
                 btnSubscribe.disabled = false;
                 btnSubscribe.innerText = '🚀 ติดตามเลย';
             }
@@ -700,7 +715,6 @@
         });
     }
 
-    // ติดตั้ง Event Listeners
     const addListener = (id, event, callback) => {
         const el = document.getElementById(id);
         if (el) el.addEventListener(event, callback);
