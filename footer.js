@@ -159,6 +159,9 @@
     </div>
 
     <div style="margin-top: 20px; margin-bottom: 10px; text-align: center !important;">
+        <div style="text-align: center; color: #4dabff; font-family: 'Prompt'; font-size: 13px; margin-bottom: 5px;">
+            <sup>🌐 เมนูนำทางคริสตจักร (Navigation)</sup>
+        </div>
         <nav class="custom-footer-menu">
             <a href="index.html">🏠 หน้าแรก</a>
             <a href="sermons.html">🎙️ คำเทศนา</a>
