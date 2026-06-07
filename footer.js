@@ -3,7 +3,28 @@
     window.toggleAddress = null;
 
     const footerHTML = `
-    <div style="max-width: 1300px; margin: auto; padding: 0 20px;">
+    <main class="content-area" style="max-width: 1300px; margin: auto; padding: 0 20px;">
+        <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
+        <div id="list-news" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">🙏 คำพยานชีวิต</h2>
+        <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">📖 บทความหนุนใจ</h2>
+        <div id="list-article" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
+        <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
+    </main>
+
+    <div class="marquee-box" style="margin-top: 40px;">
+        <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px;">
+            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยอห์น 3:16 
+        </marquee>
+    </div>
+
+    <div style="max-width: 1300px; margin: auto; padding: 40px 20px 0 20px;">
+        
         <div class="rating-form" style="background: #1e1e1e; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #333;">
             <h3 style="font-family: 'Prompt'; color: white; margin-bottom: 15px;">⭐️ ให้คะแนนและแบ่งปันพระพร</h3>
             <select id="uStars" class="u-input" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; background: #2a2a2a; color: #f1c40f; border: 1px solid #444; font-size: 16px;">
@@ -19,41 +40,39 @@
         </div>
 
         <div class="action-center-section">
-    <div class="action-grid">
-        
-        <div class="action-box" style="border-top: 4px solid #25d366;">
-            <div class="action-title" style="color: #25d366;">🟢 ช่องทาง LINE Official</div>
-            <div class="action-desc">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
-            <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer;">
-                <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'">
+            <div class="action-grid">
+                <div class="action-box" style="border-top: 4px solid #25d366; margin-bottom: 20px;">
+                    <div class="action-title" style="color: #25d366; font-family: 'Prompt'; font-weight: bold;">🟢 ช่องทาง LINE Official</div>
+                    <div class="action-desc" style="font-family: 'Sarabun'; color: #ccc; margin: 5px 0;">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
+                    <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer; margin: 10px 0;">
+                        <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'" style="width: 150px;">
+                    </div>
+                    <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link" style="text-decoration: none; display: inline-block; margin-top: 5px;">💬 กดเพิ่มเพื่อนใน LINE</a>
+                </div>
+
+                <div class="action-box" style="border-top: 4px solid #4dabff; margin-bottom: 20px;">
+                    <div class="action-title" style="color: #4dabff; font-family: 'Prompt'; font-weight: bold;">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
+                    <div class="action-desc" style="font-family: 'Sarabun'; color: #ccc; margin: 5px 0;">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
+                    <div class="action-image-box" style="margin: 10px 0;">
+                        <img src="bbk_church.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4221/4221711.png'" style="width: 60px;">
+                    </div>
+                    <div class="bank-details" style="font-family: 'Sarabun'; color: #eee; line-height: 1.6;">
+                        ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>
+                        โดยการถวายเงินผ่านธนาคารได้ที่<br>
+                        <strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>
+                        ประเภทบัญชี: บัญชีออมทรัพย์<br>
+                        เลขที่บัญชี: <span class="bank-highlight" style="color: #4dabff; font-weight: bold;">161-5-36894-9</span><br>
+                        ชื่อบัญชี: <strong>คริสตจักรแบ๊พติสต์บางเขน</strong>
+                    </div>
+                </div>
             </div>
-            <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link">💬 กดเพิ่มเพื่อนใน LINE</a>
         </div>
 
-        <div class="action-box" style="border-top: 4px solid #4dabff;">
-            <div class="action-title" style="color: #4dabff;">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
-            <div class="action-desc">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
-            <div class="action-image-box">
-                <img src="bbk_church.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4221/4221711.png'">
-            </div>
-            <div class="bank-details">
-                ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>
-                โดยการถวายเงินผ่านธนาคารได้ที่<br>
-                <strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>
-                ประเภทบัญชี: บัญชีออมทรัพย์<br>
-                เลขที่บัญชี: <span class="bank-highlight">161-5-36894-9</span><br>
-                ชื่อบัญชี: <strong>คริสตจักรแบ๊พติสต์บางเขน</strong>
-            </div>
+        <div class="footer-support-section" style="text-align: center; margin: 20px 0;">
+            <a href="ads.html" class="img-banner-link">
+                <img src="banner02.png" alt="หนังสือ & สื่อเพลงคริสเตียน" style="max-width: 100%; height: auto; border-radius: 10px;">
+            </a>
         </div>
-
-    </div>
-</div>
-
-<div class="footer-support-section">
-    <a href="ads.html" class="img-banner-link">
-        <img src="banner02.png" alt="หนังสือ & สื่อเพลงคริสเตียน">
-    </a>
-</div>
 
         <div style="text-align: center; margin-bottom: 50px; padding: 40px 20px; background: #1e1e1e; border: 1px solid #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 600px; margin: 40px auto;">
             <h2 style="font-family: 'Prompt'; color: #4dabff; margin-bottom: 10px;">💬 ติดต่อคริสตจักร</h2>
@@ -84,30 +103,8 @@
                 </a>
             </div>
         </div>
-    </div>
 
-    <div class="marquee-box">
-        <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
-            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานประบุตรของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ ยอห์น 3 : 16 
-        </marquee>
-    </div>
-
-    <main class="content-area">
-        <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
-        <div id="list-news" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">🙏 คำพยานชีวิต</h2>
-        <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">📖 บทความหนุนใจ</h2>
-        <div id="list-article" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
-        <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
-    </main>
-
-
-    <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff;">
+    </div> <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff; margin-top: 50px;">
         <img src="logo.png" onerror="this.src='logo.png'" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
         <br>
         <strong style="font-family:'Prompt'; font-size: 24px; display: block; margin-bottom: 15px; letter-spacing: 1px;">คริสตจักรแบ๊พติสต์บางเขน</strong>
