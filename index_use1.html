@@ -118,6 +118,11 @@
         .subscription-btn:hover {
             background: #3596eb;
         }
+        .subscription-btn:disabled {
+            background: #555;
+            color: #aaa;
+            cursor: not-allowed;
+        }
 
         /* กล่องสารบัญและการจัดเรียงแบบแนวนอน */
         .horizontal-filter-container {
@@ -397,11 +402,11 @@
                 <h3>📮 ติดตามข่าวสารและบทความ</h3>
                 <p>ลงทะเบียนรับคำเทศนา บทความหนุนใจ และข่าวสารอัปเดตตรงถึงคุณ</p>
             </div>
-            <div class="subscription-form">
+            <form id="subscribeForm" class="subscription-form">
                 <input type="text" id="subName" class="subscription-input" placeholder="ชื่อของคุณ">
                 <input type="email" id="subEmail" class="subscription-input" placeholder="อีเมลของคุณ" required>
-                <button type="button" id="btnSubscribe" class="subscription-btn">🚀 ติดตามเลย</button>
-            </div>
+                <button type="submit" id="btnSubscribe" class="subscription-btn">🚀 ติดตามเลย</button>
+            </form>
         </div>
     </div>
 </div>
@@ -490,41 +495,55 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ฟังก์ชันสำหรับระบบสมัครสมาชิกติดตาม (Subscription)
-    document.getElementById('btnSubscribe').addEventListener('click', async () => {
-        const nameInput = document.getElementById('subName').value.trim();
-        const emailInput = document.getElementById('subEmail').value.trim();
+    // แก้ไขระบบสคริปต์ฟอร์มติดตามข่าวสาร (Subscription) แบบสมบูรณ์
+    const subscribeForm = document.getElementById('subscribeForm');
+    const btnSubscribe = document.getElementById('btnSubscribe');
 
-        if (!emailInput) {
-            alert('กรุณากรอกอีเมลของคุณเพื่อติดตามข่าวสารครับ');
-            return;
-        }
+    if (subscribeForm) {
+        subscribeForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // ป้องกันหน้าเว็บรีเฟรชโหลดใหม่วนซ้ำ
 
-        // ตรวจสอบโครงสร้างอีเมลเบื้องต้น
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailInput)) {
-            alert('รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้งครับ');
-            return;
-        }
+            const nameInput = document.getElementById('subName').value.trim();
+            const emailInput = document.getElementById('subEmail').value.trim();
 
-        try {
-            // บันทึกข้อมูลลงใน collection "subscribers" ของคริสตจักร
-            await addDoc(collection(db, "subscribers"), {
-                subscriberName: nameInput || "ผู้สนใจทั่วไป",
-                subscriberEmail: emailInput,
-                subscribedAt: serverTimestamp()
-            });
+            if (!emailInput) {
+                alert('กรุณากรอกอีเมลของคุณเพื่อติดตามข่าวสารครับ');
+                return;
+            }
 
-            alert('🎉 ลงทะเบียนติดตามเรียบร้อยแล้ว ขอบคุณสำหรับความสนใจในพันธกิจของคริสตจักรครับ ขอพระเจ้าอวยพรครับ');
-            
-            // ล้างค่าข้อมูลหลังส่งสำเร็จ
-            document.getElementById('subName').value = "";
-            document.getElementById('subEmail').value = "";
-        } catch (error) {
-            console.error("Error subscribing: ", error);
-            alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้งในภายหลังครับ');
-        }
-    });
+            // ตรวจสอบโครงสร้างอีเมลเบื้องต้น
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput)) {
+                alert('รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้งครับ');
+                return;
+            }
+
+            // บล็อกปุ่มระหว่างบันทึกข้อมูล ป้องกันการกดเบิ้ล
+            btnSubscribe.disabled = true;
+            btnSubscribe.innerText = '⏳ กำลังบันทึก...';
+
+            try {
+                // บันทึกข้อมูลลงใน collection "subscribers" ของคริสตจักร
+                await addDoc(collection(db, "subscribers"), {
+                    subscriberName: nameInput || "ผู้สนใจทั่วไป",
+                    subscriberEmail: emailInput,
+                    subscribedAt: serverTimestamp()
+                });
+
+                alert('🎉 ลงทะเบียนติดตามเรียบร้อยแล้ว ขอบคุณสำหรับความสนใจในพันธกิจของคริสตจักรครับ ขอพระเจ้าอวยพรครับ');
+                
+                // ล้างค่าข้อมูลหลังส่งสำเร็จ
+                subscribeForm.reset();
+            } catch (error) {
+                console.error("Error subscribing: ", error);
+                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้งในภายหลังครับ');
+            } finally {
+                // ปลดบล็อกปุ่มกลับมาสถานะปกติ
+                btnSubscribe.disabled = false;
+                btnSubscribe.innerText = '🚀 ติดตามเลย';
+            }
+        });
+    }
 
     let allData = [];
 
@@ -571,6 +590,7 @@
 
     function updateDropdown(elementId, dataSet, defaultText) {
         const select = document.getElementById(elementId);
+        if (!select) return;
         const currentValue = select.value;
         select.innerHTML = `<option value="all">${defaultText}</option>`;
         dataSet.forEach(item => {
@@ -582,22 +602,26 @@
     function processAndRender() {
         let filtered = [...allData];
 
-        const searchKeyword = document.getElementById('searchBar').value.trim().toLowerCase();
+        const searchBar = document.getElementById('searchBar');
+        const searchKeyword = searchBar ? searchBar.value.trim().toLowerCase() : "";
         if (searchKeyword !== "") {
             filtered = filtered.filter(item => (item.title && item.title.toLowerCase().includes(searchKeyword)));
         }
 
-        const categoryFilter = document.getElementById('filterCategory').value;
+        const filterCategory = document.getElementById('filterCategory');
+        const categoryFilter = filterCategory ? filterCategory.value : "all";
         if (categoryFilter !== "all") {
             filtered = filtered.filter(item => item.category && item.category.trim() === categoryFilter);
         }
 
-        const seriesFilter = document.getElementById('filterSeries').value;
+        const filterSeries = document.getElementById('filterSeries');
+        const seriesFilter = filterSeries ? filterSeries.value : "all";
         if (seriesFilter !== "all") {
             filtered = filtered.filter(item => item.series && item.series.trim() === seriesFilter);
         }
 
-        const authorFilter = document.getElementById('filterAuthor').value;
+        const filterAuthor = document.getElementById('filterAuthor');
+        const authorFilter = filterAuthor ? filterAuthor.value : "all";
         if (authorFilter !== "all") {
             filtered = filtered.filter(item => {
                 const author = item.authorName || item.author || "คริสตจักร";
@@ -605,13 +629,15 @@
             });
         }
 
-        const alphabetSort = document.getElementById('sortAlphabet').value;
+        const sortAlphabet = document.getElementById('sortAlphabet');
+        const alphabetSort = sortAlphabet ? sortAlphabet.value : "none";
         if (alphabetSort === "az") {
             filtered.sort((a, b) => (a.title || "").localeCompare(b.title || "", 'th'));
         } else if (alphabetSort === "za") {
             filtered.sort((a, b) => (b.title || "").localeCompare(a.title || "", 'th'));
         } else {
-            const dateSort = document.getElementById('sortDate').value;
+            const sortDate = document.getElementById('sortDate');
+            const dateSort = sortDate ? sortDate.value : "desc";
             if (dateSort === "desc") {
                 filtered.sort((a, b) => (b.displayDate || "").localeCompare(a.displayDate || ""));
             } else if (dateSort === "asc") {
@@ -661,33 +687,45 @@
                 </div>
             </div>`;
             
-            if (cat.includes("ข่าวสาร")) { lists.news.insertAdjacentHTML('beforeend', card); counts.news++; }
-            if (cat.includes("พยาน")) { lists.testimony.insertAdjacentHTML('beforeend', card); counts.testimony++; }
-            if (cat.includes("บทความ")) { lists.article.insertAdjacentHTML('beforeend', card); counts.article++; }
-            if (cat.includes("เทศนา")) { lists.sermon.insertAdjacentHTML('beforeend', card); counts.sermon++; }
+            if (cat.includes("ข่าวสาร") && lists.news) { lists.news.insertAdjacentHTML('beforeend', card); counts.news++; }
+            if (cat.includes("พยาน") && lists.testimony) { lists.testimony.insertAdjacentHTML('beforeend', card); counts.testimony++; }
+            if (cat.includes("บทความ") && lists.article) { lists.article.insertAdjacentHTML('beforeend', card); counts.article++; }
+            if (cat.includes("เทศนา") && lists.sermon) { lists.sermon.insertAdjacentHTML('beforeend', card); counts.sermon++; }
         });
 
         Object.keys(lists).forEach(key => {
-            if (counts[key] === 0) {
+            if (lists[key] && counts[key] === 0) {
                 lists[key].innerHTML = "<p style='color:#666; font-size:14px; padding:10px;'>ไม่พบข้อมูลในหมวดหมู่นี้ตามเงื่อนไขที่เลือก</p>";
             }
         });
     }
 
-    document.getElementById('searchBar').addEventListener('input', processAndRender);
-    document.getElementById('filterCategory').addEventListener('change', processAndRender);
-    document.getElementById('filterSeries').addEventListener('change', processAndRender);
-    document.getElementById('filterAuthor').addEventListener('change', processAndRender);
-    document.getElementById('sortDate').addEventListener('change', processAndRender);
+    // ติดตั้ง Event Listeners
+    const addListener = (id, event, callback) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener(event, callback);
+    };
+
+    addListener('searchBar', 'input', processAndRender);
+    addListener('filterCategory', 'change', processAndRender);
+    addListener('filterSeries', 'change', processAndRender);
+    addListener('filterAuthor', 'change', processAndRender);
+    addListener('sortDate', 'change', processAndRender);
     
-    document.getElementById('sortAlphabet').addEventListener('change', () => {
-        if(document.getElementById('sortAlphabet').value !== "none") {
-            document.getElementById('sortDate').disabled = true;
-        } else {
-            document.getElementById('sortDate').disabled = false;
-        }
-        processAndRender();
-    });
+    const sortAlphabetSelect = document.getElementById('sortAlphabet');
+    if (sortAlphabetSelect) {
+        sortAlphabetSelect.addEventListener('change', () => {
+            const sortDateSelect = document.getElementById('sortDate');
+            if (sortDateSelect) {
+                if(sortAlphabetSelect.value !== "none") {
+                    sortDateSelect.disabled = true;
+                } else {
+                    sortDateSelect.disabled = false;
+                }
+            }
+            processAndRender();
+        });
+    }
 
     let cur = 0;
     setInterval(() => {
