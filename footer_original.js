@@ -2,8 +2,43 @@
     // ลบ window.toggleAddress เดิมออก (ถ้ามี) เพื่อล้างค่าฟังก์ชันเก่า
     window.toggleAddress = null;
 
-    const footerHTML = `
-    <div style="max-width: 1300px; margin: auto; padding: 0 20px;">
+    // เพิ่ม CSS สไตล์สำหรับเมนูแนวนอน เพื่อให้รองรับหน้าจอคอมและมือถือ (Responsive)
+    const menuStyle = `
+    <style>
+        .horizontal-menu {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        .horizontal-menu a {
+            font-family: 'Prompt', sans-serif;
+            font-size: 15px;
+            color: #eeeeee;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .horizontal-menu a:hover {
+            background: #4dabff;
+            color: #ffffff;
+            border-color: #4dabff;
+            box-shadow: 0 4px 10px rgba(77, 171, 255, 0.3);
+        }
+    </style>
+    `;
+
+    const footerHTML = menuStyle + `
+    <div style="max-width: 1300px; margin: auto; padding: 40px 20px 0 20px;">
+        
+        <!-- ฟอร์มให้คะแนน -->
         <div class="rating-form" style="background: #1e1e1e; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #333;">
             <h3 style="font-family: 'Prompt'; color: white; margin-bottom: 15px;">⭐️ ให้คะแนนและแบ่งปันพระพร</h3>
             <select id="uStars" class="u-input" style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 8px; background: #2a2a2a; color: #f1c40f; border: 1px solid #444; font-size: 16px;">
@@ -18,7 +53,45 @@
             <button id="submitRatingBtn" style="width: 100%; padding: 15px; background: #4dabff; color: white; border: none; border-radius: 8px; cursor: pointer; font-family: 'Prompt'; font-weight: 600;">ส่งความคิดเห็น</button>
         </div>
 
-        <div style="text-align: center; margin-bottom: 50px; padding: 40px 20px; background: #1e1e1e; border: 1px solid #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 600px; margin: 40px auto;">
+        <!-- LINE & ช่องทางสนับสนุน -->
+        <div class="action-center-section">
+            <div class="action-grid">
+                <div class="action-box" style="border-top: 4px solid #25d366; margin-bottom: 20px;">
+                    <div class="action-title" style="color: #25d366; font-family: 'Prompt'; font-weight: bold;">🟢 ช่องทาง LINE Official</div>
+                    <div class="action-desc" style="font-family: 'Sarabun'; color: #ccc; margin: 5px 0;">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
+                    <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer; margin: 10px 0;">
+                        <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'" style="width: 150px;">
+                    </div>
+                    <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link" style="text-decoration: none; display: inline-block; margin-top: 5px;">💬 กดเพิ่มเพื่อนใน LINE</a>
+                </div>
+
+                <div class="action-box" style="border-top: 4px solid #4dabff; margin-bottom: 20px;">
+                    <div class="action-title" style="color: #4dabff; font-family: 'Prompt'; font-weight: bold;">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
+                    <div class="action-desc" style="font-family: 'Sarabun'; color: #ccc; margin: 5px 0;">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
+                    <div class="action-image-box" style="margin: 10px 0;">
+                        <img src="bbk_church.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4221/4221711.png'" style="width: 60px;">
+                    </div>
+                    <div class="bank-details" style="font-family: 'Sarabun'; color: #eee; line-height: 1.6;">
+                        ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>
+                        โดยการถวายเงินผ่านธนาคารได้ที่<br>
+                        <strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>
+                        ประเภทบัญชี: บัญชีออมทรัพย์<br>
+                        เลขที่บัญชี: <span class="bank-highlight" style="color: #4dabff; font-weight: bold;">161-5-36894-9</span><br>
+                        ชื่อบัญชี: <strong>คริสตจักรแบ๊พติสต์บางเขน</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner โฆษณา -->
+        <div class="footer-support-section" style="text-align: center; margin: 20px 0;">
+            <a href="ads.html" class="img-banner-link">
+                <img src="banner02.png" alt="หนังสือ & สื่อเพลงคริสเตียน" style="max-width: 100%; height: auto; border-radius: 10px;">
+            </a>
+        </div>
+
+        <!-- ติดต่อคริสตจักร & สถิติ -->
+        <div style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background: #1e1e1e; border: 1px solid #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 600px; margin: 40px auto;">
             <h2 style="font-family: 'Prompt'; color: #4dabff; margin-bottom: 10px;">💬 ติดต่อคริสตจักร</h2>
             <p style="font-family: 'Sarabun'; color: #eeeeee; font-size: 18px; margin-bottom: 25px; line-height: 1.6;">
                 <b>โปรดสแกน QR Code ด้านล่างนี้</b><br>
@@ -40,22 +113,39 @@
                 </p>
             </div>
             
+            <!-- ส่วนของ Flag Counter -->
             <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
                 <h3 style="margin-bottom: 10px; font-family: 'Prompt'; color: #666; font-size: 12px; font-weight: 400;">สถิติผู้เยี่ยมชม</h3>
                 <a href="https://info.flagcounter.com/iWY4" style="display: inline-block; max-width: 100%;">
-                    <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0" style="max-width: 100%; height: auto; display: block;">
+                    <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" style="max-width: 100%; height: auto; display: block; border: 0;">
                 </a>
             </div>
         </div>
-    </div>
 
-    <div class="marquee-box">
-        <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
-            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานประบุตรของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ ยอห์น 3 : 16 
+    </div> 
+
+    <!-- ข้อพระคัมภีร์วิ่ง (อยู่ใต้กล่องสถิติ) -->
+    <div class="marquee-box" style="margin-top: 30px; text-align: center;">
+        <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px; max-width: 600px; margin: 0 auto;">
+            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยоห์น 3:16 
         </marquee>
     </div>
 
-    <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff;">
+    <!-- เมนูแนวนอนสไตล์แคปซูลสวยงาม (อยู่ถัดจากข้อพระคัมภีร์และเหนือแถบสีน้ำเงินพอดี) -->
+    <div style="margin-top: 20px; margin-bottom: 5px;">
+        <nav class="horizontal-menu">
+            <a href="index.html">🏠 หน้าแรก</a>
+            <a href="sermons.html">🎙️ คำเทศนา</a>
+            <a href="blogs.html">📖 บทความ</a>
+            <a href="testimony.html">🙏 คำพยาน</a>
+            <a href="news.html">📢 ข่าวสาร</a>
+            <a href="ads.html" style="color: #ffcc00; border-color: rgba(255,204,0,0.3);">📖 โฆษณา</a>
+            <a href="contact.html">📞 ติดต่อเรา</a>
+        </nav>
+    </div>
+
+    <!-- แถบด้านล่างสุดของเว็บ (Footer main) -->
+    <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff; margin-top: 15px;">
         <img src="logo.png" onerror="this.src='logo.png'" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
         <br>
         <strong style="font-family:'Prompt'; font-size: 24px; display: block; margin-bottom: 15px; letter-spacing: 1px;">คริสตจักรแบ๊พติสต์บางเขน</strong>
