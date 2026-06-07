@@ -54,35 +54,33 @@
             color: #fff; background: #2c2c2c; transform: translateY(-2px); 
         }
 
-        /* Layout แยกฝั่งซ้าย-ขวา */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr; /* ฝั่งซ้ายเมนูค้นหา 300px ฝั่งขวาเนื้อหาหลัก */
-            gap: 30px;
-            padding: 20px 5%;
+        /* กล่องสารบัญและการจัดเรียงแบบแนวนอน (ย้ายมาจาก Sidebar) */
+        .horizontal-filter-container {
             width: 100%;
             max-width: 1200px;
-            margin: auto;
+            margin: 20px auto 10px auto;
+            padding: 0 5%;
         }
-
-        /* ฝั่งซ้าย: กล่องสารบัญ/จัดเรียงเนื้อหา (Sidebar Filter) */
-        .sidebar-filter {
+        .horizontal-filter {
             background: #1e1e1e;
             border: 1px solid #333;
             border-radius: 15px;
             padding: 20px;
-            height: fit-content;
-            position: sticky;
-            top: 90px;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: flex-end;
         }
         .filter-group {
-            margin-bottom: 20px;
+            margin-bottom: 0; /* รีเซ็ต margin เดิม */
         }
         .filter-label {
             font-family: 'Prompt';
-            font-size: 15px;
+            font-size: 14px;
             color: #4dabff;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: block;
             font-weight: 600;
         }
@@ -102,8 +100,18 @@
             border-color: #4dabff;
         }
 
-        /* ฝั่งขวา: พื้นที่แสดงกล่องเนื้อหาหลัก */
+        /* Layout พื้นที่เนื้อหาหลัก (ปรับให้วางเต็มหน้าเพจ) */
+        .main-layout {
+            display: block; /* เปลี่ยนจาก grid เป็น block เพื่อให้เนื้อหาขยายตัวเต็มที่ */
+            padding: 20px 5%;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* พื้นที่แสดงกล่องเนื้อหาหลัก */
         .content-area {
+            width: 100%;
             overflow: hidden;
         }
         .section-title { font-family: 'Prompt'; font-size: 24px; margin: 0 0 20px 0; color: #fff; border-left: 5px solid #4dabff; padding-left: 15px; }
@@ -111,7 +119,7 @@
         /* จัดเรียงกล่องการ์ด */
         .grid-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* ปรับขนาดขั้นต่ำเล็กน้อยเพื่อให้ลงตัวกับหน้าจอกว้าง */
             gap: 25px; 
             margin-bottom: 40px;
         }
@@ -256,14 +264,11 @@
         }
 
         /* Responsive */
-        @media (max-width: 992px) {
-            .main-layout { grid-template-columns: 1fr; } /* ยุบรวมเหลือคอลัมน์เดียวบนแท็บเล็ตและมือถือ */
-            .sidebar-filter { position: static; margin-bottom: 20px; }
-        }
         @media (max-width: 768px) {
             .slide { aspect-ratio: 16 / 6.5; } 
             .horizontal-menu { margin: 10px; border-radius: 15px; padding: 15px; }
             .horizontal-menu a { font-size: 14px; padding: 8px 12px; }
+            .filter-grid { grid-template-columns: 1fr; gap: 12px; } /* บนมือถือให้กรองสลับมาเป็นแนวตั้งเพื่อให้อ่านง่าย */
             .action-grid { grid-template-columns: 1fr; gap: 20px; }
             .banner-placement-container { padding: 0 15px; margin: 10px auto; }
         }
@@ -318,55 +323,58 @@
     </a>
 </div>
 
-<div class="main-layout">
-    
-    <aside class="sidebar-filter">
-        <div style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
+<div class="horizontal-filter-container">
+    <aside class="horizontal-filter">
+        <div style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
         
-        <div class="filter-group">
-            <label class="filter-label">🔍 ค้นหาตามชื่อเรื่อง</label>
-            <input type="text" id="searchBar" class="search-input" placeholder="พิมพ์ชื่อเนื้อหาที่ต้องการ...">
-        </div>
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label class="filter-label">🔍 ค้นหาตามชื่อเรื่อง</label>
+                <input type="text" id="searchBar" class="search-input" placeholder="พิมพ์ชื่อเนื้อหาที่ต้องการ...">
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">📁 คัดกรองตามหมวดหมู่</label>
-            <select id="filterCategory" class="filter-select">
-                <option value="all">ทั้งหมด ทุกหมวดหมู่</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">📁 คัดกรองตามหมวดหมู่</label>
+                <select id="filterCategory" class="filter-select">
+                    <option value="all">ทั้งหมด ทุกหมวดหมู่</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">🎞️ คัดกรองตามซีรีย์</label>
-            <select id="filterSeries" class="filter-select">
-                <option value="all">ทั้งหมด ทุกซีรีย์</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">🎞️ คัดกรองตามซีรีย์</label>
+                <select id="filterSeries" class="filter-select">
+                    <option value="all">ทั้งหมด ทุกซีรีย์</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">👤 คัดกรองตามผู้เขียน/ผู้แต่ง</label>
-            <select id="filterAuthor" class="filter-select">
-                <option value="all">ทั้งหมด ทุกผู้เขียน</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">👤 คัดกรองตามผู้เขียน</label>
+                <select id="filterAuthor" class="filter-select">
+                    <option value="all">ทั้งหมด ทุกผู้เขียน</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
-            <select id="sortAlphabet" class="filter-select">
-                <option value="none">-- เลือกการจัดเรียง --</option>
-                <option value="az">เรียงจาก ก - ฮ / A - Z</option>
-                <option value="za">เรียงจาก ฮ - ก / Z - A</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
+                <select id="sortAlphabet" class="filter-select">
+                    <option value="none">-- เลือกการจัดเรียง --</option>
+                    <option value="az">เรียงจาก ก - ฮ / A - Z</option>
+                    <option value="za">เรียงจาก ฮ - ก / Z - A</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">📅 เรียงตาม วัน, เดือน, ปี</label>
-            <select id="sortDate" class="filter-select">
-                <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
-                <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
-            </select>
+            <div class="filter-group">
+                <label class="filter-label">📅 เรียงตาม วัน, เดือน, ปี</label>
+                <select id="sortDate" class="filter-select">
+                    <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
+                    <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
+                </select>
+            </div>
         </div>
     </aside>
+</div>
 
+<div class="main-layout">
     <main class="content-area">
         <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
         <div id="list-news" class="grid-container">กำลังโหลด...</div>
@@ -380,7 +388,6 @@
         <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
         <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
     </main>
-
 </div>
 
 <script src="footer.js"></script>
