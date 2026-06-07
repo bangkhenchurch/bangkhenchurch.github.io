@@ -43,7 +43,7 @@
 
         @keyframes fade { from {opacity: .4} to {opacity: 1} }
 
-        /* เมนูด้านล่างสไลด์ */
+        /* เมนูแนวนอน */
         .horizontal-menu { 
             background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto 10px auto; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
         }
@@ -54,35 +54,33 @@
             color: #fff; background: #2c2c2c; transform: translateY(-2px); 
         }
 
-        /* Layout แยกฝั่งซ้าย-ขวา */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr; /* ฝั่งซ้ายเมนูค้นหา 300px ฝั่งขวาเนื้อหาหลัก */
-            gap: 30px;
-            padding: 20px 5%;
+        /* กล่องสารบัญและการจัดเรียงแบบแนวนอน (ย้ายมาจาก Sidebar) */
+        .horizontal-filter-container {
             width: 100%;
             max-width: 1200px;
-            margin: auto;
+            margin: 20px auto 10px auto;
+            padding: 0 5%;
         }
-
-        /* ฝั่งซ้าย: กล่องสารบัญ/จัดเรียงเนื้อหา (Sidebar Filter) */
-        .sidebar-filter {
+        .horizontal-filter {
             background: #1e1e1e;
             border: 1px solid #333;
             border-radius: 15px;
             padding: 20px;
-            height: fit-content;
-            position: sticky;
-            top: 90px;
+        }
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: flex-end;
         }
         .filter-group {
-            margin-bottom: 20px;
+            margin-bottom: 0; /* รีเซ็ต margin เดิม */
         }
         .filter-label {
             font-family: 'Prompt';
-            font-size: 15px;
+            font-size: 14px;
             color: #4dabff;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             display: block;
             font-weight: 600;
         }
@@ -102,8 +100,18 @@
             border-color: #4dabff;
         }
 
-        /* ฝั่งขวา: พื้นที่แสดงกล่องเนื้อหาหลัก */
+        /* Layout พื้นที่เนื้อหาหลัก (ปรับให้วางเต็มหน้าเพจ) */
+        .main-layout {
+            display: block; /* เปลี่ยนจาก grid เป็น block เพื่อให้เนื้อหาขยายตัวเต็มที่ */
+            padding: 20px 5%;
+            width: 100%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        /* พื้นที่แสดงกล่องเนื้อหาหลัก */
         .content-area {
+            width: 100%;
             overflow: hidden;
         }
         .section-title { font-family: 'Prompt'; font-size: 24px; margin: 0 0 20px 0; color: #fff; border-left: 5px solid #4dabff; padding-left: 15px; }
@@ -111,7 +119,7 @@
         /* จัดเรียงกล่องการ์ด */
         .grid-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* ปรับขนาดขั้นต่ำเล็กน้อยเพื่อให้ลงตัวกับหน้าจอกว้าง */
             gap: 25px; 
             margin-bottom: 40px;
         }
@@ -256,14 +264,11 @@
         }
 
         /* Responsive */
-        @media (max-width: 992px) {
-            .main-layout { grid-template-columns: 1fr; } /* ยุบรวมเหลือคอลัมน์เดียวบนแท็บเล็ตและมือถือ */
-            .sidebar-filter { position: static; margin-bottom: 20px; }
-        }
         @media (max-width: 768px) {
             .slide { aspect-ratio: 16 / 6.5; } 
             .horizontal-menu { margin: 10px; border-radius: 15px; padding: 15px; }
             .horizontal-menu a { font-size: 14px; padding: 8px 12px; }
+            .filter-grid { grid-template-columns: 1fr; gap: 12px; } /* บนมือถือให้กรองสลับมาเป็นแนวตั้งเพื่อให้อ่านง่าย */
             .action-grid { grid-template-columns: 1fr; gap: 20px; }
             .banner-placement-container { padding: 0 15px; margin: 10px auto; }
         }
@@ -282,7 +287,7 @@
     <div class="slide slide-3"></div>
 </div>
 
-<div class="featured-video-container" style="background: #121212; padding: 40px 20px;">
+<div class="featured-video-container" style="background: #121212; padding: 40px 20px 10px 20px;">
     <div style="max-width: 900px; margin: auto;">
         <h2 style="font-family: 'Prompt'; color: white; border-left: 5px solid #4dabff; padding-left: 15px; margin-bottom: 20px;">
             📽️ รับชมวีดีโอ สร้างโลก 
@@ -296,12 +301,6 @@
     </div>
 </div>
 
-<div class="marquee-box">
-    <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
-        Because God so loved the world that he gave his only begotten Son, that whoever believes in him should not perish but have eternal life. - John 3:16
-    </marquee>
-</div>
-
 <nav class="horizontal-menu">
     <a href="index.html">🏠 หน้าแรก</a>
     <a href="sermons.html">🎙️ คำเทศนา</a>
@@ -312,61 +311,70 @@
     <a href="contact.html">📞 ติดต่อเรา</a>
 </nav>
 
+<div class="marquee-box">
+    <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
+        Because God so loved the world that he gave his only begotten Son, that whoever believes in him should not perish but have eternal life. - John 3:16
+    </marquee>
+</div>
+
 <div class="banner-placement-container">
     <a href="ads.html" class="img-banner-link">
         <img src="banner01.png" alt="หนังสือ & สื่อเพลงคริสเตียน">
     </a>
 </div>
 
-<div class="main-layout">
-    
-    <aside class="sidebar-filter">
-        <div style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
+<div class="horizontal-filter-container">
+    <aside class="horizontal-filter">
+        <div style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
         
-        <div class="filter-group">
-            <label class="filter-label">🔍 ค้นหาตามชื่อเรื่อง</label>
-            <input type="text" id="searchBar" class="search-input" placeholder="พิมพ์ชื่อเนื้อหาที่ต้องการ...">
-        </div>
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label class="filter-label">🔍 ค้นหาตามชื่อเรื่อง</label>
+                <input type="text" id="searchBar" class="search-input" placeholder="พิมพ์ชื่อเนื้อหาที่ต้องการ...">
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">📁 คัดกรองตามหมวดหมู่</label>
-            <select id="filterCategory" class="filter-select">
-                <option value="all">ทั้งหมด ทุกหมวดหมู่</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">📁 คัดกรองตามหมวดหมู่</label>
+                <select id="filterCategory" class="filter-select">
+                    <option value="all">ทั้งหมด ทุกหมวดหมู่</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">🎞️ คัดกรองตามซีรีย์</label>
-            <select id="filterSeries" class="filter-select">
-                <option value="all">ทั้งหมด ทุกซีรีย์</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">🎞️ คัดกรองตามซีรีย์</label>
+                <select id="filterSeries" class="filter-select">
+                    <option value="all">ทั้งหมด ทุกซีรีย์</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">👤 คัดกรองตามผู้เขียน/ผู้แต่ง</label>
-            <select id="filterAuthor" class="filter-select">
-                <option value="all">ทั้งหมด ทุกผู้เขียน</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">👤 คัดกรองตามผู้เขียน</label>
+                <select id="filterAuthor" class="filter-select">
+                    <option value="all">ทั้งหมด ทุกผู้เขียน</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
-            <select id="sortAlphabet" class="filter-select">
-                <option value="none">-- เลือกการจัดเรียง --</option>
-                <option value="az">เรียงจาก ก - ฮ / A - Z</option>
-                <option value="za">เรียงจาก ฮ - ก / Z - A</option>
-            </select>
-        </div>
+            <div class="filter-group">
+                <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
+                <select id="sortAlphabet" class="filter-select">
+                    <option value="none">-- เลือกการจัดเรียง --</option>
+                    <option value="az">เรียงจาก ก - ฮ / A - Z</option>
+                    <option value="za">เรียงจาก ฮ - ก / Z - A</option>
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label class="filter-label">📅 เรียงตาม วัน, เดือน, ปี</label>
-            <select id="sortDate" class="filter-select">
-                <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
-                <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
-            </select>
+            <div class="filter-group">
+                <label class="filter-label">📅 เรียงตาม วัน, เดือน, ปี</label>
+                <select id="sortDate" class="filter-select">
+                    <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
+                    <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
+                </select>
+            </div>
         </div>
     </aside>
+</div>
 
+<div class="main-layout">
     <main class="content-area">
         <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
         <div id="list-news" class="grid-container">กำลังโหลด...</div>
@@ -380,53 +388,7 @@
         <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
         <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
     </main>
-
 </div>
-
-<div class="action-center-section">
-    <div class="action-grid">
-        
-        <div class="action-box" style="border-top: 4px solid #25d366;">
-            <div class="action-title" style="color: #25d366;">🟢 ช่องทาง LINE Official</div>
-            <div class="action-desc">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
-            <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer;">
-                <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'">
-            </div>
-            <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link">💬 กดเพิ่มเพื่อนใน LINE</a>
-        </div>
-
-        <div class="action-box" style="border-top: 4px solid #4dabff;">
-            <div class="action-title" style="color: #4dabff;">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
-            <div class="action-desc">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
-            <div class="action-image-box">
-                <img src="bbk_church.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4221/4221711.png'">
-            </div>
-            <div class="bank-details">
-                ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>
-                โดยการถวายเงินผ่านธนาคารได้ที่<br>
-                <strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>
-                ประเภทบัญชี: บัญชีออมทรัพย์<br>
-                เลขที่บัญชี: <span class="bank-highlight">161-5-36894-9</span><br>
-                ชื่อบัญชี: <strong>คริสตจักรแบ๊พติสต์บางเขน</strong>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div class="footer-support-section">
-    <a href="ads.html" class="img-banner-link">
-        <img src="banner02.png" alt="หนังสือ & สื่อเพลงคริสเตียน">
-    </a>
-</div>
-
-<footer>
-    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
-    <p>© 2026 Bangkhen Baptist Church. All Rights Reserved.</p>
-    <div class="footer-address">
-        คริสตจักรแบ๊พติสต์บางเขน พหลโยธิน แขวงอนุสาวรีย์ เขตบางเขน กรุงเทพมหานคร
-    </div>
-</footer>
 
 <script src="footer.js"></script>
 
