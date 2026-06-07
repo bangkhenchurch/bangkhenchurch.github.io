@@ -54,7 +54,72 @@
             color: #fff; background: #2c2c2c; transform: translateY(-2px); 
         }
 
-        /* กล่องสารบัญและการจัดเรียงแบบแนวนอน (ย้ายมาจาก Sidebar) */
+        /* กล่อง Subscription Section */
+        .subscription-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto 10px auto;
+            padding: 0 5%;
+        }
+        .subscription-box {
+            background: linear-gradient(135deg, #1e1e1e 0%, #0a2c6d 100%);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        .subscription-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr;
+            gap: 20px;
+            align-items: center;
+        }
+        .subscription-text h3 {
+            font-family: 'Prompt';
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .subscription-text p {
+            font-size: 14px;
+            color: #ccc;
+        }
+        .subscription-form {
+            display: flex;
+            gap: 10px;
+        }
+        .subscription-input {
+            flex: 1;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 14px;
+            outline: none;
+        }
+        .subscription-input:focus {
+            border-color: #4dabff;
+        }
+        .subscription-btn {
+            background: #4dabff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-family: 'Prompt';
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .subscription-btn:hover {
+            background: #3596eb;
+        }
+
+        /* กล่องสารบัญและการจัดเรียงแบบแนวนอน */
         .horizontal-filter-container {
             width: 100%;
             max-width: 1200px;
@@ -74,7 +139,7 @@
             align-items: flex-end;
         }
         .filter-group {
-            margin-bottom: 0; /* รีเซ็ต margin เดิม */
+            margin-bottom: 0;
         }
         .filter-label {
             font-family: 'Prompt';
@@ -100,9 +165,9 @@
             border-color: #4dabff;
         }
 
-        /* Layout พื้นที่เนื้อหาหลัก (ปรับให้วางเต็มหน้าเพจ) */
+        /* Layout พื้นที่เนื้อหาหลัก */
         .main-layout {
-            display: block; /* เปลี่ยนจาก grid เป็น block เพื่อให้เนื้อหาขยายตัวเต็มที่ */
+            display: block;
             padding: 20px 5%;
             width: 100%;
             max-width: 1200px;
@@ -119,7 +184,7 @@
         /* จัดเรียงกล่องการ์ด */
         .grid-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* ปรับขนาดขั้นต่ำเล็กน้อยเพื่อให้ลงตัวกับหน้าจอกว้าง */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px; 
             margin-bottom: 40px;
         }
@@ -268,7 +333,9 @@
             .slide { aspect-ratio: 16 / 6.5; } 
             .horizontal-menu { margin: 10px; border-radius: 15px; padding: 15px; }
             .horizontal-menu a { font-size: 14px; padding: 8px 12px; }
-            .filter-grid { grid-template-columns: 1fr; gap: 12px; } /* บนมือถือให้กรองสลับมาเป็นแนวตั้งเพื่อให้อ่านง่าย */
+            .subscription-grid { grid-template-columns: 1fr; text-align: center; gap: 15px; }
+            .subscription-form { flex-direction: column; }
+            .filter-grid { grid-template-columns: 1fr; gap: 12px; }
             .action-grid { grid-template-columns: 1fr; gap: 20px; }
             .banner-placement-container { padding: 0 15px; margin: 10px auto; }
         }
@@ -321,6 +388,22 @@
     <a href="ads.html" class="img-banner-link">
         <img src="banner01.png" alt="หนังสือ & สื่อเพลงคริสเตียน">
     </a>
+</div>
+
+<div class="subscription-container">
+    <div class="subscription-box">
+        <div class="subscription-grid">
+            <div class="subscription-text">
+                <h3>📮 ติดตามข่าวสารและบทความ</h3>
+                <p>ลงทะเบียนรับคำเทศนา บทความหนุนใจ และข่าวสารอัปเดตตรงถึงคุณ</p>
+            </div>
+            <div class="subscription-form">
+                <input type="text" id="subName" class="subscription-input" placeholder="ชื่อของคุณ">
+                <input type="email" id="subEmail" class="subscription-input" placeholder="อีเมลของคุณ" required>
+                <button type="button" id="btnSubscribe" class="subscription-btn">🚀 ติดตามเลย</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="horizontal-filter-container">
@@ -394,7 +477,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, query, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, query, onSnapshot, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
@@ -406,6 +489,42 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+    // ฟังก์ชันสำหรับระบบสมัครสมาชิกติดตาม (Subscription)
+    document.getElementById('btnSubscribe').addEventListener('click', async () => {
+        const nameInput = document.getElementById('subName').value.trim();
+        const emailInput = document.getElementById('subEmail').value.trim();
+
+        if (!emailInput) {
+            alert('กรุณากรอกอีเมลของคุณเพื่อติดตามข่าวสารครับ');
+            return;
+        }
+
+        // ตรวจสอบโครงสร้างอีเมลเบื้องต้น
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput)) {
+            alert('รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้งครับ');
+            return;
+        }
+
+        try {
+            // บันทึกข้อมูลลงใน collection "subscribers" ของคริสตจักร
+            await addDoc(collection(db, "subscribers"), {
+                subscriberName: nameInput || "ผู้สนใจทั่วไป",
+                subscriberEmail: emailInput,
+                subscribedAt: serverTimestamp()
+            });
+
+            alert('🎉 ลงทะเบียนติดตามเรียบร้อยแล้ว ขอบคุณสำหรับความสนใจในพันธกิจของคริสตจักรครับ ขอพระเจ้าอวยพรครับ');
+            
+            // ล้างค่าข้อมูลหลังส่งสำเร็จ
+            document.getElementById('subName').value = "";
+            document.getElementById('subEmail').value = "";
+        } catch (error) {
+            console.error("Error subscribing: ", error);
+            alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้งในภายหลังครับ');
+        }
+    });
 
     let allData = [];
 
