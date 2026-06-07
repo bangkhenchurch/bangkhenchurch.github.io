@@ -1,11 +1,11 @@
 (function() {
-    // ลบ window.toggleAddress เดิมออก (ถ้ามี) เพื่อล้างค่าฟังก์ชันเก่า
+    // 1. ล้างค่าฟังก์ชันหรือตัวแปรเก่าที่อาจผูกกับ window เพื่อป้องกันการซ้ำซ้อน
     window.toggleAddress = null;
 
-    // รวบรวม CSS ทั้งระบบเมนู และระบบ Grid บล็อกติดต่อ/บริจาค เพื่อให้ทุกหน้าเพจแสดงผลได้สวยงามเท่ากัน
+    // 2. รวบรวม CSS สไตล์ทั้งหมดของระบบ Footer
     const customStyle = `
     <style>
-        /* CSS เมนูแนวนอน */
+        /* CSS เมนูนำทางแนวนอน */
         .custom-footer-menu {
             display: flex !important;
             flex-direction: row !important;
@@ -38,7 +38,7 @@
             box-shadow: 0 4px 10px rgba(77, 171, 255, 0.3) !important;
         }
 
-        /* CSS จัดการกล่อง QR Code และ บัญชีธนาคารให้เรียงแนวนอน (แก้ปัญหากล่องเบี้ยวหน้าเพจย่อย) */
+        /* CSS Grid สำหรับกล่อง LINE Official และ ช่องทางถวายเงิน */
         .action-grid {
             display: grid !important;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
@@ -68,6 +68,7 @@
     </style>
     `;
 
+    // 3. รวบรวมโครงสร้าง HTML ทั้งหมดของ Footer
     const footerHTML = customStyle + `
     <div style="max-width: 1300px; margin: auto; padding: 40px 20px 0 20px;">
         
@@ -123,7 +124,7 @@
         <div style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background: #1e1e1e; border: 1px solid #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 600px; margin: 40px auto;">
             <h2 style="font-family: 'Prompt'; color: #4dabff; margin-bottom: 10px;">💬 ติดต่อคริสตจักร</h2>
             <p style="font-family: 'Sarabun'; color: #eeeeee; font-size: 18px; margin-bottom: 25px; line-height: 1.6;">
-                <b>โปรดสแกน QR Code ด้านล่างนี้</b><br>
+                <b>...โปรดสแกน QR Code ด้านล่างนี้...</b><br>
                 เพื่อบอกความต้องการของคุณให้เราทราบ
             </p>
             
@@ -154,7 +155,7 @@
 
     <div class="marquee-box" style="margin-top: 30px; text-align: center;">
         <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px; max-width: 600px; margin: 0 auto;">
-            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยоห์น 3:16 
+            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยอห์น 3:16 
         </marquee>
     </div>
 
@@ -192,6 +193,28 @@
     </footer>
     `;
 
-    // ค้นหาตำแหน่งและใส่ HTML
+    // 4. แทรกลงในส่วนท้ายสุดของ Tag <body>
     document.body.insertAdjacentHTML('beforeend', footerHTML);
+
+    // 5. ระบบบันทึกฟังก์ชันทำงานหลังการ Render (เช่น Event Listener ของฟอร์มรีวิว)
+    const submitBtn = document.getElementById('submitRatingBtn');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function() {
+            const stars = document.getElementById('uStars').value;
+            const name = document.getElementById('uName').value.trim();
+            const msg = document.getElementById('uMsg').value.trim();
+
+            if (!name || !msg) {
+                alert('กรุณากรอกชื่อและความประทับใจของคุณให้ครบถ้วนนะครับ');
+                return;
+            }
+
+            // แสดงแจ้งเตือนผลลัพธ์การส่งข้อมูล (สามารถเชื่อมต่อ API บันทึก Firebase ได้ในอนาคต)
+            alert(`ขอบคุณคุณ ${name} ที่ร่วมแบ่งปันพระพรให้แก่เรา! \nคะแนนที่คุณให้: ${stars} ดาว`);
+            
+            // ล้างค่าข้อมูลในฟอร์มหลังส่งเสร็จสิ้น
+            document.getElementById('uName').value = '';
+            document.getElementById('uMsg').value = '';
+        });
+    }
 })();
