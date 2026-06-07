@@ -3,18 +3,18 @@
     window.toggleAddress = null;
 
     const footerHTML = `
-<nav class="horizontal-menu">
-    <a href="index.html">🏠 หน้าแรก</a>
-    <a href="sermons.html">🎙️ คำเทศนา</a>
-    <a href="blogs.html">📖 บทความ</a>
-    <a href="testimony.html">🙏 คำพยาน</a>
-    <a href="news.html">📢 ข่าวสาร</a>
-    <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
-    <a href="contact.html">📞 ติดต่อเรา</a>
-</nav>
+    <nav class="horizontal-menu">
+        <a href="index.html">🏠 หน้าแรก</a>
+        <a href="sermons.html">🎙️ คำเทศนา</a>
+        <a href="blogs.html">📖 บทความ</a>
+        <a href="testimony.html">🙏 คำพยาน</a>
+        <a href="news.html">📢 ข่าวสาร</a>
+        <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
+        <a href="contact.html">📞 ติดต่อเรา</a>
+    </nav>
     <div class="marquee-box" style="margin-top: 40px;">
         <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px;">
-            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยอห์น 3:16 
+            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยоห์น 3:16 
         </marquee>
     </div>
 
@@ -94,12 +94,14 @@
             <div style="margin-top: 30px; border-top: 1px solid #333; padding-top: 20px;">
                 <h3 style="margin-bottom: 10px; font-family: 'Prompt'; color: #666; font-size: 12px; font-weight: 400;">สถิติผู้เยี่ยมชม</h3>
                 <a href="https://info.flagcounter.com/iWY4" style="display: inline-block; max-width: 100%;">
-                    <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" border="0" style="max-width: 100%; height: auto; display: block;">
+                    <img src="https://s01.flagcounter.com/countxl/iWY4/bg_FFFFFF/txt_000000/border_CCCCCC/columns_5/maxflags_20/viewers_0/labels_1/pageviews_1/flags_0/percent_0/" alt="Flag Counter" style="max-width: 100%; height: auto; display: block; border: 0;">
                 </a>
             </div>
         </div>
 
-    </div> <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff; margin-top: 50px;">
+    </div> 
+
+    <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff; margin-top: 50px;">
         <img src="logo.png" onerror="this.src='logo.png'" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
         <br>
         <strong style="font-family:'Prompt'; font-size: 24px; display: block; margin-bottom: 15px; letter-spacing: 1px;">คริสตจักรแบ๊พติสต์บางเขน</strong>
@@ -118,6 +120,6 @@
     </footer>
     `;
 
-    // ค้นหาตำแหน่งและใส่ HTML
+    // ค้นหาตำแหน่งและใส่ HTML ที่ท้ายสุดของ body
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 })();
