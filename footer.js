@@ -3,19 +3,6 @@
     window.toggleAddress = null;
 
     const footerHTML = `
-    <main class="content-area" style="max-width: 1300px; margin: auto; padding: 0 20px;">
-        <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
-        <div id="list-news" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">🙏 คำพยานชีวิต</h2>
-        <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">📖 บทความหนุนใจ</h2>
-        <div id="list-article" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
-        <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
-    </main>
 
     <div class="marquee-box" style="margin-top: 40px;">
         <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px;">
@@ -103,6 +90,16 @@
                 </a>
             </div>
         </div>
+
+        <nav class="horizontal-menu">
+    <a href="index.html">🏠 หน้าแรก</a>
+    <a href="sermons.html">🎙️ คำเทศนา</a>
+    <a href="blogs.html">📖 บทความ</a>
+    <a href="testimony.html">🙏 คำพยาน</a>
+    <a href="news.html">📢 ข่าวสาร</a>
+    <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
+    <a href="contact.html">📞 ติดต่อเรา</a>
+</nav>
 
     </div> <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff; margin-top: 50px;">
         <img src="logo.png" onerror="this.src='logo.png'" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
