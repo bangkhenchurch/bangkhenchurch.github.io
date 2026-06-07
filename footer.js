@@ -3,12 +3,6 @@
     window.toggleAddress = null;
 
     const footerHTML = `
-    <div class="marquee-box" style="margin-top: 40px;">
-        <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px;">
-            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยอห์น 3:16 
-        </marquee>
-    </div>
-
     <div style="max-width: 1300px; margin: auto; padding: 40px 20px 0 20px;">
         
         <div class="rating-form" style="background: #1e1e1e; padding: 25px; border-radius: 15px; margin-bottom: 30px; border: 1px solid #333;">
@@ -60,7 +54,7 @@
             </a>
         </div>
 
-        <div style="text-align: center; margin-bottom: 50px; padding: 40px 20px; background: #1e1e1e; border: 1px solid #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 600px; margin: 40px auto;">
+        <div style="text-align: center; margin-bottom: 30px; padding: 40px 20px; background: #1e1e1e; border: 1px solid #333; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); max-width: 600px; margin: 40px auto;">
             <h2 style="font-family: 'Prompt'; color: #4dabff; margin-bottom: 10px;">💬 ติดต่อคริสตจักร</h2>
             <p style="font-family: 'Sarabun'; color: #eeeeee; font-size: 18px; margin-bottom: 25px; line-height: 1.6;">
                 <b>โปรดสแกน QR Code ด้านล่างนี้</b><br>
@@ -92,7 +86,13 @@
 
     </div> 
 
-    <div style="text-align: center; margin-top: 60px;">
+    <div class="marquee-box" style="margin-top: 20px; text-align: center;">
+        <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px; max-width: 600px; margin: 0 auto;">
+            เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยอห์น 3:16 
+        </marquee>
+    </div>
+
+    <div style="text-align: center; margin-top: 25px; margin-bottom: 5px;">
         <nav class="horizontal-menu" style="display: inline-block;">
             <a href="index.html">🏠 หน้าแรก</a>
             <a href="sermons.html">🎙️ คำเทศนา</a>
