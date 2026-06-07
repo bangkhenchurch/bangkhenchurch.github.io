@@ -3,7 +3,15 @@
     window.toggleAddress = null;
 
     const footerHTML = `
-
+<nav class="horizontal-menu">
+    <a href="index.html">🏠 หน้าแรก</a>
+    <a href="sermons.html">🎙️ คำเทศนา</a>
+    <a href="blogs.html">📖 บทความ</a>
+    <a href="testimony.html">🙏 คำพยาน</a>
+    <a href="news.html">📢 ข่าวสาร</a>
+    <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
+    <a href="contact.html">📞 ติดต่อเรา</a>
+</nav>
     <div class="marquee-box" style="margin-top: 40px;">
         <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt'; font-size: 16px;">
             เพราะว่าพระเจ้าทรงรักโลก จนได้ทรงประทานพระบุตรองค์เดียวของพระองค์ เพื่อทุกคนที่วางใจในพระบุตรนั้นจะไม่พินาศ แต่มีชีวิตนิรันดร์ — ยอห์น 3:16 
@@ -90,16 +98,6 @@
                 </a>
             </div>
         </div>
-
-        <nav class="horizontal-menu">
-    <a href="index.html">🏠 หน้าแรก</a>
-    <a href="sermons.html">🎙️ คำเทศนา</a>
-    <a href="blogs.html">📖 บทความ</a>
-    <a href="testimony.html">🙏 คำพยาน</a>
-    <a href="news.html">📢 ข่าวสาร</a>
-    <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
-    <a href="contact.html">📞 ติดต่อเรา</a>
-</nav>
 
     </div> <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff; margin-top: 50px;">
         <img src="logo.png" onerror="this.src='logo.png'" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
