@@ -92,6 +92,21 @@
         </marquee>
     </div>
 
+    <main class="content-area">
+        <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
+        <div id="list-news" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">🙏 คำพยานชีวิต</h2>
+        <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">📖 บทความหนุนใจ</h2>
+        <div id="list-article" class="grid-container">กำลังโหลด...</div>
+        
+        <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
+        <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
+    </main>
+
+
     <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff;">
         <img src="logo.png" onerror="this.src='logo.png'" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
         <br>
