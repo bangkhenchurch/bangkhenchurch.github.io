@@ -68,7 +68,7 @@
     </style>
     `;
 
-    // 3. รวบรวมโครงสร้าง HTML ทั้งหมดของ Footer
+    // 3. รวบรวมโครงสร้าง HTML ทั้งหมดของ Footer (เว้นที่ไว้ให้ Histats)
     const footerHTML = customStyle + `
     <div style="max-width: 1300px; margin: auto; padding: 40px 20px 0 20px;">
         
@@ -174,9 +174,8 @@
         </nav>
     </div>
 
-    <div style="text-align: center; margin-top: 15px; margin-bottom: 5px;">
-        <div id="histats_counter"></div>
-    </div>
+    <div id="histats_counter" style="text-align: center; margin-top: 20px; margin-bottom: 5px; min-height: 50px;"></div>
+
     <footer style="background: #0a2c6d; color: white; text-align: center; padding: 60px 20px; border-top: 6px solid #4dabff; margin-top: 15px;">
         <img src="logo.png" onerror="this.src='logo.png'" style="width: 80px; border-radius: 50%; margin-bottom: 20px; border: 2px solid rgba(255,255,255,0.2);">
         <br>
@@ -199,19 +198,24 @@
     // 4. แทรกลงในส่วนท้ายสุดของ Tag <body>
     document.body.insertAdjacentHTML('beforeend', footerHTML);
 
-    // 5. โหลดสคริปต์การทำงานของ Histats หลังจากแฮนเดิล HTML เรียบร้อยแล้ว
-    var _Hasync = window._Hasync || [];
-    _Hasync.push(['Histats.start', '1,4414180,4,408,270,55,00011111']);
-    _Hasync.push(['Histats.fasi', '1']);
-    _Hasync.push(['Histats.track_hits', '']);
-    
-    (function() {
-        var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
-        hs.src = ('//s10.histats.com/js15_as.js');
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
-    })();
+    // 5. โหลดสคริปต์ของ Histats หลังจากที่จัดหน้าเสร็จสิ้น
+    window._Hasync = window._Hasync || [];
+    window._Hasync.push(['Histats.start', '1,4414180,4,408,270,55,00011111']);
+    window._Hasync.push(['Histats.fasi', '1']);
+    window._Hasync.push(['Histats.track_hits', '']);
 
-    // 6. ระบบบันทึกฟังก์ชันทำงานหลังการ Render (เช่น Event Listener ของฟอร์มรีวิว)
+    var hs = document.createElement('script'); 
+    hs.type = 'text/javascript'; 
+    hs.async = true;
+    hs.src = 'https://s10.histats.com/js15_as.js';
+    
+    // ตรวจสอบความพร้อมของหน้าจอก่อนทำการติดตั้งสคริปต์สถิติ
+    var targetHeader = document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0];
+    if (targetHeader) {
+        targetHeader.appendChild(hs);
+    }
+
+    // 6. ระบบบันทึกฟังก์ชันทำงานหลังการ Render (Event Listener ของฟอร์มรีวิว)
     const submitBtn = document.getElementById('submitRatingBtn');
     if (submitBtn) {
         submitBtn.addEventListener('click', function() {
@@ -224,10 +228,8 @@
                 return;
             }
 
-            // แสดงแจ้งเตือนผลลัพธ์การส่งข้อมูล
             alert(`ขอบคุณคุณ ${name} ที่ร่วมแบ่งปันพระพรให้แก่เรา! \nคะแนนที่คุณให้: ${stars} ดาว`);
             
-            // ล้างค่าข้อมูลในฟอร์มหลังส่งเสร็จสิ้น
             document.getElementById('uName').value = '';
             document.getElementById('uMsg').value = '';
         });
