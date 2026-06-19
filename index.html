@@ -1,753 +1,84 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
-    <title>Bangkhen Baptist Church | คริสตจักรแบ๊พติสต์บางเขน</title>
-    <meta name="description" content="Bangkhen Baptist Church - ศูนย์รวมใจในการนมัสการพระเจ้า เรียนรู้พระคัมภีร์ และแบ่งปันความรักของพระคริสต์สู่สังคม ฟังคำเทศนาประจำสัปดาห์ อ่านบทความหนุนใจ และข่าวสารพันธกิจ">
-    <meta name="keywords" content="Bangkhen Baptist Church, คริสตจักรแบ๊พติสต์บางเขน, โบสถ์บางเขน, ฟังคำเทศนา, บทความคริสเตียน, คำพยานชีวิต">
-    <meta name="robots" content="index, follow">
-    
-    <link rel="canonical" href="https://bangkhenchurch.github.io/">
-    
-    <link rel="alternate" hreflang="th" href="https://bangkhenchurch.github.io/">
-    <link rel="alternate" hreflang="x-default" href="https://bangkhenchurch.github.io/">
-
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bangkhenchurch.github.io/">
-    <meta property="og:title" content="Bangkhen Baptist Church | คริสตจักรแบ๊พติสต์บางเขน">
-    <meta property="og:description" content="ร่วมเป็นส่วนหนึ่งกับพันธกิจของคริสตจักรแบ๊พติสต์บางเขน รับฟังคำเทศนา และบทความหนุนใจคริสเตียน">
-    <meta property="og:image" content="https://bangkhenchurch.github.io/logo.png">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://bangkhenchurch.github.io/">
-    <meta name="twitter:title" content="Bangkhen Baptist Church | คริสตจักรแบ๊พติสต์บางเขน">
-    <meta name="twitter:description" content="ร่วมเป็นส่วนหนึ่งกับพันธกิจของคริสตจักรแบ๊พติสต์บางเขน รับฟังคำเทศนา และบทความหนุนใจคริสเตียน">
-    <meta name="twitter:image" content="https://bangkhenchurch.github.io/logo.png">
-
-    <link rel="icon" type="image/png" href="logo.png">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&family=Prompt:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        /* พื้นฐาน */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { overflow-x: hidden; width: 100%; }
-        body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
-
-        /* Navbar */
-        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .navbar img { width: 35px; border-radius: 50%; }
-
-        /* Hero Slideshow */
-        .hero-container { 
-            width: 100%; 
-            background: #000; 
-            position: relative; 
-            overflow: hidden; 
-        }
-        .slide { 
-            width: 100%; 
-            aspect-ratio: 16 / 5; 
-            display: none; 
-            animation: fade 1.5s; 
-            background-size: cover; /* เปลี่ยนจาก contain เป็น cover เพื่อให้ขยายเต็มพื้นที่ทุกหน้าจอ */
-            background-position: center;
-            background-repeat: no-repeat;
-            opacity: 0.9;
-        }
-        .slide.active { 
-            display: block; 
-        }
-        
-        @keyframes fade { from {opacity: .4} to {opacity: 1} }
-
-        /* เมนูแนวนอน */
-        .horizontal-menu { 
-            background: #1e1e1e; padding: 10px 5%; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; border: 1px solid #333; max-width: 1200px; margin: 20px auto 10px auto; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-        }
-        .horizontal-menu a { 
-            padding: 10px 20px; color: #ccc; text-decoration: none; font-family: 'Prompt', sans-serif; font-size: 15px; border-radius: 25px; transition: all 0.3s ease; display: flex; align-items: center; gap: 5px; 
-        }
-        .horizontal-menu a:hover { 
-            color: #fff; background: #2c2c2c; transform: translateY(-2px); 
-        }
-
-        /* กล่อง Subscription Section */
-        .subscription-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px auto 10px auto;
-            padding: 0 5%;
-        }
-        .subscription-box {
-            background: linear-gradient(135deg, #1e1e1e 0%, #0a2c6d 100%);
-            border: 1px solid #333;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-        }
-        .subscription-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 2fr;
-            gap: 20px;
-            align-items: center;
-        }
-        .subscription-text h3 {
-            font-family: 'Prompt';
-            font-size: 20px;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-        .subscription-text p {
-            font-size: 14px;
-            color: #ccc;
-        }
-        .subscription-form {
-            display: flex;
-            gap: 10px;
-        }
-        .subscription-input {
-            flex: 1;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 12px 15px;
-            border-radius: 8px;
-            font-family: 'Sarabun', sans-serif;
-            font-size: 14px;
-            outline: none;
-        }
-        .subscription-input:focus {
-            border-color: #4dabff;
-        }
-        .subscription-btn {
-            background: #4dabff;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-family: 'Prompt';
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-            white-space: nowrap;
-        }
-        .subscription-btn:hover {
-            background: #3596eb;
-        }
-        .subscription-btn:disabled {
-            background: #555;
-            color: #aaa;
-            cursor: not-allowed;
-        }
-
-        /* กล่องสารบัญและการจัดเรียงแบบแนวนอน */
-        .horizontal-filter-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 20px auto 10px auto;
-            padding: 0 5%;
-        }
-        .horizontal-filter {
-            background: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 15px;
-            padding: 20px;
-        }
-        .filter-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            align-items: flex-end;
-        }
-        .filter-group {
-            margin-bottom: 0;
-        }
-        .filter-label {
-            font-family: 'Prompt';
-            font-size: 14px;
-            color: #4dabff;
-            margin-bottom: 6px;
-            display: block;
-            font-weight: 600;
-        }
-        .filter-select, .search-input {
-            width: 100%;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            font-family: 'Sarabun', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: 0.3s;
-        }
-        .filter-select:focus, .search-input:focus {
-            border-color: #4dabff;
-        }
-
-        /* Layout พื้นที่เนื้อหาหลัก */
-        .main-layout {
-            display: block;
-            padding: 20px 5%;
-            width: 100%;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        /* พื้นที่แสดงกล่องเนื้อหาหลัก */
-        .content-area {
-            width: 100%;
-            overflow: hidden;
-        }
-        .section-title { font-family: 'Prompt'; font-size: 24px; margin: 0 0 20px 0; color: #fff; border-left: 5px solid #4dabff; padding-left: 15px; }
-        
-        /* จัดเรียงกล่องการ์ด */
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px; 
-            margin-bottom: 40px;
-        }
-
-        /* Card Design */
-        .card { 
-            background: #1e1e1e; border-radius: 12px; overflow: hidden; border: 1px solid #333; 
-            transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; height: 100%;
-            position: relative;
-        }
-        .card:hover { transform: translateY(-5px); border-color: #4dabff; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-        .card img { width: 100%; height: 180px; object-fit: cover; background: #2a2a2a; }
-        
-        .card-content { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .card-title { font-family: 'Prompt'; font-size: 18px; margin-bottom: 8px; color: #fff; line-height: 1.4; }
-        
-        .card-info { font-size: 13px; color: #bbb; margin-bottom: 10px; flex-grow: 1; }
-        .card-info div { margin-bottom: 2px; display: flex; align-items: flex-start; gap: 5px; }
-        .info-label { color: #4dabff; font-weight: bold; min-width: fit-content; }
-
-        .card-meta { font-size: 12px; color: #777; border-top: 1px solid #333; padding-top: 10px; margin-top: auto; display: flex; justify-content: space-between; }
-        
-        /* แบนเนอร์โฆษณา */
-        .banner-placement-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 15px auto;
-            padding: 0 5%;
-            display: flex;
-            justify-content: center;
-        }
-        .img-banner-link {
-            display: block;
-            width: 100%;
-            max-width: 728px; 
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .img-banner-link:hover {
-            transform: scale(1.01);
-            box-shadow: 0 6px 20px rgba(77, 171, 255, 0.2);
-        }
-        .img-banner-link img {
-            width: 100%;
-            height: auto;
-            display: block;
-            object-fit: contain;
-        }
-
-        /* LINE QR Code และ ข้อมูลการถวายเงิน */
-        .action-center-section {
-            background: #1a1a1a;
-            border-top: 1px solid #333;
-            padding: 40px 5%;
-            width: 100%;
-        }
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            max-width: 900px;
-            margin: auto;
-        }
-        .action-box {
-            background: #222;
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 25px 20px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .action-title { font-family: 'Prompt'; font-size: 16px; font-weight: bold; margin-bottom: 5px; }
-        .action-desc { font-size: 13px; color: #aaa; margin-bottom: 15px; }
-        .action-image-box {
-            max-width: 160px;
-            width: 100%;
-            background: #fff;
-            padding: 10px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            margin-bottom: 15px;
-            transition: 0.2s;
-        }
-        .action-image-box img { width: 100%; height: auto; display: block; }
-        
-        .bank-details {
-            box-size: border-box;
-            font-size: 13px;
-            color: #ddd;
-            text-align: center;
-            line-height: 1.6;
-            background: #181818;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #2a2a2a;
-            width: 100%;
-            margin-top: auto;
-        }
-        .bank-highlight { color: #ffcc00; font-weight: bold; font-size: 16px; font-family: 'Prompt'; letter-spacing: 0.5px; }
-
-        .btn-line-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #25d366;
-            color: #fff;
-            padding: 10px 24px;
-            font-family: 'Prompt';
-            font-size: 14px;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: 0.2s;
-            margin-top: auto;
-        }
-        .btn-line-link:hover { background: #20ba5a; }
-
-        .footer-support-section {
-            background: #121212;
-            border-top: 1px solid #252525;
-            padding: 30px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-        }
-        
-        /* Footer */
-        footer { background: #0a2c6d; color: white; text-align: center; padding: 50px 20px; width: 100%; }
-        footer img { width: 60px; border-radius: 50%; margin-bottom: 15px; }
-        .footer-address {
-            max-width: 600px;
-            margin: 15px auto 0 auto;
-            font-size: 13px;
-            color: #add8e6;
-            line-height: 1.6;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 15px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .slide { aspect-ratio: 16 / 6.5; } 
-            .horizontal-menu { margin: 10px; border-radius: 15px; padding: 15px; }
-            .horizontal-menu a { font-size: 14px; padding: 8px 12px; }
-            .subscription-grid { grid-template-columns: 1fr; text-align: center; gap: 15px; }
-            .subscription-form { flex-direction: column; }
-            .filter-grid { grid-template-columns: 1fr; gap: 12px; }
-            .action-grid { grid-template-columns: 1fr; gap: 20px; }
-            .banner-placement-container { padding: 0 15px; margin: 10px auto; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketFlow - Dime Stock Tracker</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
 
-<nav class="navbar">
-    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
-    <span style="font-family:'Prompt'; font-weight: 600;">Bangkhen Baptist Church</span>
-</nav>
-
-<div class="hero-container">
-    <div class="slide active" style="background-image: url('hero_01.png'), url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?q=80&w=1200');"></div>
-    <div class="slide" style="background-image: url('hero_02.png'), url('https://images.unsplash.com/photo-1544427928-c49cdca8a93d?q=80&w=1200');"></div>
-    <div class="slide" style="background-image: url('hero_03.png'), url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1200');"></div>
-    <div class="slide" style="background-image: url('hero_04.png'), url('https://images.unsplash.com/photo-1447069387593-a5de0862481e?q=80&w=1200');"></div>
-</div>
-
-<div class="featured-video-container" style="background: #121212; padding: 40px 20px 10px 20px;">
-    <div style="max-width: 900px; margin: auto;">
-        <h2 style="font-family: 'Prompt'; color: white; border-left: 5px solid #4dabff; padding-left: 15px; margin-bottom: 20px;">
-            📽️ รับชมวีดีโอ สร้างโลก 
-        </h2>
-        <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
-                src="https://www.youtube.com/embed/Vytt_r-k7Ck?autoplay=1&mute=1&rel=0&si=s0Rh5bN011KbyWYd" 
-                title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-            </iframe>
-        </div>
-    </div>
-</div>
-
-<nav class="horizontal-menu">
-    <a href="index.html">🏠 หน้าแรก</a>
-    <a href="sermons.html">🎙️ คำเทศนา</a>
-    <a href="blogs.html">📖 บทความ</a>
-    <a href="testimony.html">🙏 คำพยาน</a>
-    <a href="news.html">📢 ข่าวสาร</a>
-    <a href="ads.html" style="color: #ffcc00;">📖 โฆษณา</a>
-    <a href="contact.html">📞 ติดต่อเรา</a>
-</nav>
-
-<div class="marquee-box">
-    <marquee scrollamount="5" style="color: #4dabff; font-family: 'Prompt';">
-        Because God so loved the world that he gave his only begotten Son, that whoever believes in him should not perish but have eternal life. - John 3:16
-    </marquee>
-</div>
-
-<div class="banner-placement-container">
-    <a href="ads.html" class="img-banner-link">
-        <img src="banner01.png" alt="หนังสือ & สื่อเพลงคริสเตียน">
-    </a>
-</div>
-
-<div class="subscription-container">
-    <div class="subscription-box">
-        <div class="subscription-grid">
-            <div class="subscription-text">
-                <h3>📮 ติดตามข่าวสารและบทความ</h3>
-                <p>ลงทะเบียนรับคำเทศนา บทความหนุนใจ และข่าวสารอัปเดตตรงถึงคุณ</p>
-            </div>
-            <form id="subscribeForm" class="subscription-form">
-                <input type="text" id="subName" class="subscription-input" placeholder="ชื่อของคุณ">
-                <input type="email" id="subEmail" class="subscription-input" placeholder="อีเมลของคุณ" required>
-                <button type="submit" id="btnSubscribe" class="subscription-btn">🚀 ติดตามเลย</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="horizontal-filter-container">
-    <aside class="horizontal-filter">
-        <div style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
-        
-        <div class="filter-grid">
-            <div class="filter-group">
-                <label class="filter-label">🔍 ค้นหาตามชื่อเรื่อง</label>
-                <input type="text" id="searchBar" class="search-input" placeholder="พิมพ์ชื่อเนื้อหาที่ต้องการ...">
-            </div>
-
-            <div class="filter-group">
-                <label class="filter-label">📁 คัดกรองตามหมวดหมู่</label>
-                <select id="filterCategory" class="filter-select">
-                    <option value="all">ทั้งหมด ทุกหมวดหมู่</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label class="filter-label">🎞️ คัดกรองตามซีรีย์</label>
-                <select id="filterSeries" class="filter-select">
-                    <option value="all">ทั้งหมด ทุกซีรีย์</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label class="filter-label">👤 คัดกรองตามผู้เขียน</label>
-                <select id="filterAuthor" class="filter-select">
-                    <option value="all">ทั้งหมด ทุกผู้เขียน</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
-                <select id="sortAlphabet" class="filter-select">
-                    <option value="none">-- เลือกการจัดเรียง --</option>
-                    <option value="az">เรียงจาก ก - ฮ / A - Z</option>
-                    <option value="za">เรียงจาก ฮ - ก / Z - A</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label class="filter-label">📅 เรียงตาม วัน, เดือน, ปี</label>
-                <select id="sortDate" class="filter-select">
-                    <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
-                    <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
-                </select>
-            </div>
-        </div>
-    </aside>
-</div>
-
-<div class="main-layout">
-    <main class="content-area">
-        <h2 class="section-title">📢 ขสารและประกาศ</h2>
-        <div id="list-news" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">🙏 คำพยานชีวิต</h2>
-        <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">📖 บทความหนุนใจ</h2>
-        <div id="list-article" class="grid-container">กำลังโหลด...</div>
-        
-        <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
-        <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
-    </main>
-</div>
-
-<script src="footer.js"></script>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, query, onSnapshot, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDw9PPAcnoQUcVnHpcndJ5OpBcmYYnMq3",
-        authDomain: "bbcchurch-6ffc3.firebaseapp.com",
-        projectId: "bbcchurch-6ffc3",
-        storageBucket: "bbcchurch-6ffc3.appspot.com",
-        appId: "1:1007626508012:web:b936b62bf0ea69b31877c9"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const subscribeForm = document.getElementById('subscribeForm');
-    const btnSubscribe = document.getElementById('btnSubscribe');
-
-    if (subscribeForm) {
-        subscribeForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const nameInput = document.getElementById('subName').value.trim();
-            const emailInput = document.getElementById('subEmail').value.trim();
-
-            if (!emailInput) {
-                alert('กรุณากรอกอีเมลของคุณเพื่อติดตามข่าวสารครับ');
-                return;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(emailInput)) {
-                alert('รูปแบบอีเมลไม่ถูกต้อง กรุณาตรวจสอบอีกครั้งครับ');
-                return;
-            }
-
-            btnSubscribe.disabled = true;
-            btnSubscribe.innerText = '⏳ กำลังบันทึก...';
-
-            try {
-                await addDoc(collection(db, "subscribers"), {
-                    subscriberName: nameInput || "ผู้สนใจทั่วไป",
-                    subscriberEmail: emailInput,
-                    subscribedAt: serverTimestamp()
-                });
-
-                alert('🎉 ลงทะเบียนติดตามเรียบร้อยแล้ว ขอบคุณสำหรับความสนใจในพันธกิจของคริสตจักรครับ ขอพระเจ้าอวยพรครับ');
-                subscribeForm.reset();
-            } catch (error) {
-                console.error("Error subscribing: ", error);
-                alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล กรุณาลองใหม่อีกครั้งในภายหลังครับ');
-            } finally {
-                btnSubscribe.disabled = false;
-                btnSubscribe.innerText = '🚀 ติดตามเลย';
-            }
-        });
-    }
-
-    let allData = [];
-
-    function getYoutubeThumb(url) {
-        if (!url) return null;
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        if (match && match[2].length === 11) {
-            return `https://img.youtube.com/vi/${match[2]}/mqdefault.jpg`;
-        }
-        return null;
-    }
-
-    const q = query(collection(db, "articles"), orderBy("displayDate", "desc"));
-
-    onSnapshot(q, (snap) => {
-        allData = [];
-        const authorSet = new Set();
-        const categorySet = new Set();
-        const seriesSet = new Set();
-
-        snap.forEach(doc => {
-            const dataWithId = { id: doc.id, ...doc.data() };
-            allData.push(dataWithId);
-            
-            const author = dataWithId.authorName || dataWithId.author || "คริสตจักร";
-            authorSet.add(author);
-
-            if (dataWithId.category) {
-                categorySet.add(dataWithId.category.trim());
-            }
-
-            if (dataWithId.series) {
-                seriesSet.add(dataWithId.series.trim());
-            }
-        });
-
-        updateDropdown('filterAuthor', authorSet, "ทั้งหมด ทุกผู้เขียน");
-        updateDropdown('filterCategory', categorySet, "ทั้งหมด ทุกหมวดหมู่");
-        updateDropdown('filterSeries', seriesSet, "ทั้งหมด ทุกซีรีย์");
-        
-        processAndRender();
-    });
-
-    function updateDropdown(elementId, dataSet, defaultText) {
-        const select = document.getElementById(elementId);
-        if (!select) return;
-        const currentValue = select.value;
-        select.innerHTML = `<option value="all">${defaultText}</option>`;
-        dataSet.forEach(item => {
-            select.insertAdjacentHTML('beforeend', `<option value="${item}">${item}</option>`);
-        });
-        select.value = currentValue;
-    }
-
-    function processAndRender() {
-        let filtered = [...allData];
-
-        const searchBar = document.getElementById('searchBar');
-        const searchKeyword = searchBar ? searchBar.value.trim().toLowerCase() : "";
-        if (searchKeyword !== "") {
-            filtered = filtered.filter(item => (item.title && item.title.toLowerCase().includes(searchKeyword)));
-        }
-
-        const filterCategory = document.getElementById('filterCategory');
-        const categoryFilter = filterCategory ? filterCategory.value : "all";
-        if (categoryFilter !== "all") {
-            filtered = filtered.filter(item => item.category && item.category.trim() === categoryFilter);
-        }
-
-        const filterSeries = document.getElementById('filterSeries');
-        const seriesFilter = filterSeries ? filterSeries.value : "all";
-        if (seriesFilter !== "all") {
-            filtered = filtered.filter(item => item.series && item.series.trim() === seriesFilter);
-        }
-
-        const filterAuthor = document.getElementById('filterAuthor');
-        const authorFilter = filterAuthor ? filterAuthor.value : "all";
-        if (authorFilter !== "all") {
-            filtered = filtered.filter(item => {
-                const author = item.authorName || item.author || "คริสตจักร";
-                return author === authorFilter;
-            });
-        }
-
-        const sortAlphabet = document.getElementById('sortAlphabet');
-        const alphabetSort = sortAlphabet ? sortAlphabet.value : "none";
-        if (alphabetSort === "az") {
-            filtered.sort((a, b) => (a.title || "").localeCompare(b.title || "", 'th'));
-        } else if (alphabetSort === "za") {
-            filtered.sort((a, b) => (b.title || "").localeCompare(a.title || "", 'th'));
-        } else {
-            const sortDate = document.getElementById('sortDate');
-            const dateSort = sortDate ? sortDate.value : "desc";
-            if (dateSort === "desc") {
-                filtered.sort((a, b) => (b.displayDate || "").localeCompare(a.displayDate || ""));
-            } else if (dateSort === "asc") {
-                filtered.sort((a, b) => (a.displayDate || "").localeCompare(a.displayDate || ""));
-            }
-        }
-
-        const lists = {
-            news: document.getElementById('list-news'),
-            testimony: document.getElementById('list-testimony'),
-            article: document.getElementById('list-article'),
-            sermon: document.getElementById('list-sermon')
-        };
-        Object.values(lists).forEach(l => { if(l) l.innerHTML = ""; });
-
-        let counts = { news: 0, testimony: 0, article: 0, sermon: 0 };
-
-        filtered.forEach(d => {
-            const ytThumb = getYoutubeThumb(d.youtubeUrl);
-            const finalThumb = d.thumbUrl || ytThumb || 'logo.png'; 
-
-            const rawAuthor = d.authorName || d.author || "คริสตจักร";
-            const cat = d.category || "";
-            
-            let prefix = "ผู้เขียน: ";
-            if (cat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
-            else if (cat.includes("พยาน")) prefix = "เจ้าของคำพยาน: ";
-            
-            const authorHtml = `<div><span class="info-label">${prefix}</span> ${rawAuthor}</div>`;
-            const seriesHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
-            const bibleHtml = d.bibleRef ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef}</div>` : '';
-
-            const card = `
-            <div class="card" onclick="location.href='article.html?id=${d.id}'">
-                <img src="${finalThumb}" alt="${d.title}" onerror="this.src='logo.png'">
-                <div class="card-content">
-                    <h4 class="card-title">${d.title || 'ไม่มีหัวข้อ'}</h4>
-                    <div class="card-info">
-                        ${authorHtml}
-                        ${seriesHtml}
-                        ${bibleHtml}
-                    </div>
-                    <div class="card-meta">
-                        <span>📅 ${d.displayDate || ''}</span>
-                        <span style="color:#4dabff">อ่านต่อ...</span>
-                    </div>
-                </div>
-            </div>`;
-            
-            if (cat.includes("ข่าวสาร") && lists.news) { lists.news.insertAdjacentHTML('beforeend', card); counts.news++; }
-            if (cat.includes("พยาน") && lists.testimony) { lists.testimony.insertAdjacentHTML('beforeend', card); counts.testimony++; }
-            if (cat.includes("บทความ") && lists.article) { lists.article.insertAdjacentHTML('beforeend', card); counts.article++; }
-            if (cat.includes("เทศนา") && lists.sermon) { lists.sermon.insertAdjacentHTML('beforeend', card); counts.sermon++; }
-        });
-
-        Object.keys(lists).forEach(key => {
-            if (lists[key] && counts[key] === 0) {
-                lists[key].innerHTML = "<p style='color:#666; font-size:14px; padding:10px;'>ไม่พบข้อมูลในหมวดหมู่นี้ตามเงื่อนไขที่เลือก</p>";
-            }
-        });
-    }
-
-    const addListener = (id, event, callback) => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener(event, callback);
-    };
-
-    addListener('searchBar', 'input', processAndRender);
-    addListener('filterCategory', 'change', processAndRender);
-    addListener('filterSeries', 'change', processAndRender);
-    addListener('filterAuthor', 'change', processAndRender);
-    addListener('sortDate', 'change', processAndRender);
+  <div class="max-w-md mx-auto min-h-screen flex flex-col p-4 bg-white shadow-lg">
     
-    const sortAlphabetSelect = document.getElementById('sortAlphabet');
-    if (sortAlphabetSelect) {
-        sortAlphabetSelect.addEventListener('change', () => {
-            const sortDateSelect = document.getElementById('sortDate');
-            if (sortDateSelect) {
-                if(sortAlphabetSelect.value !== "none") {
-                    sortDateSelect.disabled = true;
-                } else {
-                    sortDateSelect.disabled = false;
-                }
-            }
-            processAndRender();
-        });
-    }
+    <header class="flex justify-between items-center py-4 border-b border-slate-100">
+      <h1 class="text-3xl font-black tracking-tight text-indigo-600">PocketFlow</h1>
+      <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">Dime Portfolio</span>
+    </header>
 
-    // ฟังก์ชันรันลูปสไลด์แบบ Dynamic
-    let cur = 0;
-    setInterval(() => {
-        const slides = document.querySelectorAll('.slide');
-        if(slides.length < 2) return;
-        slides[cur].classList.remove('active');
-        cur = (cur + 1) % slides.length;
-        slides[cur].classList.add('active');
-    }, 5000);
-</script>
+    <section class="my-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-6 shadow-md">
+      <p class="text-xs uppercase tracking-wider text-slate-400 font-medium">มูลค่าพอร์ตโดยรวม</p>
+      <h2 class="text-4xl font-extrabold mt-1 mb-4">$1,245.80</h2>
+      
+      <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-700">
+        <div>
+          <p class="text-xs text-slate-400">กำไร / ขาดทุนรวม</p>
+          <p class="text-2xl font-bold text-emerald-400">+$120.40</p>
+        </div>
+        <div>
+          <p class="text-xs text-slate-400">เงินปันผลรวม</p>
+          <p class="text-2xl font-bold text-amber-400">$35.20</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-6 bg-slate-100 rounded-xl p-4">
+      <h3 class="text-sm font-bold uppercase text-slate-500 mb-3">บันทึกรายการใหม่</h3>
+      <div class="grid grid-cols-3 gap-2 mb-3">
+        <button class="bg-emerald-600 text-white font-bold py-2 rounded-lg text-center shadow-sm">ซื้อ (BUY)</button>
+        <button class="bg-rose-600 text-white font-bold py-2 rounded-lg text-center shadow-sm">ขาย (SELL)</button>
+        <button class="bg-amber-500 text-white font-bold py-2 rounded-lg text-center shadow-sm">ปันผล (DIV)</button>
+      </div>
+      
+      <div class="space-y-3">
+        <input type="text" placeholder="ชื่อหุ้น เช่น AAPL" class="w-full bg-white border border-slate-200 rounded-lg p-3 text-lg font-bold uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <div class="grid grid-cols-2 gap-2">
+          <input type="number" placeholder="จำนวนหุ้น" class="w-full bg-white border border-slate-200 rounded-lg p-3 text-lg font-semibold">
+          <input type="number" placeholder="ราคา/หุ้น" class="w-full bg-white border border-slate-200 rounded-lg p-3 text-lg font-semibold">
+        </div>
+        <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-lg font-bold py-3 rounded-xl transition shadow-md">บันทึกรายการ</button>
+      </div>
+    </section>
+
+    <section class="flex-1">
+      <h3 class="text-lg font-bold text-slate-700 mb-3">ประวัติรายการ</h3>
+      <div class="space-y-3">
+        
+        <div class="flex justify-between items-center p-3 bg-white border border-slate-100 rounded-xl shadow-xs">
+          <div class="flex items-center space-x-3">
+            <div class="bg-emerald-100 text-emerald-700 p-2 rounded-lg font-bold text-xs">BUY</div>
+            <div>
+              <p class="text-lg font-bold leading-tight">AAPL</p>
+              <p class="text-xs text-slate-400">19 มิ.ย. 2026 • 2 หุ้น</p>
+            </div>
+          </div>
+          <p class="text-xl font-bold text-slate-800">-$360.00</p>
+        </div>
+
+        <div class="flex justify-between items-center p-3 bg-white border border-slate-100 rounded-xl shadow-xs">
+          <div class="flex items-center space-x-3">
+            <div class="bg-amber-100 text-amber-700 p-2 rounded-lg font-bold text-xs">DIV</div>
+            <div>
+              <p class="text-lg font-bold leading-tight">O (Realty Income)</p>
+              <p class="text-xs text-slate-400">15 มิ.ย. 2026</p>
+            </div>
+          </div>
+          <p class="text-xl font-bold text-emerald-600">+$15.20</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
 </body>
 </html>
