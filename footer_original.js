@@ -93,7 +93,7 @@
                     <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer; margin-bottom: 15px;">
                         <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'" style="width: 150px; border-radius: 8px;">
                     </div>
-                    <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link" style="text-decoration: none; display: inline-block;">💬 กดเพิ่มเพื่อนใน LINE</a>
+                    <a https://lin.ee/PdbJk7Q" target="_blank" class="btn-line-link" style="text-decoration: none; display: inline-block;">💬 กดเพิ่มเพื่อนใน LINE</a>
                 </div>
 
                 <div class="action-box" style="border-top: 4px solid #4dabff;">
