@@ -13,8 +13,26 @@
         body { background: #121212; color: #eeeeee; font-family: 'Sarabun', sans-serif; line-height: 1.6; }
 
         /* Navbar */
-        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .navbar { width: 100%; background: #0a2c6d; padding: 15px 5%; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .nav-brand { display: flex; align-items: center; gap: 12px; }
         .navbar img { width: 35px; border-radius: 50%; }
+        
+        /* ปุ่มสลับภาษา */
+        .lang-switch-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: 'Prompt', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lang-switch-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: #4dabff;
+        }
 
         /* Hero Slideshow */
         .hero-container { 
@@ -57,7 +75,7 @@
         /* Layout แยกฝั่งซ้าย-ขวา */
         .main-layout {
             display: grid;
-            grid-template-columns: 300px 1fr; /* ฝั่งซ้ายเมนูคัดกรอง 300px ฝั่งขวาเนื้อหาหลัก */
+            grid-template-columns: 300px 1fr;
             gap: 30px;
             padding: 20px 5%;
             width: 100%;
@@ -218,7 +236,7 @@
 
         /* Responsive */
         @media (max-width: 992px) {
-            .main-layout { grid-template-columns: 1fr; } /* ยุบรวมเหลือคอลัมน์เดียวบนแท็บเล็ตและมือถือ */
+            .main-layout { grid-template-columns: 1fr; }
             .sidebar-filter { position: static; margin-bottom: 20px; }
         }
         @media (max-width: 768px) {
@@ -232,8 +250,11 @@
 <body>
 
 <nav class="navbar">
-    <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
-    <span style="font-family:'Prompt'; font-weight: 600;">Bangkhen Baptist Church</span>
+    <div class="nav-brand">
+        <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
+        <span style="font-family:'Prompt'; font-weight: 600;">Bangkhen Baptist Church</span>
+    </div>
+    <button class="lang-switch-btn" id="langSwitchBtn" onclick="toggleLanguage()">🌐 EN / TH</button>
 </nav>
 
 <div class="hero-container">
@@ -244,8 +265,8 @@
 
 <div class="featured-video-container" style="background: #121212; padding: 40px 20px;">
     <div style="max-width: 900px; margin: auto;">
-        <h2 style="font-family: 'Prompt'; color: white; border-left: 5px solid #4dabff; padding-left: 15px; margin-bottom: 20px;">
-            📽️ รับชมวีดีโอ สร้างโลก 
+        <h2 id="txtVideoTitle" style="font-family: 'Prompt'; color: white; border-left: 5px solid #4dabff; padding-left: 15px; margin-bottom: 20px;">
+            📽️️ รับชมวีดีโอ สร้างโลก 
         </h2>
         <div style="position: relative; width: 100%; padding-bottom: 56.25%; height: 0; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
@@ -263,70 +284,70 @@
 </div>
 
 <nav class="horizontal-menu">
-    <a href="index.html">🏠 หน้าแรก</a>
-    <a href="sermons.html">🎙️ คำเทศนา</a>
-    <a href="blogs.html">📖 บทความ</a>
-    <a href="testimony.html">🙏 คำพยาน</a>
-    <a href="news.html">📢 ข่าวสาร</a>
-    <a href="contact.html">📞 ติดต่อเรา</a>
+    <a href="index.html" data-i18n="menu_home">🏠 หน้าแรก</a>
+    <a href="sermons.html" data-i18n="menu_sermons">🎙️ คำเทศนา</a>
+    <a href="blogs.html" data-i18n="menu_blogs">📖 บทความ</a>
+    <a href="testimony.html" data-i18n="menu_testimony">🙏 คำพยาน</a>
+    <a href="news.html" data-i18n="menu_news">📢 ข่าวสาร</a>
+    <a href="contact.html" data-i18n="menu_contact">📞 ติดต่อเรา</a>
 </nav>
 
 <div class="main-layout">
     
     <aside class="sidebar-filter">
-        <div style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
+        <div id="txtSidebarTitle" style="font-family:'Prompt'; font-size:18px; font-weight:600; margin-bottom:20px; border-bottom:1px solid #333; padding-bottom:10px; color:#fff;">📋 สารบัญและการจัดเรียง</div>
         
         <div class="filter-group">
-            <label class="filter-label">📁 คัดกรองตามหมวดหมู่</label>
+            <label class="filter-label" data-i18n="label_category">📁 คัดกรองตามหมวดหมู่</label>
             <select id="filterCategory" class="filter-select">
-                <option value="all">ทั้งหมด ทุกหมวดหมู่</option>
+                <option value="all" data-i18n="opt_all_category">ทั้งหมด ทุกหมวดหมู่</option>
             </select>
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">🎞️️ คัดกรองตามซีรีย์</label>
+            <label class="filter-label" data-i18n="label_series">🎞 คัดกรองตามซีรีย์</label>
             <select id="filterSeries" class="filter-select">
-                <option value="all">ทั้งหมด ทุกซีรีย์</option>
+                <option value="all" data-i18n="opt_all_series">ทั้งหมด ทุกซีรีย์</option>
             </select>
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">👤 คัดกรองตามผู้เขียน/ผู้แต่ง</label>
+            <label class="filter-label" data-i18n="label_author">👤 คัดกรองตามผู้เขียน/ผู้แต่ง</label>
             <select id="filterAuthor" class="filter-select">
-                <option value="all">ทั้งหมด ทุกผู้เขียน</option>
+                <option value="all" data-i18n="opt_all_author">ทั้งหมด ทุกผู้เขียน</option>
             </select>
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">🔤 จัดเรียงลำดับอักษร</label>
+            <label class="filter-label" data-i18n="label_alphabet">🔤 จัดเรียงลำดับอักษร</label>
             <select id="sortAlphabet" class="filter-select">
-                <option value="none">-- เลือกการจัดเรียง --</option>
-                <option value="az">เรียงจาก ก - ฮ / A - Z</option>
-                <option value="za">เรียงจาก ฮ - ก / Z - A</option>
+                <option value="none" data-i18n="opt_sort_none">-- เลือกการจัดเรียง --</option>
+                <option value="az" data-i18n="opt_sort_az">เรียงจาก ก - ฮ / A - Z</option>
+                <option value="za" data-i18n="opt_sort_za">เรียงจาก ฮ - ก / Z - A</option>
             </select>
         </div>
 
         <div class="filter-group">
-            <label class="filter-label">📅 เรียงตาม วัน, เดือน, ปี</label>
+            <label class="filter-label" data-i18n="label_date">📅 เรียงตาม วัน, เดือน, ปี</label>
             <select id="sortDate" class="filter-select">
-                <option value="desc">ใหม่ล่าสุด ไป เก่าสุด</option>
-                <option value="asc">เก่าสุด ไป ใหม่ล่าสุด</option>
+                <option value="desc" data-i18n="opt_date_desc">ใหม่ล่าสุด ไป เก่าสุด</option>
+                <option value="asc" data-i18n="opt_date_asc">เก่าสุด ไป ใหม่ล่าสุด</option>
             </select>
         </div>
     </aside>
 
     <main class="content-area">
-        <h2 class="section-title">📢 ข่าวสารและประกาศ</h2>
-        <div id="list-news" class="grid-container">กำลังโหลด...</div>
+        <h2 class="section-title" data-i18n="sec_news">📢 ข่าวสารและประกาศ</h2>
+        <div id="list-news" class="grid-container" data-i18n="loading">กำลังโหลด...</div>
         
-        <h2 class="section-title">🙏 คำพยานชีวิต</h2>
-        <div id="list-testimony" class="grid-container">กำลังโหลด...</div>
+        <h2 class="section-title" data-i18n="sec_testimony">🙏 คำพยานชีวิต</h2>
+        <div id="list-testimony" class="grid-container" data-i18n="loading">กำลังโหลด...</div>
         
-        <h2 class="section-title">📖 บทความหนุนใจ</h2>
-        <div id="list-article" class="grid-container">กำลังโหลด...</div>
+        <h2 class="section-title" data-i18n="sec_article">📖 บทความหนุนใจ</h2>
+        <div id="list-article" class="grid-container" data-i18n="loading">กำลังโหลด...</div>
         
-        <h2 class="section-title">🎙️ คำเทศนาประจำสัปดาห์</h2>
-        <div id="list-sermon" class="grid-container">กำลังโหลด...</div>
+        <h2 class="section-title" data-i18n="sec_sermon">🎙️ คำเทศนาประจำสัปดาห์</h2>
+        <div id="list-sermon" class="grid-container" data-i18n="loading">กำลังโหลด...</div>
     </main>
 
 </div>
@@ -335,21 +356,21 @@
     <div class="action-grid">
         
         <div class="action-box" style="border-top: 4px solid #25d366;">
-            <div class="action-title" style="color: #25d366;">🟢 ช่องทาง LINE Official</div>
-            <div class="action-desc">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
+            <div class="action-title" style="color: #25d366;" data-i18n="line_title">🟢 ช่องทาง LINE Official</div>
+            <div class="action-desc" data-i18n="line_desc">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
             <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer;">
                 <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'">
             </div>
-            <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link">💬 กดเพิ่มเพื่อนใน LINE</a>
+            <a href="https://lin.ee/t3ASqcu" target="_blank" class="btn-line-link" data-i18n="line_btn">💬 กดเพิ่มเพื่อนใน LINE</a>
         </div>
 
         <div class="action-box" style="border-top: 4px solid #4dabff;">
-            <div class="action-title" style="color: #4dabff;">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
-            <div class="action-desc">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
+            <div class="action-title" style="color: #4dabff;" data-i18n="donate_title">⛪ ช่องทางสนับสนุนและร่วมรับใช้</div>
+            <div class="action-desc" data-i18n="donate_desc">ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน</div>
             <div class="action-image-box">
                 <img src="bbk_church.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4221/4221711.png'">
             </div>
-            <div class="bank-details">
+            <div class="bank-details" data-i18n="bank_info">
                 ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>
                 โดยการถวายเงินผ่านธนาคารได้ที่<br>
                 <strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>
@@ -365,12 +386,144 @@
 <footer>
     <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3504/3504000.png'">
     <p>© 2026 Bangkhen Baptist Church. All Rights Reserved.</p>
-    <div class="footer-address">
+    <div class="footer-address" data-i18n="footer_address">
         คริสตจักรแบ๊พติสต์บางเขน พหลโยธิน แขวงอนุสาวรีย์ เขตบางเขน กรุงเทพมหานคร
     </div>
 </footer>
 
 <script src="footer.js"></script>
+
+<script>
+    // ระบบพจนานุกรม 2 ภาษา (ไทย - อังกฤษ)
+    const translations = {
+        th: {
+            menu_home: "🏠 หน้าแรก",
+            menu_sermons: "🎙️ คำเทศนา",
+            menu_blogs: "📖 บทความ",
+            menu_testimony: "🙏 คำพยาน",
+            menu_news: "📢 ข่าวสาร",
+            menu_contact: "📞 ติดต่อเรา",
+            video_title: "📽️ รับชมวีดีโอ สร้างโลก",
+            sidebar_title: "📋 สารบัญและการจัดเรียง",
+            label_category: "📁 คัดกรองตามหมวดหมู่",
+            label_series: "🎞 คัดกรองตามซีรีย์",
+            label_author: "👤 คัดกรองตามผู้เขียน/ผู้แต่ง",
+            label_alphabet: "🔤 จัดเรียงลำดับอักษร",
+            label_date: "📅 เรียงตาม วัน, เดือน, ปี",
+            opt_all_category: "ทั้งหมด ทุกหมวดหมู่",
+            opt_all_series: "ทั้งหมด ทุกซีรีย์",
+            opt_all_author: "ทั้งหมด ทุกผู้เขียน",
+            opt_sort_none: "-- เลือกการจัดเรียง --",
+            opt_sort_az: "เรียงจาก ก - ฮ / A - Z",
+            opt_sort_za: "เรียงจาก ฮ - ก / Z - A",
+            opt_date_desc: "ใหม่ล่าสุด ไป เก่าสุด",
+            opt_date_asc: "เก่าสุด ไป ใหม่ล่าสุด",
+            sec_news: "📢 ข่าวสารและประกาศ",
+            sec_testimony: "🙏 คำพยานชีวิต",
+            sec_article: "📖 บทความหนุนใจ",
+            sec_sermon: "🎙️ คำเทศนาประจำสัปดาห์",
+            loading: "กำลังโหลด...",
+            line_title: "🟢 ช่องทาง LINE Official",
+            line_desc: "สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ",
+            line_btn: "💬 กดเพิ่มเพื่อนใน LINE",
+            donate_title: "⛪ ช่องทางสนับสนุนและร่วมรับใช้",
+            donate_desc: "ท่านสามารถร่วมสนับสนุนพันธกิจคริสตจักรผ่านการถวายเงิน",
+            bank_info: `ท่านสามารถร่วมสนับสนุนหรือรับใช้<br>โดยการถวายเงินผ่านธนาคารได้ที่<br><strong>ธนาคารกรุงเทพ สาขาบางเขน</strong><br>ประเภทบัญชี: บัญชีออมทรัพย์<br>เลขที่บัญชี: <span class="bank-highlight">161-5-36894-9</span><br>ชื่อบัญชี: <strong>คริสตจักรแบ๊พติสต์บางเขน</strong>`,
+            footer_address: "คริสตจักรแบ๊พติสต์บางเขน พหลโยธิน แขวงอนุสาวรีย์ เขตบางเขน กรุงเทพมหานคร",
+            no_data: "ไม่พบข้อมูลในหมวดหมู่นี้ตามเงื่อนไขที่เลือก",
+            read_more: "อ่านต่อ...",
+            author_prefix: "ผู้เขียน: ",
+            preacher_prefix: "ผู้เทศนา: ",
+            testimony_prefix: "เจ้าของคำพยาน: ",
+            series_label: "ซีรีย์:",
+            bible_label: "ข้อพระธรรม:"
+        },
+        en: {
+            menu_home: "🏠 Home",
+            menu_sermons: "🎙️ Sermons",
+            menu_blogs: "📖 Articles",
+            menu_testimony: "🙏 Testimonies",
+            menu_news: "📢 News",
+            menu_contact: "📞 Contact Us",
+            video_title: "📽️️ Featured Video",
+            sidebar_title: "📋 Index & Sorting",
+            label_category: "📁 Filter by Category",
+            label_series: "🎞 Filter by Series",
+            label_author: "👤 Filter by Author",
+            label_alphabet: "🔤 Alphabetical Sort",
+            label_date: "📅 Sort by Date",
+            opt_all_category: "All Categories",
+            opt_all_series: "All Series",
+            opt_all_author: "All Authors",
+            opt_sort_none: "-- Select Sorting --",
+            opt_sort_az: "A - Z",
+            opt_sort_za: "Z - A",
+            opt_date_desc: "Newest to Oldest",
+            opt_date_asc: "Oldest to Newest",
+            sec_news: "📢 News & Announcements",
+            sec_testimony: "🙏 Life Testimonies",
+            sec_article: "📖 Encouraging Articles",
+            sec_sermon: "🎙️ Weekly Sermons",
+            loading: "Loading...",
+            line_title: "🟢 LINE Official Channel",
+            line_desc: "Scan the QR code to receive updates and devotionals",
+            line_btn: "💬 Add Friend on LINE",
+            donate_title: "⛪ Support & Ministry",
+            donate_desc: "You can support church ministries through offerings",
+            bank_info: `You can support or serve<br>by offering via bank transfer at:<br><strong>Bangkok Bank, Bangkhen Branch</strong><br>Account Type: Savings<br>Account No: <span class="bank-highlight">161-5-36894-9</span><br>Account Name: <strong>Bangkhen Baptist Church</strong>`,
+            footer_address: "Bangkhen Baptist Church, Phaholyothin Rd, Anusawari, Bang Khen, Bangkok",
+            no_data: "No information found in this category matching your criteria.",
+            read_more: "Read more...",
+            author_prefix: "Author: ",
+            preacher_prefix: "Speaker: ",
+            testimony_prefix: "Testifier: ",
+            series_label: "Series:",
+            bible_label: "Bible Ref:"
+        }
+    };
+
+    // ตรวจจับภาษาของเครื่องเป็นค่าเริ่มต้น (ถ้าขึ้นต้นด้วย en ให้เป็นอังกฤษ นอกนั้นเป็นไทย)
+    let currentLang = (navigator.language || navigator.userLanguage || 'th').toLowerCase().startsWith('en') ? 'en' : 'th';
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.setAttribute('lang', lang);
+        
+        // แปลข้อความทั่วไปผ่าน attribute data-i18n
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang][key]) {
+                if(el.tagName === 'SELECT') {
+                    // จัดการ option แรกของ select
+                    el.options[0].text = translations[lang][key];
+                } else {
+                    el.innerHTML = translations[lang][key];
+                }
+            }
+        });
+
+        // แปลข้อความหัวข้อพิเศษอื่นๆ
+        document.getElementById('txtVideoTitle').innerHTML = translations[lang].video_title;
+        document.getElementById('txtSidebarTitle').innerHTML = translations[lang].sidebar_title;
+
+        // อัปเดตข้อความในปุ่มสลับภาษา
+        document.getElementById('langSwitchBtn').innerText = lang === 'th' ? "🌐 EN / TH" : "🌐 TH / EN";
+
+        // เรนเดอร์ข้อมูลใหม่เพื่อให้ข้อความภายใน Card อัปเดตภาษาด้วย
+        if (typeof processAndRender === 'function') {
+            processAndRender();
+        }
+    }
+
+    function toggleLanguage() {
+        setLanguage(currentLang === 'th' ? 'en' : 'th');
+    }
+
+    // รันตั้งค่าภาษาตามเครื่องเมื่อโหลดหน้าเว็บ
+    window.addEventListener('DOMContentLoaded', () => {
+        setLanguage(currentLang);
+    });
+</script>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -423,9 +576,9 @@
             }
         });
 
-        updateDropdown('filterAuthor', authorSet, "ทั้งหมด ทุกผู้เขียน");
-        updateDropdown('filterCategory', categorySet, "ทั้งหมด ทุกหมวดหมู่");
-        updateDropdown('filterSeries', seriesSet, "ทั้งหมด ทุกซีรีย์");
+        updateDropdown('filterAuthor', authorSet, translations[currentLang].opt_all_author);
+        updateDropdown('filterCategory', categorySet, translations[currentLang].opt_all_category);
+        updateDropdown('filterSeries', seriesSet, translations[currentLang].opt_all_series);
         
         processAndRender();
     });
@@ -440,7 +593,7 @@
         select.value = currentValue;
     }
 
-    function processAndRender() {
+    window.processAndRender = function() {
         let filtered = [...allData];
 
         const categoryFilter = document.getElementById('filterCategory').value;
@@ -484,6 +637,7 @@
         Object.values(lists).forEach(l => { if(l) l.innerHTML = ""; });
 
         let counts = { news: 0, testimony: 0, article: 0, sermon: 0 };
+        const t = translations[currentLang];
 
         filtered.forEach(d => {
             const ytThumb = getYoutubeThumb(d.youtubeUrl);
@@ -492,13 +646,13 @@
             const rawAuthor = d.authorName || d.author || "คริสตจักร";
             const cat = d.category || "";
             
-            let prefix = "ผู้เขียน: ";
-            if (cat.includes("เทศนา")) prefix = "ผู้เทศนา: ";
-            else if (cat.includes("พยาน")) prefix = "เจ้าของคำพยาน: ";
+            let prefix = t.author_prefix;
+            if (cat.includes("เทศนา")) prefix = t.preacher_prefix;
+            else if (cat.includes("พยาน")) prefix = t.testimony_prefix;
             
             const authorHtml = `<div><span class="info-label">${prefix}</span> ${rawAuthor}</div>`;
-            const seriesHtml = d.series ? `<div><span class="info-label">ซีรีย์:</span> ${d.series}</div>` : '';
-            const bibleHtml = d.bibleRef ? `<div><span class="info-label">ข้อพระธรรม:</span> ${d.bibleRef}</div>` : '';
+            const seriesHtml = d.series ? `<div><span class="info-label">${t.series_label}</span> ${d.series}</div>` : '';
+            const bibleHtml = d.bibleRef ? `<div><span class="info-label">${t.bible_label}</span> ${d.bibleRef}</div>` : '';
 
             const card = `
             <div class="card" onclick="location.href='article.html?id=${d.id}'">
@@ -512,7 +666,7 @@
                     </div>
                     <div class="card-meta">
                         <span>📅 ${d.displayDate || ''}</span>
-                        <span style="color:#4dabff">อ่านต่อ...</span>
+                        <span style="color:#4dabff">${t.read_more}</span>
                     </div>
                 </div>
             </div>`;
@@ -525,7 +679,7 @@
 
         Object.keys(lists).forEach(key => {
             if (counts[key] === 0) {
-                lists[key].innerHTML = "<p style='color:#666; font-size:14px; padding:10px;'>ไม่พบข้อมูลในหมวดหมู่นี้ตามเงื่อนไขที่เลือก</p>";
+                lists[key].innerHTML = `<p style='color:#666; font-size:14px; padding:10px;'>${t.no_data}</p>`;
             }
         });
     }
