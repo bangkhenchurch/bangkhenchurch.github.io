@@ -128,7 +128,7 @@
             </p>
             
             <div style="margin-bottom: 25px;">
-                <a href="https://lin.ee/QSq98F6" target="_blank">
+                <a href="https://lin.ee/twsShCg" target="_blank">
                     <img src="https://qr-official.line.me/gs/M_082xyooj_BW.png?oat_สารบัญ" alt="LINE" style="width: 180px; border: 5px solid #2a2a2a; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); background: #000000;">
                 </a>
             </div>
