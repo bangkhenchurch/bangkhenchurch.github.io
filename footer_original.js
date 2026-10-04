@@ -91,7 +91,7 @@
                     <div class="action-title" style="color: #25d366; font-family: 'Prompt'; font-weight: bold; font-size: 18px;">🟢 ช่องทาง LINE Official</div>
                     <div class="action-desc" style="font-family: 'Sarabun'; color: #ccc; margin: 8px 0 15px 0; font-size: 14px;">สแกนคิวอาร์โค้ดเพื่อรับข่าวสารและบทความหนุนใจ</div>
                     <div class="action-image-box" onclick="window.open('https://lin.ee/t3ASqcu', '_blank')" style="cursor: pointer; margin-bottom: 15px;">
-                        <img src="line-qr.png" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://lin.ee/t3ASqcu'" style="width: 150px; border-radius: 8px;">
+                        <img src="line-qr.jpeg" onerror="this.src='https://api.qrserver.com/v1/create-qr-code/?size=180x180&data='" style="width: 150px; border-radius: 8px;">
                     </div>
                     <a https://lin.ee/PdbJk7Q" target="_blank" class="btn-line-link" style="text-decoration: none; display: inline-block;">💬 กดเพิ่มเพื่อนใน LINE</a>
                 </div>
